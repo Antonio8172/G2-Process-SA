@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}
+    Crear Tarea
+{% endblock titulo %}
+
+{% block contenido %}
+
+<div class="cajon">
+    <a href="{% url 'AppWebHome:crudUsuario' %}" style="position:absolute; top:0; right:0;">
+        <img class="btn-cerrar-1"id="img-icono-2" src="/static/img/iconos/cerrar.png" alt="imagen para cerrar">
+    </a>
+    <div class="caja-arriba">
+        <div class="tarjeta-form">
+            <div class="tarjeta-titulo"><h2>Crear nuevo Usuario</h2></div>
+            <form method="POST" id="formulario-tarea"> {% csrf_token %}
+                <div class="tarjeta-texto">
+                    <table style="padding: 2px 5%;">
+                        <tbody>
+                            <!-- <tr>
+                                <td>ID:</td>
+                                <td><input type="number" placeholder="Se registra automáticamente." readonly></td>
+                            </tr> -->
+                            <tr>
+                                <td>Nombre de Usuario: </td>
+                                <td>{{ form.usuario }}</td>
+                            </tr>
+                            <tr>
+                                <td>Contraseña:</td>
+                                <td>{{ form.contraseña }}</td>
+                            </tr>
+                            <tr>
+                                <td>Nombres: </td>
+                                <td>{{ form.nombres }}</td>
+                            </tr>
+                            <tr>
+                                <td>Apellidos: </td>
+                                <td>{{ form.apellidos }}</td>
+                            </tr>
+                            <tr>
+                                <td>RUT: </td>
+                                <td>{{ form.rut }}</td>
+                            </tr>
+                            <tr>
+                                <td>Correo Electrónico: </td>
+                                <td>{{ form.correo }}</td>
+                            </tr>
+                            <tr>
+                                <td>Número de Celular: </td>
+                                <td>{{ form.celular }}</td>
+                            </tr>
+                            <tr>
+                                <td>Dirección:</td>
+                                <td><select name="calle_id_calle" class="form-control" id="calle_id_calle" required>
+                                    <option value selected>- Seleccionar Calle -</option>
+                                    {% for c in calles %}
+                                        <option value="{{ c.id_calle }}">{{ c.id_calle }} - {{ c.calle }}</option>
+                                    {% endfor %}
+                                </select></td>
+                            </tr>
+                            <tr>
+                                <td>Unidad:</td>
+                                <td><select name="unidad_id_unidad" class="form-control" id="unidad_id_unidad" required>
+                                    <option value selected>- Seleccionar Unidad -</option>
+                                    {% for u in unidades %}
+                                        <option value="{{ u.id_unidad }}">{{ u.id_unidad }} - {{ u.unidad }}</option>
+                                    {% endfor %}
+                                </select></td>
+                            </tr>
+                            <tr>
+                                <td>Rol:</td>
+                                <td><select name="rol_id_rol" class="form-control" id="rol_id_rol" required>
+                                    <option value selected>- Seleccionar Rol -</option>
+                                    {% for r in roles %}
+                                        <option value="{{ r.id_rol }}">{{ r.id_rol }} - {{ r.rol }}</option>
+                                    {% endfor %}
+                                </select></td>
+                            </tr>
+                            <tr>
+                                <td>Jerarquía:</td>
+                                <td><select name="jerarquia_id_jerarquia" class="form-control" id="jerarquia_id_jerarquia" required>
+                                    <option value selected>- Seleccionar Jerarquía -</option>
+                                    {% for j in jerarquias %}
+                                        <option value="{{ j.id_jerarquia }}">{{ j.id_jerarquia }} - {{ j.jerarquia }}</option>
+                                    {% endfor %}
+                                </select></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tarjeta-botones">
+                    <a href="{% url 'AppWebHome:crearUsuario' %}">
+                        <div class="stat left">
+                            <img id="img-icono-2" src="/static/img/iconos/limpiar.png" alt="imagen para limpiar campos">
+                            <div class="valor">Limpiar</div>
+                        </div>
+                    </a>
+                    <button type="submit" class="stat border">
+                        <img src="/static/img/iconos/crear.png" alt="imagen para crear" id="img-icono-2">
+                        <!-- <input type="image" src="/static/img/iconos/crear.png" alt="imagen para crear" id="img-icono-2"> -->
+                        <div class="valor">Agregar</div>
+                    </button>
+                    <a href="{% url 'AppWebHome:verUsuarios' %}">
+                        <div class="stat right">
+                            <img id="img-icono-2" src="/static/img/iconos/usuarios.png" alt="imagen para ver usuarios">
+                            <div class="valor">Ver usuarios</div>
+                        </div>
+                    </a>
+                    
+                </div>
+            </form>
+        </div>
+        <div class="tarjeta-tabla" style="grid-template-columns: 500px;">
+            <div class="tarjeta-tabla-titulo"><h1>Calles</h1></div>
+            <div class="tarjeta-tabla-texto" style="padding: 5px 28%;">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th class="ID">ID</th>
+                            <th class="Nombre">Calle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for calle in calles %}
+                            <tr>
+                                <td class="ID">{{calle.id_calle}}</td>
+                                <td class="Nombre">{{calle.calle}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="caja-abajo">
+        <div class="tarjeta-tabla" style="grid-template-columns: 300px;">
+            <div class="tarjeta-tabla-titulo"><h1>Roles</h1></div>
+            <div class="tarjeta-tabla-texto" style="padding: 5px 18%;">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th class="ID">ID</th>
+                            <th class="Nombre">Rol</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rol in roles %}
+                            <tr>
+                                <td class="ID">{{rol.id_rol}}</td>
+                                <td class="Nombre">{{rol.rol}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tarjeta-tabla" style="grid-template-columns: 300px;">
+            <div class="tarjeta-tabla-titulo"><h1>Unidades</h1></div>
+            <div class="tarjeta-tabla-texto" style="padding: 5px 22%;">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th class="ID">ID</th>
+                            <th class="Nombre">Unidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for unidad in unidades %}
+                            <tr>
+                                <td class="ID">{{unidad.id_unidad}}</td>
+                                <td class="Nombre">{{unidad.unidad}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tarjeta-tabla" style="grid-template-columns: 300px;">
+            <div class="tarjeta-tabla-titulo"><h1>Jerarquías</h1></div>
+            <div class="tarjeta-tabla-texto" style="padding: 5px 25%;">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th class="ID">ID</th>
+                            <th class="Nombre">Jerarquía</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for jerarquia in jerarquias %}
+                            <tr>
+                                <td class="ID">{{jerarquia.id_jerarquia}}</td>
+                                <td class="Nombre">{{jerarquia.jerarquia}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+    

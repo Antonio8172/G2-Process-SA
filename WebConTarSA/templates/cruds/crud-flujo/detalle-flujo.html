@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}
+    Flujo: {{ flujo.flujo }}
+{% endblock titulo %}
+
+{% block contenido %}
+    <div class="cajon">
+        <a href="{% url 'AppWebHome:crudFlujo' %}" style="position:absolute; top:0; right:0;">
+            <img class="btn-cerrar-1"id="img-icono-2" src="/static/img/iconos/cerrar.png" alt="imagen para cerrar">
+        </a>
+        <div class="caja-arriba">
+            <div class="tarjeta-form">
+                <div class="tarjeta-titulo"><textarea name="" id="" cols="30" rows="2" style="resize: none; border: 0px;font-size: 24px; text-align: center; font-family: monospace; width: 330px; height: 55px; margin-top: 5px;color: white; background-color: rgba(255, 255, 255, 0);" readonly>{{ flujo.nombre_flujo }}</textarea></div>
+                <form method="POST"> {% csrf_token %}
+                    <div class="tarjeta-texto">
+                        <table style="padding: 55px 8%;">
+                            <tbody>
+                                <tr>
+                                    <td>ID:</td>
+                                    <td><input type="number" name="id_flujo" id="id_flujo" value="{{ flujo.id_flujo }}" readonly></td>
+                                </tr>
+                                <tr>
+                                    <td>Nombre Flujo: </td>
+                                    <td><input type="text" name="nombre_flujo" id="nombre_flujo" value="{{ flujo.nombre_flujo }}"></td>
+                                </tr>
+                                <tr>
+                                    <td>Descripción</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                <td colspan="2"><textarea name="descripcion" id="descripcion" cols="40" rows="4">{{ flujo.descripcion }}</textarea></td>
+                                </tr>
+                                <tr>
+                                    <td>ID Estado:</td>
+                                    <td><select name="estado_id_estado" class="form-control" required id="estado_id_estado">
+                                        <option value="{{ flujo.estado_id_estado.id_estado }}" selected>{{ flujo.estado_id_estado.id_estado }} - {{ flujo.estado_id_estado.estado }}</option>
+                                        {% for estado in estados %}
+                                            
+                                            {% if flujo.estado_id_estado.id_estado != estado.id_estado %}
+                                                <option value="{{estado.id_estado}}">{{estado.id_estado}} - {{estado.estado}}</option>
+                                            {% endif %}
+                                                
+                                        {% endfor %}
+                                    </select></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tarjeta-botones">
+                        <a href="{% url 'AppWebHome:detalleFlujo' flujo.id_flujo %}">
+                            <div class="stat left">
+                                <img id="img-icono-2" src="/static/img/iconos/deshacer.png" alt="imagen para crear">
+                                <div class="valor">Deshacer</div>
+                            </div>
+                        </a>
+                        <div class="stat border">
+                            <img id="img-icono-2" src="/static/img/iconos/actualizar.png" alt="imagen para crear">
+                            <div class="valor">Actualizar</div>
+                        </div>
+                        <div class="stat right">
+                            <img id="img-icono-2" src="/static/img/iconos/borrar.png" alt="imagen para crear">
+                            <div class="valor">Borrar</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="tarjeta-tabla" style="grid-template-columns: 600px;">
+                <div class="tarjeta-tabla-titulo"><h1>Tareas</h1></div>
+                <div class="tarjeta-tabla-texto">
+                    <table cellpadding="2" cellspacing="10" border="0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tarea</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tarea in tareas %}
+                            
+                                {% if flujo.id_flujo == tarea.flujo_id_flujo.id_flujo %}
+                                    <tr>
+                                        <td>{{ tarea.id_tarea }}</td>
+                                        <td>{{ tarea.tarea }}</td>
+                                        <td>{{ tarea.descripcion }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="caja-abajo">
+            <div class="tarjeta-tabla" style="grid-template-columns: 500px;">
+                <div class="tarjeta-tabla-titulo"><h1>Estados</h1></div>
+                <div class="tarjeta-tabla-texto">
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for estado in estados %}
+                                <tr>
+                                    
+                                    {% if flujo.estado_id_estado.id_estado != estado.id_estado %}
+                                        <td><input type="radio" name="estado"></td>
+                                    {% else %}
+                                        <td><input type="radio" name="estado" checked></td>
+                                    {% endif %}
+                                        
+                                    <td>{{ estado.id_estado }}</td>
+                                    <td>{{ estado.estado }}</td>
+
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock contenido %}

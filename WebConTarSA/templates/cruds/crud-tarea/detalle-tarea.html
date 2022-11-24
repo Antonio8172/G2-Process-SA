@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}
+    Tarea: {{ tarea.tarea }}
+{% endblock titulo %}
+
+{% block contenido %}
+
+<div class="cajon">
+    <a href="{% url 'AppWebHome:verTareas' %}?page=1" style="position:absolute; top:0; right:0;">
+        <img class="btn-cerrar-1"id="img-icono-2" src="/static/img/iconos/cerrar.png" alt="imagen para cerrar">
+    </a>
+    <div class="caja-arriba">
+            
+        <div class="tarjeta-form">
+            <div class="tarjeta-titulo sbg-{% if dd >= 7 %}verde{% elif dd < 7 and dd >= 0 %}amarillo{% else %}rojo{% endif %}">
+                    <textarea name="" id="" cols="30" rows="2" style="resize: none; border: 0px;font-size: 24px; text-align: center; font-family: monospace; width: 330px; height: 55px; margin-top: 5px;color: white; background-color: rgba(255, 255, 255, 0);" readonly>{{ tarea.tarea }}</textarea>
+            </div>
+            <form method="POST" id="formulario-tarea"> {% csrf_token %}
+                <div class="tarjeta-texto">
+                    <table style="padding: 21px 5%;">
+                        <tbody>
+                            <tr>
+                                <td>ID:</td>
+                                <td><input type="number" name="id_tarea" id="id_tarea" value="{{ tarea.id_tarea }}"readonly></td>
+                            </tr>
+                            <tr>
+                                <td>Nombre Tarea: </td>
+                                <td><input type="text" name="tarea" id="tarea" value="{{ tarea.tarea }}"></td>
+                            </tr>
+                            <tr>
+                                <td>Descripción</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><textarea name="descripcion" id="descripcion" cols="43" rows="4" style="resize:none; font-family:monospace;">{{ tarea.descripcion }}</textarea></td>
+                            </tr>
+                            <tr>
+                                <td>Fecha de Inicio: </td>
+                                <td>Fecha de Plazo: </td>
+                            </tr>
+                            <tr>
+                                <td><input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ tarea.fecha_inicio|date:'Y-m-d' }}"></td>
+                                <td><input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ tarea.fecha_plazo|date:'Y-m-d' }}"></td>
+                            </tr>
+                            <tr>
+                                <td>ID Persona Asignada:</td>
+                                <td><select name="usuario_persona_id_persona" class="form-control" required id="usuario_persona_id_persona">
+                                    <option value="{{ tarea.usuario_id_usuario.id_usuario }}" selected>- {{ tarea.usuario_id_usuario.id_usuario }} - {{ tarea.usuario_id_usuario.nombres }}-</option>
+                                    {% for u in usuarios %}
+                                        <option value="{{u.persona_id_persona.id_persona}}">{{u.persona_id_persona.id_persona}} - {{u.usuario}}</option>
+                                    {% endfor %}
+                                </select></td>
+                            </tr>
+                            <tr>
+                                <td>ID Flujo Asignado:</td>
+                                <td><select name="flujo_id_flujo" class="form-control" id="flujo_id_flujo">
+                                    <option value="{{ tarea.flujo_id_flujo.id_flujo }}" selected>- {{ tarea.flujo_id_flujo.id_flujo }} - {{ tarea.flujo_id_flujo.nombre_flujo }} -</option>
+                                    {% for flujo in flujos %}
+                                        <option value="{{flujo.id_flujo}}">{{flujo.id_flujo}} - {{flujo.nombre_flujo}}</option>
+                                    {% endfor %}
+                                </select></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tarjeta-botones sbg-{% if dd >= 7 %}verde{% elif dd < 7 and dd >= 0 %}amarillo{% else %}rojo{% endif %}">
+                    <a href="{% url 'AppWebHome:detalleTarea' tarea.id_tarea %}">
+                        <div class="stat left">
+                            <img id="img-icono-2" src="/static/img/iconos/deshacer.png" alt="imagen para crear">
+                            <div class="valor">Deshacer</div>
+                        </div>
+                    </a>
+                    <div class="stat border">
+                        <img id="img-icono-2" src="/static/img/iconos/actualizar.png" alt="imagen para crear">
+                        <div class="valor">Actualizar</div>
+                    </div>
+                    <a href="/borrar/{{ tarea.id_tarea }}">
+                        <div class="stat right">
+                            <img id="img-icono-2" src="/static/img/iconos/borrar.png" alt="imagen para crear">
+                            <div class="valor">Borrar</div>
+                        </div>
+                    </a>
+                </div>
+            </form>
+        </div>
+        <div class="xd">
+            
+            <div class="tarjeta">
+                <div class="tarjeta-imagen"></div>
+                <div class="tarjeta-texto">
+                    <span class="c-{% if dd >= 7 %}verde{% elif dd < 7 and dd >= 0 %}amarillo{% else %}rojo{% endif %} fs-13px contorno-negro">{{ tarea.usuario_id_usuario.rut }}</span>
+                    <h2>{{ tarea.usuario_id_usuario.usuario }}</h2>
+                    <p>Correo: {{ tarea.usuario_id_usuario.correo }}</p>
+                    <p>Celular: {{ tarea.usuario_id_usuario.celular }}</p>
+                    <p>Unidad: {{ tarea.usuario_id_usuario.unidad_id_unidad.unidad }}</p>
+                    <p>Jerarquía: {{ tarea.usuario_id_usuario.jerarquia_id_jerarquia.jerarquia }}</p>
+                    <p>Rol: {{ tarea.usuario_id_usuario.rol_id_rol.rol }}</p>
+                </div>
+                <div class="tarjeta-stats sbg-{% if dd >= 7 %}verde{% elif dd < 7 and dd >= 0 %}amarillo{% else %}rojo{% endif %}">
+                    <div class="stat left">
+                        <div class="value">4<sup>m</sup></div>
+                        <div class="type">Tareas</div>
+                    </div>
+                    <div class="stat border">
+                        <div class="value">5123</div>
+                        <div class="type">Subordinados</div>
+                    </div>
+                    <div class="stat right">
+                        <div class="value">32</div>
+                        <div class="type">Flujos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="caja-abajo">
+        <div class="tarjeta-tabla" style="grid-template-columns: 100%;">
+  
+            <div class="tarjeta-tabla-titulo sbg-{% if dd >= 7 %}verde{% elif dd < 7 and dd >= 0 %}amarillo{% else %}rojo{% endif %}"><h1>Flujos</h1></div>
+    
+            <div class="tarjeta-tabla-texto" style="padding: 5px 3%; overflow-y: scroll;">
+    
+                <table cellpadding="0" cellspacing="0" border="0">
+        
+                    <thead>
+                        <tr>
+                            <th class="checkbox"></th>
+                            <th class="ID">ID</th>
+                            <th class="Nombre">Nombre</th>
+                            <th class="Descrip">Descripción</th>
+                            <th class="Estado">Estado</th>
+                        </tr>
+                    </thead>
+    
+                    <tbody>
+                        {% for flujo in flujos %}
+                            <tr>
+                                {% if tarea.flujo_id_flujo.id_flujo != flujo.id_flujo %}
+                                    <td class="checkbox"><input type="radio" name="flujo"></td>
+                                {% else %}
+                                    <td class="checkbox"><input type="radio" name="flujo" checked></td>
+                                {% endif %}
+                                <td class="ID">{{flujo.id_flujo}}</td>
+                                <td class="Nombre">{{flujo.nombre_flujo}}</td>
+                                <td class="Descrip">{{flujo.descripcion}}</td>
+                                <td class="Estado">{{flujo.estado_id_estado.estado}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+    
+                </table>
+  
+            </div>
+  
+        </div>
+  
+    </div>
+
+{% endblock contenido %}

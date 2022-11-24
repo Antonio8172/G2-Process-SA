@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+    Inicio de Sesión
+{% endblock titulo %}
+
+{% block contenido %}
+{% load static %}
+
+<div class="cajon">
+
+    <div class="caja-arriba">
+
+        <div class="tarjeta">
+
+            <div class="tarjeta-imagen"></div>
+
+            <form method="POST"> {% csrf_token %}
+
+                <div class="tarjeta-texto">
+
+                    <h1>Iniciar Sesión</h1>
+
+                    <div style="align-items: left;">
+
+                        <div>Usuario:</div>
+                        {{form.usuario}}
+
+                    </div>
+                    <br>
+                    <div>
+
+                        <div>Contraseña:</div>
+                        {{form.contraseña}}
+
+                    </div>
+                    <br>
+                    <div>
+                        <input type="checkbox" style="width:15px;"onclick="myFunction()">Mostrar Contraseña
+                    </div>
+                    <br>
+                </div>
+
+
+                <a href="/home"><button>Iniciar Sesión</button></a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function myFunction() {
+      var x = document.getElementById("id_contraseña");
+      if (x.type === "password") {
+        x.type = "text";
+      } else {
+        x.type = "password";
+      }
+    }
+    </script>
+{% endblock contenido %}
+    

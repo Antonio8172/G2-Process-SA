@@ -1,0 +1,56 @@
+{% load static %}
+
+<header class="header">
+
+  <div class="header__search">
+    
+    {% if user.rol_id_rol.id_rol == 4 %} <!-- Desarrollador -->
+
+      <a href="{% url 'AppWebHome:prueba' %}">
+
+    {% elif user.rol_id_rol.id_rol == 3 %} <!-- Funcionario -->
+
+      <a href="{% url 'AppWebHome:funcionario' %}">
+
+    {% elif user.rol_id_rol.id_rol == 2 %} <!-- Diseñador de Procesos -->
+
+      <a href="{% url 'AppWebHome:diseñador' %}">
+
+    {% elif user.rol_id_rol.id_rol == 1 %} <!-- Administrador -->
+
+      <a href="{% url 'AppWebHome:administrador' %}">
+    
+    {% else %} <!-- Sin Usuario -->
+
+      <a href="{% url 'AppWebHome:home' %}">
+
+    {% endif %}
+
+      <img src="/static/img/iconos/home.png" alt="ir a home" id="img-icono-2" class="btn-icono-2">
+    </a>
+
+  </div>
+
+  <div class="header__avatar">
+
+    {% if user.rol_id_rol.id_rol == 1 or user.rol_id_rol.id_rol == 2 or user.rol_id_rol.id_rol == 3 or user.rol_id_rol.id_rol == 4 %}
+
+      <a href="{% url 'AppWebHome:perfil' %}" style="margin-right: 15px;">
+        <img src="/static/img/iconos/usuario.png" alt="ir al perfil" id="img-icono-2" class="btn-icono-2">
+      </a>
+
+      <a href="{% url 'AppWebHome:logout' %}">
+        <img src="/static/img/iconos/logout.png" alt="Salir de sesión" id="img-icono-2" class="btn-icono-2">
+      </a>
+
+    {% else %}
+
+      <a href="{% url 'AppWebHome:login' %}">
+        <img src="/static/img/iconos/login.png" alt="Iniciar sesión" id="img-icono-2" class="btn-icono-2">
+      </a>
+
+    {% endif %}
+
+  </div>
+
+</header>

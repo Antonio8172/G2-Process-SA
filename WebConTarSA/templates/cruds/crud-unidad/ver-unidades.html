@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+    Ver Unidades
+{% endblock titulo %}
+
+{% block contenido %}
+{% load static %}
+
+<div class="cajon">
+
+    <a href="{% url 'AppWebHome:crudUnidad' %}" style="position:absolute; top:0; right:0;">
+        <img class="btn-cerrar-1"id="img-icono-2" src="/static/img/iconos/cerrar.png" alt="imagen para cerrar">
+    </a>
+
+    <div class="caja-arriba">
+
+        <div class="tabla-tareas">
+
+            <div class="cabecera">
+
+                <h2>Unidades hasta la fecha: {{ fechaActual }}</h2> 
+
+            </div>
+            <div class="row">
+
+                {% for u in unidades %}
+
+                <div class="column">
+                    <div class="card">
+                        <p class="cabecera-card">ID: {{ u.id_unidad }}</p>
+                        <div class="contenido-card">
+                            <textarea rows="2" cols="25" style="resize: none; cursor:pointer; font-size: 20px; text-align: center; font-family: monospace;" readonly>{{ u.unidad }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="caja-abajo">
+
+        {% include 'includes/pagination.html' %}
+
+    </div>
+
+</div>
+
+
+{% endblock contenido %}

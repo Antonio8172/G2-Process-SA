@@ -1,0 +1,221 @@
+
+/* ------------------------------------------------------------------------------------------------------- */
+/*                                                Cartas                                                   */
+/* ------------------------------------------------------------------------------------------------------- */
+
+/* -------------------------------------------------- */
+/* Cartas Principales                                 */
+/* -------------------------------------------------- */
+.cartas-principales {
+    column-count: 1;
+    column-gap: 20px;
+    margin: 20px;
+}
+
+.carta-principal {
+    border-radius: 20px;
+    border: 1px solid rgb(192, 192, 192);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    background-image: linear-gradient(to top, #0000008f 0%, #ffffff3e 100%);
+    margin-bottom: 20px;
+    -webkit-column-break-inside: avoid;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+/* --------------------------------------------------- */
+/* Tarjetas                                            */
+/* --------------------------------------------------- */
+
+/* ---------- */
+/* Perfil     */
+/* ---------- */
+ .tarjeta-perfil {
+    grid-template-columns: 600px;
+    grid-template-rows: 130px 480px 65px;
+    grid-template-areas: "imagen-perfil" "texto" "stats-perfil";
+    text-align: center;
+ }
+
+ .tarjeta-perfil-imagen {
+    grid-area: imagen-perfil;
+    background: url("/static/img/iconos/usuario.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+ }
+
+ .tarjeta-perfil-stats {
+    grid-area: stats-perfil;
+    background-color: green;
+ }
+
+/* ---------- */
+/* Formulario */
+/* ---------- */
+.tarjeta-form {
+    grid-template-columns: 380px;
+    grid-template-rows: 65px 272px 89px;
+    grid-template-areas: "titulo" "texto" "botones";
+    text-align: left;
+}
+
+.tarjeta-titulo {
+    grid-area: titulo;
+    background-color: orange;
+    text-align: center;
+}
+
+.tarjeta-botones {
+    grid-area: botones;
+    background-color: orange;
+}
+/* ------ */
+/* Tablas */
+/* ------ */
+.tarjeta-tabla {
+    grid-template-rows: 65px 200px;
+    grid-template-areas: "titulo-tabla" "texto-tabla";
+    text-align: center;
+}
+.tarjeta-tabla-titulo {
+    grid-area: titulo-tabla;
+    background-color: orange;
+    text-align: center;
+}
+/* --------------- */
+/* Perfil chiquito */
+/* --------------- */
+.tarjeta {
+    grid-template-columns: 300px;
+    grid-template-rows: 150px 200px 80px;
+    grid-template-areas: "imagen" "texto" "stats";
+    cursor: pointer;
+    text-align: center;
+}
+
+.tarjeta-imagen {
+    grid-area: imagen;
+    background: url("/static/img/iconos/usuario.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.tarjeta-stats {
+    grid-area: stats; 
+    background: rgb(185, 7, 255);
+}
+
+
+/* ------- */
+/* General */
+/* ------- */
+.tarjeta, .tarjeta-form, .tarjeta-perfil, .tarjeta-tabla {
+    display: grid;
+    border-radius: 18px;
+    background: white;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.9);
+    font-family: monospace;
+    transition: .5s ease all;
+    margin: 30px;
+}
+
+.tarjeta:hover, .tarjeta-form:hover, .tarjeta-perfil:hover, .tarjeta-tabla:hover {
+    transform: scale( 1.05 );
+    box-shadow: 5px 5px 15px rgba ( 0 , 0 , 0 , 0.6 ) ;
+}
+
+.tarjeta-imagen, .tarjeta-titulo, .tarjeta-perfil-imagen, .tarjeta-tabla-titulo {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.tarjeta-texto {
+    grid-area: texto;
+    color: black;
+    text-align: center;
+}
+.tarjeta-tabla-texto {
+    grid-area: texto-tabla;
+    color: black;
+    text-align: left;
+    overflow-y: scroll;
+}
+
+.tarjeta-texto .date {
+    font-size:13px;
+    color: rgb(185, 7, 255);
+}
+.tarjeta-texto p {
+    color: grey;
+    font-size:15px;
+    font-weight: 300;
+}
+.tarjeta-texto h2 {
+    margin-top:0px;
+    font-size:28px;
+}
+
+.tarjeta-texto h2, .tarjeta-texto h3, .tarjeta-texto p {
+    margin: 7px;
+}
+
+.tarjeta-stats, .tarjeta-botones, .tarjeta-perfil-stats{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+.tarjeta-stats .stat, .tarjeta-botones .stat, .tarjeta-perfil-stats .stat{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    padding:10px;
+}
+.tarjeta-stats .stat:hover, .tarjeta-botones .stat:hover, .tarjeta-perfil-stats .stat:hover{
+    background-color: black;
+}
+.left:hover{
+    border-bottom-left-radius: 15px;
+}
+.right:hover{
+    border-bottom-right-radius: 15px;
+}
+.tarjeta-stats .border, .tarjeta-botones .border, .tarjeta-perfil-stats .border{
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+}
+button.border{
+    background-color: rgba(255, 68, 0, 0);
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 16px;
+    border-bottom: 0px;
+    border-top: 0px;
+}
+button.border:hover{
+    background-color: black;
+}
+
+
+/* --------------------------------------------- */
+/* Pantallas medianas, punto de quiebre: 1050px  */
+/* --------------------------------------------- */
+@media only screen and (min-width: 65.625em) {
+    
+    /* ----------------------------------------------- */
+    /* Cartas Principales                              */
+    /* ----------------------------------------------- */
+
+    /* Divide las cartas principales en 3 columnas */
+    .cartas-principales {
+        column-count: 3;
+    }
+}

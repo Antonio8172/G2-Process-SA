@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}
+Crear Flujo
+{% endblock titulo %}
+
+{% block contenido %}
+    <div class="cajon">
+        <a href="{% url 'AppWebHome:crudFlujo' %}" style="position:absolute; top:0; right:0;">
+            <img class="btn-cerrar-1"id="img-icono-2" src="/static/img/iconos/cerrar.png" alt="imagen para cerrar">
+        </a>
+        <div class="caja-arriba">
+            <div class="tarjeta-form">
+                <div class="tarjeta-titulo"><h2>Crear nuevo flujo</h2></div>
+                <form method="POST"> {% csrf_token %}
+                    <div class="tarjeta-texto">
+                        <table style="padding: 55px 5%;">
+                            <tbody>
+                                <tr>
+                                    <td>ID:</td>
+                                    <td><input type="number" placeholder="Se registra automáticamente" readonly></td>
+                                </tr>
+                                <tr>
+                                    <td>Nombre Flujo: </td>
+                                    <td>{{form.nombre_flujo}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Descripción</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                <td colspan="2">{{form.descripcion}}</td>
+                                </tr>
+                                <tr>
+                                    <td>ID Estado:</td>
+                                    <td><select name="estado_id_estado" class="form-control" id="estado_id_estado" required>
+                                        <option selected>-----------</option>
+                                        {% for e in estados %}
+                                        <option value="{{e.id_estado}}">{{e.id_estado}} - {{e.estado}}</option>
+                                        {% endfor %}
+                                    </select></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tarjeta-botones">
+                        <a href="{% url 'AppWebHome:crearFlujo' %}">
+                            <div class="stat left">
+                                <img id="img-icono-2" src="/static/img/iconos/limpiar.png" alt="imagen para limpiar campos">
+                                <div class="valor">Limpiar</div>
+                            </div>
+                        </a>
+                        <button type="submit" class="stat border">
+                            <img src="/static/img/iconos/crear.png" alt="imagen para crear" id="img-icono-2">
+                            <!-- <input type="image" src="/static/img/iconos/crear.png" alt="imagen para crear" id="img-icono-2"> -->
+                            <div class="valor">Agregar</div>
+                        </button>
+                        <a href="{% url 'AppWebHome:verFlujos' %}">
+                            <div class="stat right">
+                                <img id="img-icono-2" src="/static/img/iconos/tarea.png" alt="imagen para ver tareas">
+                                <div class="valor">Ver flujos</div>
+                            </div>
+                        </a>
+                        
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="caja-abajo">
+            <div class="tarjeta-tabla" style="grid-template-columns: 500px;">
+                <div class="tarjeta-tabla-titulo"><h1>Estados</h1></div>
+                <div class="tarjeta-tabla-texto">
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <thead>
+                            <tr>
+                                <th class="checkbox"></th>
+                                <th class="ID">ID</th>
+                                <th class="Nombre">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for estado in estados %}
+                                <tr>
+                                    <td class="checkbox"><input type="radio" name="estado"></td>
+                                    <td class="ID">{{estado.id_estado}}</td>
+                                    <td class="Nombre">{{estado.estado}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock contenido %}

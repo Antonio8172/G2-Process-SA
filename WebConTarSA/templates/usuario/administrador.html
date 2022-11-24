@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+
+{% block titulo %}
+    Administrador
+{% endblock titulo %}
+    
+
+{% block contenido %}
+{% load static %}
+
+<div class="main-header">
+    <h1 style="text-align: center;">Hola! Administrador/a {{ user.usuario }}</h1>
+    <div class="main-header__heading">¡Hola {{ user.nombres }} {{ user.apellidos }}!</div>
+</div>
+
+<div class="cartas-principales">
+
+    <div class="carta-principal">
+        <a href="{% url 'AppWebHome:crudJerarquia' %}" class="button button-1">
+            <img src="/static/img/iconos/jerarquia.png" alt="imagen de usuarios" id="img-icono">
+            <br>
+            CRUD Jerarquias
+        </a>
+    </div>
+
+    <div class="carta-principal">
+        <a href="{% url 'AppWebHome:crudRol' %}" class="button button-2">
+            <img src="/static/img/iconos/rol.png" alt="imagen de usuarios" id="img-icono">
+            <br>
+            CRUD Roles
+        </a>
+    </div>
+
+    <div class="carta-principal">
+        <a href="{% url 'AppWebHome:crudUnidad' %}" class="button button-1">
+            <img src="/static/img/iconos/unidad.png" alt="imagen de usuarios" id="img-icono">
+            <br>
+            CRUD Unidades
+        </a>
+    </div>
+
+    <div class="carta-principal">
+        <a href="{% url 'AppWebHome:crudUsuario' %}" class="button button-2">
+            <img src="/static/img/iconos/usuarios.png" alt="imagen de usuarios" id="img-icono">
+            <br>
+            CRUD Usuarios
+        </a>
+    </div>
+
+    <div class="carta-principal">
+        <a href="{% url 'AppWebHome:crudTarea' %}" class="button button-1">
+            <img src="/static/img/iconos/tarea.png" alt="imagen de usuarios" id="img-icono">
+            <br>
+            CRUD Tareas
+        </a>
+    </div>
+
+    <div class="carta-principal">
+        <a href="{% url 'AppWebHome:crudFlujo' %}" class="button button-2">
+            <img src="/static/img/iconos/flujo.png" alt="imagen de usuarios" id="img-icono">
+            <br>
+            CRUD Flujos
+        </a>
+    </div>
+</div>
+    
+
+    {% endblock contenido %}
+    

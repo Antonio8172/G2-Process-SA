@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+
+{% block titulo %}
+    CRUD Jerarquía
+{% endblock titulo %}
+    
+{% block contenido %}
+  {% load static %}
+
+  <div class="cajon">
+
+    <div class="caja-arriba">
+      
+      <div class="cartas-principales">
+        
+        <div class="carta-principal oculto"></div>
+        
+        <div class="carta-principal">
+          
+          <a href="{% url 'AppWebHome:crearJerarquia' %}" class="button button-1">
+            
+            <img id="img-icono" src="/static/img/iconos/nuevaJerarquia.png" alt="#"><br><br>Crear Nueva Jerarquía
+            
+          </a>
+          
+        </div>
+        
+      </div>
+      
+    </div>
+
+    <div class="caja-abajo">
+
+      <div class="tarjeta-tabla" style="grid-template-columns: 300px;">
+
+        <div class="tarjeta-tabla-titulo" style="background-color: rgb(97, 15, 173);"><h1>Jerarquías</h1></div>
+
+        <div class="tarjeta-tabla-texto" style="padding: 5px 25%; overflow-y: scroll;">
+
+          <table cellpadding="0" cellspacing="0" border="0">
+
+            <thead>
+              <tr>
+                <th class="ID">ID</th>
+                <th class="Nombre">Jerarquía</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for jerarquia in jerarquias %}
+                <tr class="tr1">
+                  <td class="td1 ID">{{jerarquia.id_jerarquia}}</td>
+                  <td class="td1 Nombre">{{jerarquia.jerarquia}}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+{% endblock contenido %}
+    

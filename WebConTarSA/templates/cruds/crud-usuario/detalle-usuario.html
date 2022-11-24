@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+
+{% block titulo %}
+
+    Perfil de {{ usuario.usuario }}
+
+{% endblock titulo %}
+
+{% block contenido %}
+
+    {% load static %}
+
+    <div class="cajon">
+
+        <div class="caja-arriba">
+
+            <div class="tarjeta-perfil" style="grid-template-rows: 120px 490px 88px;">
+
+                <div class="tarjeta-perfil-imagen"></div>
+
+                <div class="tarjeta-texto">
+
+                    <span class="c-azul">{{ usuario.rut }}</span>
+                    <h2>{{usuario.usuario}}</h2>
+                    <h3>Contraseña:</h3>
+                    <p>{{ usuario.contraseña }}</p>
+                    <h3>Nombre Completo:</h3>
+                    <p>{{ usuario.nombres }} {{ usuario.apellidos }}</p>
+                    <h3>Contacto:</h3>
+                    <p>{{ usuario.correo }}</p>
+                    <p>{{ usuario.celular }}</p>
+                    <h3>Dirección:</h3>
+                    <p>{{ usuario.calle_id_calle.calle }}, {{ usuario.calle_id_calle.comuna_id_comuna.comuna }},</p>
+                    <p>{{ usuario.calle_id_calle.comuna_id_comuna.ciudad_id_ciudad.ciudad }}</p>
+                    <h3>Rol:</h3>
+                    <p>{{ usuario.rol_id_rol.rol }}</p>
+                    <h3>Unidad:</h3>
+                    <p>{{ usuario.unidad_id_unidad.unidad }}</p>
+                    <h3>Jerarquia:</h3>
+                    <p>{{ usuario.jerarquia_id_jerarquia.jerarquia }}</p>
+
+                </div>
+
+                <div class="tarjeta-perfil-stats sbg-azul">
+
+                    <a href="{% url 'AppWebHome:verUsuarios' %}">
+                        <div class="stat left">
+                            <img id="img-icono-2" src="/static/img/iconos/deshacer.png" alt="imagen para crear">
+                            <div class="valor">Volver</div>
+                        </div>
+                    </a>
+                    <div class="stat border">
+                        <img id="img-icono-2" src="/static/img/iconos/actualizar.png" alt="imagen para crear">
+                        <div class="valor">Actualizar</div>
+                    </div>
+                    <a href="/borrrar/{{ usuario.id_usuario }}">
+                        <div class="stat right">
+                            <img id="img-icono-2" src="/static/img/iconos/borrar.png" alt="imagen para crear">
+                            <div class="valor">Borrar</div>
+                        </div>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock contenido %}

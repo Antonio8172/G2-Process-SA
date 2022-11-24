@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+
+{% block titulo %}
+    CRUD Flujo
+{% endblock titulo %}
+    
+{% block contenido %}
+  {% load static %}
+
+  <div class="cajon">
+
+    <div class="cartas-principales">
+      
+      <div class="carta-principal">
+        <a href="{% url 'AppWebHome:crearFlujo' %}" class="button button-1">
+          <!-- <div class="add-product-1" id="add-product-1">
+            <div class="button-copy-1" id="btn-copy-1"> -->
+              <img id="img-icono" src="/static/img/iconos/nuevoFlujo.png" alt="#"><br><br>Crear Nuevo Flujo
+            <!-- </div>
+          </div> -->
+        </a>
+      </div>
+      
+      <div class="carta-principal">
+        <a href="{% url 'AppWebHome:verFlujos' %}" class="button button-2">
+          <!-- <div class="add-product-2" id="add-product-2">
+            <div class="button-copy-2" id="btn-copy-2"> -->
+              <img id="img-icono" src="/static/img/iconos/verFlujos.png" alt="#"><br><br>Ver Flujos
+            <!-- </div>
+          </div> -->
+          </a>
+      </div>
+          
+    </div>
+    
+  </div>
+  
+  <!-- <script src="{% static 'js/funciones/botonAnimado.js'%} "></script> -->
+{% endblock contenido %}
+    

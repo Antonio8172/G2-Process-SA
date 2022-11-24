@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+    Ver Usuarios
+{% endblock titulo %}
+
+{% block contenido %}
+{% load static %}
+
+<div class="cajon">
+
+    <div class="caja-arriba">
+
+        <div class="tabla-tareas">
+
+            <div class="cabecera">
+
+                <h2>Usuarios existentes hasta la fecha: {{ fechaActual }}</h2> 
+
+            </div>
+            <style>
+                .usuarios{
+                    border: 2px solid black;
+                }
+                .usuarios:hover{
+                    background-color: orange;
+                    border: 0.5px solid orange;
+                    color: white;
+                }
+            </style>
+            <table>
+                <thead style="text-align: left;">
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Contraseña</th>
+                        <th>Nombre Completo</th>
+                        <th>RUT</th>
+                        <th>Correo Electrónico</th>
+                        <th>Celular</th>
+                        <th>Botón</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in usuarios %}
+                    
+                        <tr class="usuarios">
+                            
+                                <td>{{ u.id_usuario }}</td>
+                                <td>{{ u.usuario }}</td>
+                                <td>{{ u.contraseña }}</td>
+                                <td>{{ u.nombres }} {{ u.apellidos }}</td>
+                                <td>{{ u.rut }}</td>
+                                <td>{{ u.correo }}</td>
+                                <td>{{ u.celular }}</td>
+                                <td>
+                                    <a href="{% url 'AppWebHome:detalleUsuario' u.id_usuario %}">
+                                        <img id="img-icono-2" src="/static/img/iconos/usuarios.png" alt="imagen para ver usuarios">
+                                    </a>
+                                </td>
+                            
+                        </tr>
+
+                    
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+    <div class="caja-abajo">
+
+        {% include 'includes/pagination.html' %}
+
+    </div>
+
+</div>
+
+
+{% endblock contenido %}

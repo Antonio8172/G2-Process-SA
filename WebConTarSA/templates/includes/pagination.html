@@ -1,0 +1,47 @@
+{% load static %}
+
+<style>
+    .center {
+      text-align: center;
+    }
+    
+    .pagination {
+      display: inline-block;
+    }
+    
+    .pagination a {
+      background-color: black;
+      color: rgb(255, 255, 255);
+      float: left;
+      padding: 8px 16px;
+      text-decoration: none;
+      transition: background-color .3s;
+      border: 1px solid rgb(255, 255, 255);
+      margin: 0 4px;
+    }
+    
+    .pagination a.activo {
+      background-color: orange;
+      color: white;
+      border: 1px solid #4CAF50;
+    }
+    
+    .pagination a:hover:not(.activo) {background-color: orange;}
+</style>
+
+{% if is_paginated %}
+    <div class="center">
+        <div class="pagination">
+
+            <a href="{% if page_obj.has_previous %} ?page={{ page_obj.previous_page_number }} {% endif %}">&laquo;</a>
+
+            {% for i in paginator.page_range %}
+                <a href="?page={{ i }}" class="{% if page_obj.number == i %} activo {% endif %}">{{ i }}</a>
+            {% endfor %}
+
+            <a href="{% if page_obj.has_next %} ?page={{ page_obj.next_page_number }} {% endif %}">&raquo;</a>
+
+        </div>
+    </div>
+{% endif %}
+    

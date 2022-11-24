@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}
+    Home
+{% endblock titulo %}
+
+{% block contenido %}
+<div class="cajon">
+    
+    <div class="caja-arriba">
+        <img src="/static/img/Logo-ProcessSA.png" alt="Logo de Process SA" width="400px">
+    </div>
+    
+    <div class="cartas-principales">
+    
+        <div class="carta-principal oculto"></div>
+    
+        <div class="carta-principal">
+            <a href="{% url 'AppWebHome:login' %}" class="button button-1">
+                <img src="/static/img/iconos/usuario.png" alt="imagen de usuario" id="img-icono">
+                <br>
+                Iniciar Sesión
+            </a>
+        </div>
+    
+    </div>
+</div>
+
+
+{% endblock contenido %}

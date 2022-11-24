@@ -1,0 +1,261 @@
+
+
+
+    
+<aside class="sidenav">
+    <div class="menu-icon">
+        <a href="#">
+            <img src="/static/img/Logo-ProcessSA.png" alt="Logo de Process SA">
+        </a>
+    </div>
+    <!-- <div class="sidenav__close-icon">
+      <i class="fa fa-minus-square fa-2x"></i>
+    </div> -->
+
+    
+    {% if user.rol_id_rol.rol == 'Administrador' or user.rol_id_rol.rol == 'Diseñador de Procesos' or user.rol_id_rol.rol == 'Funcionario' or user.rol_id_rol.rol == 'Desarrollador' %}
+
+        <ul class="sidenav__list-perfil">
+            <a href="{% url 'AppWebHome:perfil' %}">
+                <li class="sidenav__list-item">
+                    <p class="fs-14px" style="margin: 0px;">{{ user.nombres }} {{ user.apellidos }}</p>
+                    {% if user.rol_id_rol.rol == 'Funcionario' %}
+                        <p class="fs-12px" style="margin: 0px;">{{ user.jerarquia_id_jerarquia.jerarquia }}</p>
+                    {% else %}
+                        <p class="fs-12px" style="margin: 0px;">{{ user.rol_id_rol.rol }}</p>
+                    {% endif %}
+                </li>
+            </a>
+        </ul>
+
+        <ul class="sidenav__list">
+    {% endif %}
+        
+        
+    <!-- Desarrollador -->
+    {% if user.rol_id_rol.rol == 'Desarrollador' %}
+
+        <a href="{% url 'AppWebHome:home' %}">
+            <li class="sidenav__list-item">Home</li>
+        </a>
+
+        <a href="{% url 'AppWebHome:login' %}">
+            <li class="sidenav__list-item">Iniciar Sesión</li>
+        </a>
+
+        <button class="accordion">Usuarios</button>
+        <div class="panel">
+            <a href="{% url 'AppWebHome:administrador' %}">
+                Administrador
+            </a>
+            <a href="{% url 'AppWebHome:funcionario' %}">
+                Funcionario
+            </a>
+            <a href="{% url 'AppWebHome:diseñador' %}">
+                Diseñador
+            </a>
+        </div>
+        
+        <button class="accordion">CRUDs</button>
+        <div class="panel">
+            <a href="{% url 'AppWebHome:crudUsuario' %}">
+                Usuarios
+            </a>
+            <a href="{% url 'AppWebHome:crudJerarquia' %}">
+                Jerarquias
+            </a>
+            <a href="{% url 'AppWebHome:crudUnidad' %}">
+                Unidads
+            </a>
+            <a href="{% url 'AppWebHome:crudRol' %}">
+                Roles
+            </a>
+            <a href="{% url 'AppWebHome:crudTarea' %}">
+                Tareas
+            </a>
+            <a href="{% url 'AppWebHome:crudFlujo' %}">
+                Flujos
+            </a>
+        </div>
+
+        <a href="{% url 'AppWebHome:prueba' %}">
+            <li class="sidenav__list-item">Prueba</li>
+        </a>
+
+    <!-- Funcionario -->
+    {% elif user.rol_id_rol.rol == 'Funcionario' %}
+
+        <a href="{% url 'AppWebHome:funcionario' %}">
+            <li class="sidenav__list-item">Home</li>
+        </a>
+        
+        {% if user.jerarquia_id_jerarquia.jerarquia == 'Gerente' or user.jerarquia_id_jerarquia.jerarquia == 'Funcionario' %}
+
+            <button class="accordion">CRUD Tarea</button>
+            <div class="panel">
+
+                <a href="{% url 'AppWebHome:crearTarea' %}">
+                    Crear Nuevas Tareas
+                </a>
+
+                <a href="{% url 'AppWebHome:verTareas' %}?page=1">
+                    Ver Tareas existentes
+                </a>
+
+            </div>
+            
+            <a href="{% url 'AppWebHome:verUsuarios' %}">
+                <li class="sidenav__list-item">Ver Subordinados</li>
+            </a>
+        {% elif user.jerarquia_id_jerarquia.jerarquia == 'Subordinado' %}
+        
+            <a href="{% url 'AppWebHome:verTareas' %}?page=1">
+                <li class="sidenav__list-item">Ver mis Tareas</li>
+            </a>
+
+        {% endif %}
+
+        <a href="{% url 'AppWebHome:verFlujos' %}">
+            <li class="sidenav__list-item">Ver Flujos</li>
+        </a>
+
+        
+        {% if user.jerarquia_id_jerarquia.jerarquia == 'Gerente' %}
+            <a href="">
+                <li class="sidenav__list-item">Ver Panel de Control</li>
+            </a>
+        {% endif %}
+            
+
+    <!-- Diseñador de Procesos -->
+    {% elif user.rol_id_rol.rol == 'Diseñador de Procesos' %}
+
+        <a href="{% url 'AppWebHome:diseñador' %}">
+            <li class="sidenav__list-item">Home</li>
+        </a>
+
+        <button class="accordion">CRUD Flujo</button>
+        <div class="panel">
+
+            <a href="{% url 'AppWebHome:crearFlujo' %}">
+                Crear nuevos Flujos
+            </a>
+
+            <a href="{% url 'AppWebHome:verFlujos' %}">
+                Ver Flujos existentes
+            </a>
+
+        </div>
+
+    <!-- Administrador -->
+    {% elif user.rol_id_rol.rol == 'Administrador' %}
+
+        <a href="{% url 'AppWebHome:administrador' %}">
+            <li class="sidenav__list-item">Home</li>
+        </a>
+
+        <button class="accordion">CRUD Tarea</button>
+        <div class="panel">
+
+            <a href="{% url 'AppWebHome:crearTarea' %}">
+                Crear Nuevas Tareas
+            </a>
+
+            <a href="{% url 'AppWebHome:verTareas' %}?page=1">
+                Ver Tareas existentes
+            </a>
+
+        </div>
+
+        <button class="accordion">CRUD Flujo</button>
+        <div class="panel">
+
+            <a href="{% url 'AppWebHome:crearFlujo' %}">
+                Crear Nuevos Flujos
+            </a>
+
+            <a href="{% url 'AppWebHome:verFlujos' %}">
+                Ver Flujos existentes
+            </a>
+
+        </div>
+
+        <button class="accordion">CRUD Usuario</button>
+        <div class="panel">
+
+            <a href="{% url 'AppWebHome:crearUsuario' %}">
+                Crear Nuevos Usuarios
+            </a>
+
+            <a href="{% url 'AppWebHome:verUsuarios' %}">
+                Ver Usuarios existentes
+            </a>
+
+        </div>
+
+        <a href="{% url 'AppWebHome:crudJerarquia' %}">
+            <li class="sidenav__list-item">CRUD Jerarquía</li>
+        </a>
+
+        <a href="{% url 'AppWebHome:crudRol' %}">
+            <li class="sidenav__list-item">CRUD Rol</li>
+        </a>
+
+        <a href="{% url 'AppWebHome:crudUnidad' %}">
+            <li class="sidenav__list-item">CRUD Unidad</li>
+        </a>
+
+    {% else %}
+
+        <ul class="sidenav__list" style="margin-top: 85px;">
+
+            <a href="{% url 'AppWebHome:home' %}">
+                <li class="sidenav__list-item">Home</li>
+            </a>
+
+            <a href="{% url 'AppWebHome:login' %}">
+                <li class="sidenav__list-item">Iniciar Sesión</li>
+            </a>
+
+        </ul>
+
+    {% endif %}
+
+    {% if user.rol_id_rol.rol == 'Administrador' or user.rol_id_rol.rol == 'Diseñador de Procesos' or user.rol_id_rol.rol == 'Funcionario' or user.rol_id_rol.rol == 'Desarrollador' %}
+        </ul>
+
+        <div class="sidenav__list-logout">
+            <!-- margin-top: 290px; -->
+            <a href="{% url 'AppWebHome:logout' %}">
+                <li class="sidenav__list-item">Cerrar Sesión</li>
+            </a>
+        </div>
+
+    {% endif %}
+
+</aside>
+
+<script>
+    var acc = document.querySelectorAll(".accordion");
+    var active = null;
+
+    acc.forEach((item, i) => {
+    item.addEventListener("click", function () {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        
+        if(active) {
+            active.style.maxHeight = null;
+        }
+        
+        if(panel !== active) {
+            panel.style.maxHeight = panel.scrollHeight + "px";
+            active = panel
+        } else {
+            active = null
+        }
+
+        
+    });
+    }); 
+</script>

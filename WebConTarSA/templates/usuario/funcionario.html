@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+
+{% block titulo %}
+    Funcionario
+{% endblock titulo %}
+
+
+{% block contenido %}
+{% load static %}
+
+{% if user.rol_id_rol.rol == 'Funcionario' and user.jerarquia_id_jerarquia.jerarquia == 'Funcionario' %}
+
+    <h1>hola</h1>
+    
+{% endif %}
+    
+<div class="main-header">
+    <h1 style="text-align: center;">Hola! {{ user.jerarquia_id_jerarquia.jerarquia }} {{ user.usuario }}</h1>
+    <div class="main-header__heading">¡Hola {{ user.nombres }} {{ user.apellidos }}!</div>
+</div>
+
+<div class="cartas-principales">
+
+    
+    {% if user.jerarquia_id_jerarquia.jerarquia == 'Subordinado' %}
+        <div class="carta-principal">
+            <a href="{% url 'AppWebHome:verTareas' %}?page=1" class="button button-1">
+                <img src="/static/img/iconos/tarea.png" alt="imagen de tareas" id="img-icono">
+                <br>
+                Ver Tareas
+            </a>
+        </div>
+    {% else %}
+    
+        <div class="carta-principal">
+            <a href="{% url 'AppWebHome:crudTarea' %}" class="button button-1">
+                <img src="/static/img/iconos/tarea.png" alt="imagen de tareas" id="img-icono">
+                <br>
+                CRUD Tareas
+            </a>
+        </div>
+
+        <div class="carta-principal">
+            <a href="{% url 'AppWebHome:login' %}" class="button button-2">
+                <img src="/static/img/iconos/usuarios.png" alt="imagen de usuarios" id="img-icono">
+                <br>
+                Subordinados
+            </a>
+        </div>
+
+    {% endif %}
+
+    <div class="carta-principal">
+        <a href="{% url 'AppWebHome:verFlujos' %}" class="button button-1">
+            <img src="/static/img/iconos/verFlujos.png" alt="imagen de flujos" id="img-icono">
+            <br>
+            Flujos
+        </a>
+    </div>
+
+    
+    {% if user.jerarquia_id_jerarquia.jerarquia == 'Gerente' %}
+        <!-- <div class="carta-principal"></div> -->
+        <div class="carta-principal">
+            <a href="" class="button button-1">
+                <img src="/static/img/iconos/panel-de-control.png" alt="Imagen para el panel de control" id="img-icono">
+                <br>
+                Panel de Control
+            </a>
+        </div>
+    {% endif %}
+        
+
+</div>
+
+{% endblock contenido %}
+    

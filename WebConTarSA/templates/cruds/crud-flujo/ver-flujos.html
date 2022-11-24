@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+    Ver Flujos
+{% endblock titulo %}
+
+{% block contenido %}
+{% load static %}
+
+<div class="cajon">
+
+    <div class="caja-arriba">
+
+        <div class="tabla-tareas">
+
+            <div class="cabecera">
+
+                <h2>Flujos hasta la fecha: {{ fechaActual }}</h2> 
+
+            </div>
+            <div class="row">
+
+                {% for f in flujos %}
+
+                <div class="column">
+                    <a href="{% url 'AppWebHome:detalleFlujo' f.id_flujo %}" class="card">
+                        <p class="cabecera-card">ID: {{ f.id_flujo }}</p>
+                        <div class="contenido-card">
+                            <textarea rows="2" cols="25" style="resize: none; cursor:pointer; font-size: 20px; text-align: center; font-family: monospace;" readonly>{{ f.nombre_flujo }}</textarea>
+                        </div>
+                    </a>
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="caja-abajo">
+
+        {% include 'includes/pagination.html' %}
+
+    </div>
+
+</div>
+
+
+{% endblock contenido %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Ver Tareas
+{% endblock titulo %}
+
+{% block contenido %}
+{% load static %}
+
+<div class="cajon">
+
+    <div class="caja-arriba">
+
+        <div class="tabla-tareas">
+
+            <div class="cabecera">
+
+                {% if user.rol_id_rol.id_rol != 1 %}
+                    <h2>Mis tareas hasta la fecha: {{ fechaActual }}</h2> 
+                {% else %}
+                    <h2>Tareas asignadas hasta la fecha: {{ fechaActual }}</h2>     
+                {% endif %}
+
+            </div>
+            <div class="row">
+
+                {% for t in tareas %}
+
+                <div class="column">
+                    <a href="{% url 'AppWebHome:detalleTarea' t.id_tarea %}" class="card">
+
+                        {% for dd in diferenciaDias %}
+
+                            {% if forloop.counter0 == forloop.parentloop.counter0 %}
+
+                                <p class="cabecera-card {% if dd < 0 %}bg-rojo{% elif dd < 7 and dd >= 0 %}bg-amarillo{% else %}bg-verde{% endif %}">{{t.fecha_inicio}} {{ dd }}- {{t.fecha_plazo}}</p>
+                                <div class="contenido-card">
+                                    <textarea rows="2" cols="25" style="resize: none; cursor:pointer; font-size: 20px; text-align: center; font-family: monospace;" readonly>{{t.tarea}}</textarea>
+                                </div>
+                                <p class="pie-card {% if dd < 0 %}bg-rojo{% elif dd < 7 and dd >= 0 %}bg-amarillo{% else %}bg-verde{% endif %}">
+                                    
+                                    {% for pa in porcentajeActual %}
+                                        
+                                        
+                                        {% if forloop.counter0 == forloop.parentloop.counter0 %}
+
+                                            {{ pa }}%
+                                            
+                                        {% endif %}
+                                            
+                                    {% endfor %}
+                                        
+                                </p>
+                            {% endif %}
+
+                        {% endfor %}
+
+                    </a>
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="caja-abajo">
+
+        {% include 'includes/pagination.html' %}
+
+    </div>
+
+</div>
+
+
+{% endblock contenido %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+    CRUD Rol
+{% endblock titulo %}
+    
+{% block contenido %}
+    {% load static %}
+
+    <div class="cajon">
+
+      <div class="caja-arriba">
+        
+        <div class="cartas-principales">
+          
+          <div class="carta-principal oculto"></div>
+          
+          <div class="carta-principal">
+            <a href="{% url 'AppWebHome:crearRol' %}" class="button button-2">
+              <img id="img-icono" src="/static/img/iconos/nuevoRol.png" alt="#"><br><br>Crear Nuevo Rol
+            </a>
+          
+          </div>
+          
+        </div>
+        
+      </div>
+  
+      <div class="caja-abajo">
+  
+        <div class="tarjeta-tabla" style="grid-template-columns: 300px;">
+  
+          <div class="tarjeta-tabla-titulo" style="background-color: orangered;"><h1>Roles</h1></div>
+  
+          <div class="tarjeta-tabla-texto" style="padding: 5px 25%; overflow-y: scroll;">
+  
+            <table cellpadding="0" cellspacing="0" border="0">
+  
+              <thead>
+                <tr>
+                  <th class="ID">ID</th>
+                  <th class="Nombre">Rol</th>
+                </tr>
+              </thead>
+  
+              <tbody>
+                {% for rol in roles %}
+                  <tr class="tr2">
+                    <td class="td2 ID">{{rol.id_rol}}</td>
+                    <td class="td2 Nombre">{{rol.rol}}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+  
+            </table>
+  
+          </div>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+  {% endblock contenido %}

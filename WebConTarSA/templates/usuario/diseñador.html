@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+{% block titulo %}
+    Funcionario
+{% endblock titulo %}
+
+
+{% block contenido %}
+{% load static %}
+
+<div class="main-header">
+    <h1 style="text-align: center;">Hola! Diseñador/a {{ user.usuario }}</h1>
+    <div class="main-header__heading">¡Hola {{ user.nombres }} {{ user.apellidos }}!</div>
+</div>
+
+<div class="cartas-principales">
+
+    <div class="carta-principal oculto"></div>
+    
+    <div class="carta-principal">
+        <a href="{% url 'AppWebHome:crudFlujo' %}" class="button button-1">
+            <img src="/static/img/iconos/flujo.png" alt="imagen de flujos" id="img-icono">
+            <br>
+            CRUD Flujos
+        </a>
+    </div>
+
+</div>
+
+{% endblock contenido %}
+    

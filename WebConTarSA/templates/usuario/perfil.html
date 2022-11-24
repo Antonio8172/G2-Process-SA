@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+
+{% block titulo %}
+
+    Perfil de {{ user.usuario }}
+
+{% endblock titulo %}
+
+{% block contenido %}
+
+    {% load static %}
+
+    <div class="cajon">
+
+        <div class="caja-arriba">
+
+            <div class="tarjeta-perfil">
+
+                <div class="tarjeta-perfil-imagen"></div>
+
+                <div class="tarjeta-texto">
+
+                    <span class="date">{{ user.rut }}</span>
+                    <h2>{{user.usuario}}</h2>
+                    <h3>Nombre Completo:</h3>
+                    <p>{{ user.nombres }} {{ user.apellidos }}</p>
+                    <h3>Contacto:</h3>
+                    <p>{{ user.correo }}</p>
+                    <p>{{ user.celular }}</p>
+                    <h3>Dirección:</h3>
+                    <p>{{ user.calle_id_calle.calle }}, {{ user.calle_id_calle.comuna_id_comuna.comuna }},</p>
+                    <p>{{ user.calle_id_calle.comuna_id_comuna.ciudad_id_ciudad.ciudad }}</p>
+                    <h3>Rol:</h3>
+                    <p>{{ user.rol_id_rol.rol }}</p>
+                    <h3>Unidad:</h3>
+                    <p>{{ user.unidad_id_unidad.unidad }}</p>
+                    <h3>Jerarquia:</h3>
+                    <p>{{ user.jerarquia_id_jerarquia.jerarquia }}</p>
+
+                </div>
+
+                <div class="tarjeta-perfil-stats">
+
+                    <div class="stat left">
+
+                        <div class="value">4<sup>m</sup></div>
+                        <div class="type">Tareas</div>
+
+                    </div>
+
+                    <div class="stat border">
+
+                        <div class="value">5123</div>
+                        <div class="type">Subordinados</div>
+
+                    </div>
+
+                    <div class="stat right">
+
+                        <div class="value">32</div>
+                        <div class="type">Flujos</div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock contenido %}

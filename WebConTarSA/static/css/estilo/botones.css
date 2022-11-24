@@ -1,0 +1,46 @@
+.btn-cerrar-1:hover {
+    box-shadow: 0 0 10px 0 white inset, 0 0 20px 2px white;
+    border: 3px solid white;
+    color: rgb(0, 0, 0);
+}
+.btn-icono-2:hover {
+    border-radius: 50%;
+    box-shadow: 0 0 10px 0 rgb(0, 0, 0) inset, 0 0 20px 2px rgb(0, 0, 0);
+    transform: scale( 1.05 );
+}
+
+.button {
+    width:100%;
+    cursor: pointer;
+    display: inline-block;
+    border: 3px solid white;
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 600;
+    -webkit-transition: all .15s ease-in-out;
+    transition: all .15s ease-in-out;
+}
+
+.button-1 {
+    background-color: rgb(97, 15, 173);
+}
+
+.button-1:hover {
+    transform: scale( 1.05 );
+    box-shadow: 0 0 10px 0 white inset, 0 0 20px 2px white;
+    border: 3px solid white;
+    color: white;
+}
+
+.button-2 {
+    background-color: orangered;
+}
+
+.button-2:hover {
+    transform: scale( 0.95 );
+    box-shadow: 0 0 10px 0 white inset, 0 0 20px 2px white;
+    border: 3px solid white;
+    color: white;
+}
