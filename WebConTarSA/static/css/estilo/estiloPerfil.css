@@ -1,0 +1,136 @@
+
+.form-perfil{
+    width: auto;
+    text-align: center;
+    border-radius: 12px;
+    border: 2px solid #9000ff;
+    font-family: monospace;
+    font-size: 16px;
+    color: black;
+    background-color: #ffffff00;
+    transition: all 0.25s ease;
+}
+
+.form-perfil:focus-visible, .form-perfil:hover{
+    background-color: #f5f5f5;
+    border: 1px solid #9000ff;
+}
+
+.h2{
+    font-size: 32px;
+    font-weight: bold;
+    color: black;
+}
+table.direccionPerfil{
+    width: 400px;
+    text-align: center;
+    
+    margin: 1px auto;
+}
+table.direccionPerfil:nth-child(1){
+    width: 200px;
+}
+table.direccionPerfil:nth-last-child(-n + 4){
+    width: 600px;
+}
+.tdDireccion p{
+    color: black;
+}
+hr.hrPerfil{
+    width: 650px;
+    border-color: #9000ff;
+}
+
+.campoPerfil {
+    position: relative;
+}
+.campoPerfil span {
+    position: absolute;
+    right: 75px;
+    top: 0px;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 2px 10px;
+    border-radius: 15px;
+    background-color: #9000ff;
+}
+
+.campoPerfil span:hover{
+    background-color: white;
+}
+
+div.callePerfil{
+    position: relative;
+}
+
+select.callePerfil{
+    width: 182px;
+    height: 21px;
+    z-index: 0;
+    border: 0px;
+    font-family: monospace;
+    font-size: 16px;
+    color: black;
+}
+
+.callePerfil select{
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* Eliminamos la fecha que por defecto aparece en el desplegable */
+.callePerfil select::-ms-expand {
+    display: none;
+}
+
+.callePerfil{
+    max-width: 100%;
+    position: relative;
+}
+
+.callePerfil select{
+    display: inline-block;
+    width: 100%;
+    cursor: pointer;
+    padding: 7px 10px;
+    height: 42px;
+    outline: 0; 
+    border: 0;
+    border-radius: 0;
+    background: #f0f0f000;
+    font-size: 1em;
+    color: black;
+    font-family: monospace;
+    border:2px solid #9000ff;
+    border-radius: 12px;
+    position: relative;
+    transition: all 0.25s ease;
+    margin: 1px auto;
+}
+
+.callePerfil select:hover{
+    background: #f5f5f5;
+}
+
+/* 
+Creamos la fecha que aparece a la izquierda del select.
+Realmente este elemento es un cuadrado que sólo tienen
+dos bordes con color y que giramos con transform: rotate(-45deg);
+*/
+.callePerfil i{
+    position: absolute;
+    right: 15px;
+    top: calc(50% - 13px);
+    width: 16px;
+    height: 16px;
+    display: block;
+    border-left:4px solid #9000ff;
+    border-bottom:4px solid #9000ff;
+    transform: rotate(-45deg); /* Giramos el cuadrado */
+    transition: all 0.25s ease;
+}
+
+.callePerfil:hover i{
+    margin-top: 3px;
+}

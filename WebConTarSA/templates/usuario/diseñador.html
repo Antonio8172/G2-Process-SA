@@ -9,6 +9,8 @@
 {% block contenido %}
 {% load static %}
 
+<link rel="stylesheet" href="{% static 'css/estilo/BGusuarios.css' %}">
+
 <div class="main-header">
     <h1 style="text-align: center;">Hola! Diseñador/a {{ user.usuario }}</h1>
     <div class="main-header__heading">¡Hola {{ user.nombres }} {{ user.apellidos }}!</div>
@@ -20,7 +22,7 @@
     
     <div class="carta-principal">
         <a href="{% url 'AppWebHome:crudFlujo' %}" class="button button-1">
-            <img src="/static/img/iconos/flujo.png" alt="imagen de flujos" id="img-icono">
+            <img src="/static/img/iconos app/flujo.png" alt="imagen de flujos" id="img-icono">
             <br>
             CRUD Flujos
         </a>

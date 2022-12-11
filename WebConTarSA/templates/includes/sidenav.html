@@ -1,6 +1,3 @@
-
-
-
     
 <aside class="sidenav">
     <div class="menu-icon">
@@ -11,13 +8,21 @@
     <!-- <div class="sidenav__close-icon">
       <i class="fa fa-minus-square fa-2x"></i>
     </div> -->
-
+<style>
+    .sidenav__icon {
+        width: 30px;
+        position: absolute;
+        top: 5px;
+        left: 5px;
+    }
+</style>
     
     {% if user.rol_id_rol.rol == 'Administrador' or user.rol_id_rol.rol == 'Diseñador de Procesos' or user.rol_id_rol.rol == 'Funcionario' or user.rol_id_rol.rol == 'Desarrollador' %}
 
         <ul class="sidenav__list-perfil">
             <a href="{% url 'AppWebHome:perfil' %}">
-                <li class="sidenav__list-item">
+                <li class="sidenav__list-item" style="position: relative;">
+                    <span><img src="/static/img/iconos app/perfilUsuario.png" alt="Imagen de perfil de usuario" class="sidenav__icon"></span>
                     <p class="fs-14px" style="margin: 0px;">{{ user.nombres }} {{ user.apellidos }}</p>
                     {% if user.rol_id_rol.rol == 'Funcionario' %}
                         <p class="fs-12px" style="margin: 0px;">{{ user.jerarquia_id_jerarquia.jerarquia }}</p>
@@ -30,68 +35,23 @@
 
         <ul class="sidenav__list">
     {% endif %}
-        
-        
-    <!-- Desarrollador -->
-    {% if user.rol_id_rol.rol == 'Desarrollador' %}
-
-        <a href="{% url 'AppWebHome:home' %}">
-            <li class="sidenav__list-item">Home</li>
-        </a>
-
-        <a href="{% url 'AppWebHome:login' %}">
-            <li class="sidenav__list-item">Iniciar Sesión</li>
-        </a>
-
-        <button class="accordion">Usuarios</button>
-        <div class="panel">
-            <a href="{% url 'AppWebHome:administrador' %}">
-                Administrador
-            </a>
-            <a href="{% url 'AppWebHome:funcionario' %}">
-                Funcionario
-            </a>
-            <a href="{% url 'AppWebHome:diseñador' %}">
-                Diseñador
-            </a>
-        </div>
-        
-        <button class="accordion">CRUDs</button>
-        <div class="panel">
-            <a href="{% url 'AppWebHome:crudUsuario' %}">
-                Usuarios
-            </a>
-            <a href="{% url 'AppWebHome:crudJerarquia' %}">
-                Jerarquias
-            </a>
-            <a href="{% url 'AppWebHome:crudUnidad' %}">
-                Unidads
-            </a>
-            <a href="{% url 'AppWebHome:crudRol' %}">
-                Roles
-            </a>
-            <a href="{% url 'AppWebHome:crudTarea' %}">
-                Tareas
-            </a>
-            <a href="{% url 'AppWebHome:crudFlujo' %}">
-                Flujos
-            </a>
-        </div>
-
-        <a href="{% url 'AppWebHome:prueba' %}">
-            <li class="sidenav__list-item">Prueba</li>
-        </a>
 
     <!-- Funcionario -->
-    {% elif user.rol_id_rol.rol == 'Funcionario' %}
+    {% if user.rol_id_rol.rol == 'Funcionario' %}
 
         <a href="{% url 'AppWebHome:funcionario' %}">
-            <li class="sidenav__list-item">Home</li>
+            <li class="sidenav__list-item">
+                <span><img src="/static/img/iconos app/home.png" alt="Imagen de home" class="sidenav__icon"></span>    
+                Home
+            </li>
         </a>
         
         {% if user.jerarquia_id_jerarquia.jerarquia == 'Gerente' or user.jerarquia_id_jerarquia.jerarquia == 'Funcionario' %}
 
-            <button class="accordion">CRUD Tarea</button>
+            <button class="accordion">
+                <span><img src="/static/img/iconos app/tareas.png" alt="Imagen del crud de tareas" class="sidenav__icon"></span>
+                CRUD Tarea
+            </button>
             <div class="panel">
 
                 <a href="{% url 'AppWebHome:crearTarea' %}">
@@ -105,24 +65,36 @@
             </div>
             
             <a href="{% url 'AppWebHome:verUsuarios' %}">
-                <li class="sidenav__list-item">Ver Subordinados</li>
+                <li class="sidenav__list-item">
+                    <span><img src="/static/img/iconos app/empleados1.png" alt="Imagen para ver subordinados" class="sidenav__icon"></span>
+                    Ver Subordinados
+                </li>
             </a>
         {% elif user.jerarquia_id_jerarquia.jerarquia == 'Subordinado' %}
         
             <a href="{% url 'AppWebHome:verTareas' %}?page=1">
-                <li class="sidenav__list-item">Ver mis Tareas</li>
+                <li class="sidenav__list-item">
+                    <span><img src="/static/img/iconos app/tareas.png" alt="Imagen para ver tareas" class="sidenav__icon"></span>    
+                    Ver mis Tareas
+                </li>
             </a>
 
         {% endif %}
 
         <a href="{% url 'AppWebHome:verFlujos' %}">
-            <li class="sidenav__list-item">Ver Flujos</li>
+            <li class="sidenav__list-item">
+                <span><img src="/static/img/iconos app/flujo.png" alt="Imagen para ver flujos" class="sidenav__icon"></span>    
+                Ver Flujos
+            </li>
         </a>
 
         
         {% if user.jerarquia_id_jerarquia.jerarquia == 'Gerente' %}
-            <a href="">
-                <li class="sidenav__list-item">Ver Panel de Control</li>
+            <a href="{% url 'AppWebHome:panelControl' %}">
+                <li class="sidenav__list-item">
+                    <span><img src="/static/img/iconos app/analitica.png" alt="Imagen para ver panel de control" class="sidenav__icon"></span>    
+                    Ver Panel de Control
+                </li>
             </a>
         {% endif %}
             
@@ -131,10 +103,16 @@
     {% elif user.rol_id_rol.rol == 'Diseñador de Procesos' %}
 
         <a href="{% url 'AppWebHome:diseñador' %}">
-            <li class="sidenav__list-item">Home</li>
+            <li class="sidenav__list-item">
+                <span><img src="/static/img/iconos app/home.png" alt="Imagen del home" class="sidenav__icon"></span>    
+                Home
+            </li>
         </a>
 
-        <button class="accordion">CRUD Flujo</button>
+        <button class="accordion">
+            <span><img src="/static/img/iconos app/flujo.png" alt="Imagen del crud de flujos" class="sidenav__icon"></span>    
+            CRUD Flujo
+        </button>
         <div class="panel">
 
             <a href="{% url 'AppWebHome:crearFlujo' %}">
@@ -151,10 +129,16 @@
     {% elif user.rol_id_rol.rol == 'Administrador' %}
 
         <a href="{% url 'AppWebHome:administrador' %}">
-            <li class="sidenav__list-item">Home</li>
+            <li class="sidenav__list-item">
+                <span><img src="/static/img/iconos app/home.png" alt="Imagen del home" class="sidenav__icon"></span>
+                Home
+            </li>
         </a>
 
-        <button class="accordion">CRUD Tarea</button>
+        <button class="accordion">
+            <span><img src="/static/img/iconos app/tareas.png" alt="Imagen del crud de tareas" class="sidenav__icon"></span>
+            CRUD Tarea
+        </button>
         <div class="panel">
 
             <a href="{% url 'AppWebHome:crearTarea' %}">
@@ -167,7 +151,10 @@
 
         </div>
 
-        <button class="accordion">CRUD Flujo</button>
+        <button class="accordion">
+            <span><img src="/static/img/iconos app/flujo.png" alt="Imagen del crud de flujos" class="sidenav__icon"></span>    
+            CRUD Flujo
+        </button>
         <div class="panel">
 
             <a href="{% url 'AppWebHome:crearFlujo' %}">
@@ -180,7 +167,10 @@
 
         </div>
 
-        <button class="accordion">CRUD Usuario</button>
+        <button class="accordion">
+            <span><img src="/static/img/iconos app/empleados.png" alt="Imagen del crud de usuarios" class="sidenav__icon"></span>
+            CRUD Usuario
+        </button>
         <div class="panel">
 
             <a href="{% url 'AppWebHome:crearUsuario' %}">
@@ -194,15 +184,24 @@
         </div>
 
         <a href="{% url 'AppWebHome:crudJerarquia' %}">
-            <li class="sidenav__list-item">CRUD Jerarquía</li>
+            <li class="sidenav__list-item">
+                <span><img src="/static/img/iconos app/jerarquia.png" alt="Imagen del crud de jerarquías" class="sidenav__icon"></span>
+                CRUD Jerarquía
+            </li>
         </a>
 
         <a href="{% url 'AppWebHome:crudRol' %}">
-            <li class="sidenav__list-item">CRUD Rol</li>
+            <li class="sidenav__list-item">
+                <span><img src="/static/img/iconos app/roles.png" alt="Imagen del crud de roles" class="sidenav__icon"></span>
+                CRUD Rol
+            </li>
         </a>
 
         <a href="{% url 'AppWebHome:crudUnidad' %}">
-            <li class="sidenav__list-item">CRUD Unidad</li>
+            <li class="sidenav__list-item">
+                <span><img src="/static/img/iconos app/unidad.png" alt="Imagen del crud de unidades" class="sidenav__icon"></span>
+                CRUD Unidad
+            </li>
         </a>
 
     {% else %}
@@ -210,11 +209,17 @@
         <ul class="sidenav__list" style="margin-top: 85px;">
 
             <a href="{% url 'AppWebHome:home' %}">
-                <li class="sidenav__list-item">Home</li>
+                <li class="sidenav__list-item">
+                    <span><img src="/static/img/iconos app/home.png" alt="Imagen del home class="sidenav__icon"></span>
+                    Home
+                </li>
             </a>
 
             <a href="{% url 'AppWebHome:login' %}">
-                <li class="sidenav__list-item">Iniciar Sesión</li>
+                <li class="sidenav__list-item">
+                    <span><img src="/static/img/iconos app/acceso.png" alt="Imagen para iniciar sesión" class="sidenav__icon"></span>
+                    Iniciar Sesión
+                </li>
             </a>
 
         </ul>
@@ -227,8 +232,21 @@
         <div class="sidenav__list-logout">
             <!-- margin-top: 290px; -->
             <a href="{% url 'AppWebHome:logout' %}">
-                <li class="sidenav__list-item">Cerrar Sesión</li>
+                <li class="sidenav__list-item">
+                    <span><img src="/static/img/iconos app/salida.png" alt="Imagen para cerrar sesión" class="sidenav__icon"></span>
+                    Cerrar Sesión
+                </li>
             </a>
+            <!-- <script>
+                
+                function salirSesion() {
+                        Swal.fire({
+                            "title": "Sesión cerrada",
+                            "text": "¡La sesión ha sido cerrada con éxito!",
+                            "icon": "success"
+                        })
+                }
+            </script> -->
         </div>
 
     {% endif %}

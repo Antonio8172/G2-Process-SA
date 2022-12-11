@@ -7,6 +7,8 @@
     
 {% block contenido %}
   {% load static %}
+  
+  <link rel="stylesheet" href="{% static 'css/estilo/BGcrud.css' %}">
 
   <div class="cajon">
 
@@ -14,21 +16,13 @@
       
       <div class="carta-principal">
         <a href="{% url 'AppWebHome:crearFlujo' %}" class="button button-1">
-          <!-- <div class="add-product-1" id="add-product-1">
-            <div class="button-copy-1" id="btn-copy-1"> -->
-              <img id="img-icono" src="/static/img/iconos/nuevoFlujo.png" alt="#"><br><br>Crear Nuevo Flujo
-            <!-- </div>
-          </div> -->
+              <img id="img-icono" src="/static/img/iconos app/editarFlujos.png" alt="#"><br><br>Crear Nuevo Flujo
         </a>
       </div>
       
       <div class="carta-principal">
-        <a href="{% url 'AppWebHome:verFlujos' %}" class="button button-2">
-          <!-- <div class="add-product-2" id="add-product-2">
-            <div class="button-copy-2" id="btn-copy-2"> -->
-              <img id="img-icono" src="/static/img/iconos/verFlujos.png" alt="#"><br><br>Ver Flujos
-            <!-- </div>
-          </div> -->
+        <a href="{% url 'AppWebHome:verFlujos' %}" class="button button-1">
+              <img id="img-icono" src="/static/img/iconos app/verFlujos.png" alt="#"><br><br>Ver Flujos
           </a>
       </div>
           

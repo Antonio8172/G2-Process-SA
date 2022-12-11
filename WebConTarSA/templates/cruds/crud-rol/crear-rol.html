@@ -6,10 +6,13 @@ Crear Rol
 {% endblock titulo %}
 
 {% block contenido %}
+
+    <link rel="stylesheet" href="{% static 'css/estilo/BGcrud.css' %}">
+
     <div class="cajon">
                 
         <a href="{% url 'AppWebHome:crudRol' %}" style="position:absolute; top:0; right:0;">
-            <img class="btn-cerrar-1" id="img-icono-2" src="/static/img/iconos/cerrar.png" alt="imagen para cerrar">
+            <img class="btn-cerrar-1" id="img-icono-2" src="/static/img/iconos app/volveer.png" alt="imagen para cerrar">
         </a>
 
         <div class="caja-arriba">
@@ -30,20 +33,20 @@ Crear Rol
                             </tbody>
                         </table>
                     </div>
-                    <div class="tarjeta-botones"  style="background-color: rgb(97, 15, 173);">
+                    <div class="tarjeta-botones">
                         <a href="{% url 'AppWebHome:crearRol' %}">
                             <div class="stat left">
-                                <img id="img-icono-2" src="/static/img/iconos/limpiar.png" alt="imagen para limpiar campos">
+                                <img id="img-icono-2" src="/static/img/iconos app/polvo.png" alt="imagen para limpiar campos">
                                 <div class="valor">Limpiar</div>
                             </div>
                         </a>
                         <button type="submit" class="stat border">
-                            <img src="/static/img/iconos/crear.png" alt="imagen para crear" id="img-icono-2">
+                            <img src="/static/img/iconos app/creaar.png" alt="imagen para crear" id="img-icono-2">
                             <div class="valor">Agregar</div>
                         </button>
                         <a href="{% url 'AppWebHome:crearRol' %}">
                             <div class="stat right">
-                                <img id="img-icono-2" src="/static/img/iconos/actualizar.png" alt="imagen para ver tareas">
+                                <img id="img-icono-2" src="/static/img/iconos app/actualizar.png" alt="imagen para ver tareas">
                                 <div class="valor">Actualizar</div>
                             </div>
                         </a>
@@ -77,7 +80,11 @@ Crear Rol
                                         <img src="/static/img/iconos/deshacer.png" alt="imagen para agregar a la tabla" id="img-icono-3">
                                     </button>
                                 </td> -->
-                                <td class="td1" style="width: 40px;"><a class="a1" href="borrar/{{ rol.id_rol }}">borrar</a></td>
+                                <td class="td1" style="width: 40px;">
+                                    <a class="a1" href="borrar/{{ rol.id_rol }}">
+                                        <img src="/static/img/iconos app/eliminar.png" alt="imagen para eliminar un rol" style="width: 20px;">        
+                                    </a>
+                                </td>
                                 </tr>
                             {% endfor %}
                         </tbody>

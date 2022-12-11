@@ -7,14 +7,16 @@
 
 {% block contenido %}
 
+<link rel="stylesheet" href="{% static 'css/estilo/BGcrud.css' %}">
+
 <div class="cajon">
     <a href="{% url 'AppWebHome:crudUsuario' %}" style="position:absolute; top:0; right:0;">
-        <img class="btn-cerrar-1"id="img-icono-2" src="/static/img/iconos/cerrar.png" alt="imagen para cerrar">
+        <img class="btn-cerrar-1"id="img-icono-2" src="/static/img/iconos app/volveer.png" alt="imagen para cerrar">
     </a>
     <div class="caja-arriba">
         <div class="tarjeta-form">
             <div class="tarjeta-titulo"><h2>Crear nuevo Usuario</h2></div>
-            <form method="POST" id="formulario-tarea"> {% csrf_token %}
+            <form method="POST" id="formulario-usuario"> {% csrf_token %}
                 <div class="tarjeta-texto">
                     <table style="padding: 2px 5%;">
                         <tbody>
@@ -90,20 +92,17 @@
                     </table>
                 </div>
                 <div class="tarjeta-botones">
-                    <a href="{% url 'AppWebHome:crearUsuario' %}">
-                        <div class="stat left">
-                            <img id="img-icono-2" src="/static/img/iconos/limpiar.png" alt="imagen para limpiar campos">
-                            <div class="valor">Limpiar</div>
-                        </div>
-                    </a>
-                    <button type="submit" class="stat border">
-                        <img src="/static/img/iconos/crear.png" alt="imagen para crear" id="img-icono-2">
-                        <!-- <input type="image" src="/static/img/iconos/crear.png" alt="imagen para crear" id="img-icono-2"> -->
+                    <button onclick="limpiarCamposUsuario()" type="button" class="stat left">
+                        <img id="img-icono-2" src="/static/img/iconos app/polvo.png" alt="imagen para limpiar campos">
+                        <div class="valor">Limpiar</div>
+                    </button>
+                    <button onclick="crearUsuario()" type="button" class="stat border">
+                        <img src="/static/img/iconos app/creaar.png" alt="imagen para crear" id="img-icono-2">
                         <div class="valor">Agregar</div>
                     </button>
                     <a href="{% url 'AppWebHome:verUsuarios' %}">
                         <div class="stat right">
-                            <img id="img-icono-2" src="/static/img/iconos/usuarios.png" alt="imagen para ver usuarios">
+                            <img id="img-icono-2" src="/static/img/iconos app/empleados1.png" alt="imagen para ver usuarios">
                             <div class="valor">Ver usuarios</div>
                         </div>
                     </a>
@@ -199,5 +198,59 @@
         </div>
     </div>
 </div>
+
+<script>
+    function limpiarCamposUsuario() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Al limpiar los campos, los datos ingresados se perderán para siempre :(.',
+                icon: 'warning',
+                showDenyButton: true,
+                denyButtonText: 'Si, limpiar',
+                confirmButtonText: 'No, cancelar',
+            }).then((result) => {
+                if (result.isDenied) {
+                    Swal.fire(
+                        '¡Limpio!',
+                        'Los campos del formulario están en blanco."',
+                        'success'
+                    )
+                    setTimeout(function(){ window.location.href = "{% url 'AppWebHome:crearUsuario' %}"; }, 1500);
+                } else if (result.isConfirmed) {
+                    Swal.fire(
+                        'Cancelado',
+                        'Los campos del formulario están a salvo :)',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        function crearUsuario() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Estás a punto de crear un nuevo usuario.',
+                icon: 'warning',
+                showDenyButton: true,
+                confirmButtonText: 'Si, crear',
+                denyButtonText: `No, cancelar`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        '¡Guardado!',
+                        'Se ha creado un nuevo usuario.',
+                        'success'
+                    )
+                    setTimeout(function(){ document.forms["formulario-usuario"].submit(); }, 1500);
+                } else if (result.isDenied) {
+                    Swal.fire(
+                        'Cancelado',
+                        'No se ha creado nada.',
+                        'info'
+                    )
+                }
+            })
+        }
+</script>
 {% endblock contenido %}
     

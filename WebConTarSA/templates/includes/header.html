@@ -26,7 +26,7 @@
 
     {% endif %}
 
-      <img src="/static/img/iconos/home.png" alt="ir a home" id="img-icono-2" class="btn-icono-2">
+      <img src="/static/img/iconos app/home.png" alt="ir a home" id="img-icono-2" class="btn-icono-2">
     </a>
 
   </div>
@@ -36,17 +36,17 @@
     {% if user.rol_id_rol.id_rol == 1 or user.rol_id_rol.id_rol == 2 or user.rol_id_rol.id_rol == 3 or user.rol_id_rol.id_rol == 4 %}
 
       <a href="{% url 'AppWebHome:perfil' %}" style="margin-right: 15px;">
-        <img src="/static/img/iconos/usuario.png" alt="ir al perfil" id="img-icono-2" class="btn-icono-2">
+        <img src="/static/img/iconos app/perfilUsuario.png" alt="ir al perfil" id="img-icono-2" class="btn-icono-2">
       </a>
 
       <a href="{% url 'AppWebHome:logout' %}">
-        <img src="/static/img/iconos/logout.png" alt="Salir de sesión" id="img-icono-2" class="btn-icono-2">
+        <img src="/static/img/iconos app/salida.png" alt="Salir de sesión" id="img-icono-2" class="btn-icono-2">
       </a>
 
     {% else %}
 
       <a href="{% url 'AppWebHome:login' %}">
-        <img src="/static/img/iconos/login.png" alt="Iniciar sesión" id="img-icono-2" class="btn-icono-2">
+        <img src="/static/img/iconos app/acceso.png" alt="Iniciar sesión" id="img-icono-2" class="btn-icono-2">
       </a>
 
     {% endif %}

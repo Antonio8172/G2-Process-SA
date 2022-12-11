@@ -12,7 +12,21 @@ from django.db.models import Q
 
 class UsuarioManager(models.Manager):
 
-    def crear_usuario(self, nombreUsuario, contraUsuario, nombresUsuario, apellidosUsuario, rutUsuario, correoUsuario, celularUsuario, idCalle, idJerarquia, idRol, idUnidad, **extra_fields):
+    def crear_usuario(
+                    self, 
+                    nombreUsuario, 
+                    contraUsuario, 
+                    nombresUsuario, 
+                    apellidosUsuario, 
+                    rutUsuario, 
+                    correoUsuario, 
+                    celularUsuario, 
+                    idCalle, 
+                    idJerarquia, 
+                    idRol, 
+                    idUnidad, 
+                    **extra_fields
+                ):
         usuario = self.create(
             usuario                 = nombreUsuario,
             contraseña              = contraUsuario,
@@ -28,15 +42,6 @@ class UsuarioManager(models.Manager):
             **extra_fields
         )
         return usuario
-
-    # Persona
-    # def traer_datos_persona_id(self, personid):
-    #     return self.filter(
-    #         id_persona = personid
-    #     ).values_list()
-
-    # def traer_datos_persona(self):
-    #     return self.all()
 
     # Usuario
     def traer_datos_usuario(self, username, password):

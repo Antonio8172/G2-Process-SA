@@ -1,0 +1,39 @@
+{% load static %}
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% if messages %}
+    {% for m in messages %}
+        {% if m.tags == 'success' %}
+        <script>
+            Swal.fire({
+                "title": "{{m}}",
+                "text": "¡La acción realizada ha sido exitosa!",
+                "icon": "{{m.tags}}"
+            })
+        </script>
+        {% elif m.tags == 'error' %}
+        <script>
+            Swal.fire({
+                "title": "{{m}}",
+                "text": "¡Se ha producido un error!",
+                "icon": "{{m.tags}}"
+            })
+        </script>
+        {% elif m.tags == 'info' %}
+        <script>
+            Swal.fire({
+                "title": "{{m}}",
+                "text": "¡Acción realizada no se ha concretado!",
+                "icon": "{{m.tags}}"
+            })
+        </script>
+        {% elif m.tags == 'warning' %}
+        <script>
+            Swal.fire({
+                "title": "{{m}}",
+                "text": "¡Ha habido un problema!",
+                "icon": "{{m.tags}}"
+            })
+        </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}

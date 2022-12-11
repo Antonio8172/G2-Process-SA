@@ -31,3 +31,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # LOGIN SETTINGS
 LOGIN_REDIRECT_URL = '/home'
 LOGIN_URL = '/login'
+
+#Email settings
+EMAIL_HOST          = 'smtp.gmail.com'
+EMAIL_PORT          = 587
+EMAIL_HOST_USER     = 'Process.SA.BotCorreo@gmail.com'
+EMAIL_HOST_PASSWORD = 'yurfzeoygsezxqdq'
+EMAIL_USE_TLS       = True

@@ -2,228 +2,130 @@
 # Importaciones necesarias
 #----------------------------------------------------------------------------------------------------------------#
 
-from http.client import HTTPResponse
-from re import template
-from webbrowser import get
-from django.shortcuts import render
-from django.urls import reverse_lazy, reverse
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
-from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView, ListView, FormView, DetailView, View
-from .models import *
-from .forms import *
-from .functions import *
+from django.urls                import reverse_lazy, reverse
+from django.contrib.auth        import logout
+from django.contrib             import messages
+from django.http                import HttpResponseRedirect
+from django.views.generic       import TemplateView, ListView, FormView, DetailView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.template import loader
+from .models    import *
+from .forms     import *
+from .functions import *
 
 #----------------------------------------------------------------------------------------------------------------#
 # Principales
 #----------------------------------------------------------------------------------------------------------------#
 
-# Página principal
-class HomeListView(ListView):
-    model = Usuario
+# Vista de la página principal o home.
+class HomeListView(TemplateView):
     template_name = "principal/home.html"
 
-# Login
+# Vista del login.
 class LoginView(FormView):
     template_name = "principal/login.html"
-    form_class = LoginForm
-    success_url = reverse_lazy("AppWebHome:home")
-
+    form_class    = LoginForm
+    success_url   = reverse_lazy("AppWebHome:home")
+    # Validación del formulario para ingresar al sistema como un usuario.
     def form_valid(self, form):
         nomUsuario = form.cleaned_data['usuario']
         contraseña = form.cleaned_data['contraseña']
+        usuario    = Usuario.objects.usuario_exists(nomUsuario, contraseña)
+        return Login.login_autenticacion(self, usuario, nomUsuario, contraseña)
 
-        usuario = Usuario.objects.usuario_exists(nomUsuario, contraseña)
-
-        if(usuario):
-            rol_id = Usuario.objects.traer_datos_usuario(nomUsuario, contraseña)[0][10]
-            is_rol = Rol.objects.is_rol_nombre(rol_id)
-
-        if(usuario and is_rol):
-            autUsuario = authenticate(username=nomUsuario, password=contraseña)
-
-            if(autUsuario is not None):
-                login(self.request, autUsuario)
-                rol = self.request.user.rol_id_rol.id_rol
-                # return super(LoginView, self).form_valid(form)
-                if( rol == 4 ):
-                    return HttpResponseRedirect(reverse('AppWebHome:prueba'))
-                elif( rol == 3 ):
-                    return HttpResponseRedirect(reverse('AppWebHome:funcionario'))
-                elif( rol == 2 ):
-                    return HttpResponseRedirect(reverse('AppWebHome:diseñador'))
-                elif( rol == 1 ):
-                    return HttpResponseRedirect(reverse('AppWebHome:administrador'))
-                else:
-                    return HttpResponseRedirect(reverse('AppWebHome:perfil'))
-                    
-            else:
-                return HttpResponseRedirect(reverse('AppWebHome:login'))
-
-        else:
-            return HttpResponseRedirect(reverse('AppWebHome:login'))
-
+# Vista del perfil de Usuario.
+class PerfilListView(LoginRequiredMixin, ListView):
+    model               = Usuario
+    template_name       = "usuario/perfil.html"
+    context_object_name = "usuario"
+    # Obtención de otros datos.
+    def get_context_data(self, *args, **kwargs):
+        context             = super().get_context_data(**kwargs)
+        context["calles"]   = Calle.objects.all().order_by('calle')
+        context["comunas"]  = Comuna.objects.all()
+        context["ciudades"] = Ciudad.objects.all()
+        context["regiones"] = Region.objects.all()
+        return context
+    # Permite editar el perfil de usuario.
+    def editar_perfil(request):
+        return ModificacionesModelos.editar_perfil(request)
 
 #----------------------------------------------------------------------------------------------------------------#
 # Usuarios
 #----------------------------------------------------------------------------------------------------------------#
 
+# Vista del home del administrador.
 class AdministradorView(LoginRequiredMixin, TemplateView):
     template_name = "usuario/administrador.html"
-    # def get() redireccionar dependiendo del rol
+    # Sólo permite ingresar a esta página los usuarios con el rol de administrador.
+    def get(self, request, *args, **kwargs):
+        permiso = request.user.rol_id_rol.rol
+        rol     = 'Administrador'
+        if permiso == rol:
+            return super(AdministradorView, self).get(request, *args, **kwargs)
+        else:
+            return Login.verificar_permisos_rol(permiso, request)
 
-    # ------------------------------------------------------------------------------------------------------------------
-    # ------------------------------------------------------------------------------------------------------------------
-    # ------------------------------------------------------------------------------------------------------------------
-    # ------------------------------------------------------------------------------------------------------------------
-    # ------------------------------------------------------------------------------------------------------------------
+# Vista del home del funcionario.
+class FuncionarioView(LoginRequiredMixin, TemplateView):
+    template_name       = "usuario/funcionario.html"
+    # Sólo permite ingresar a esta página los usuarios con el rol de funcionario.
+    def get(self, request, *args, **kwargs):
+        permiso = request.user.rol_id_rol.rol
+        rol     = 'Funcionario'
+        if permiso == rol:
+            return super(FuncionarioView, self).get(request, *args, **kwargs)
+        else:
+            return Login.verificar_permisos_rol(permiso, request)
 
-
-class FuncionarioView(LoginRequiredMixin, ListView):
-    model = Usuario
-    template_name = "usuario/funcionario.html"
-    context_object_name = "usuario"
-
+# Vista del home del diseñador.
 class DiseñadorView(LoginRequiredMixin, TemplateView):
     template_name = "usuario/diseñador.html"
+    # Sólo permite ingresar a esta página los usuarios con el rol de Diseñador.
+    def get(self, request, *args, **kwargs):
+        permiso = request.user.rol_id_rol.rol
+        rol     = 'Diseñador de Procesos'
+        if permiso == rol:
+            return super(DiseñadorView, self).get(request, *args, **kwargs)
+        else:
+            return Login.verificar_permisos_rol(permiso, request)
 
-class PerfilListView(LoginRequiredMixin, ListView):
-    model = Usuario
-    template_name = "usuario/perfil.html"
-    context_object_name = "usuario"
 
 
 #----------------------------------------------------------------------------------------------------------------#
 # CRUDs
 #----------------------------------------------------------------------------------------------------------------#
 
+
 #-----------------------------#
 # crud tareas                 #
 #-----------------------------#
+
+# Vista general del Crud de tareas.
 class CRUDTareaView(LoginRequiredMixin, TemplateView):
-    model               = Tarea
-    template_name       = "cruds/crud-tarea/crud_tarea.html"
-    context_object_name = "tareas"
+    template_name = "cruds/crud-tarea/crud_tarea.html"
 
-
-class TareaDetailView(LoginRequiredMixin, DetailView):
-    model = Tarea
-    template_name = "cruds/crud-tarea/detalle-tarea.html"
-    context_object_name = "tarea"
-
-    # Obtención de otros datos
-    def get_context_data(self, *args, **kwargs):
-        context             = super().get_context_data(**kwargs)
-        context["usuarios"] = Usuario.objects.traer_datos_usuarios()
-        context["flujos"]   = Flujo.objects.traer_datos_flujo()
-        tareaActual         = Tarea.objects.tareas_id(self.kwargs.get('pk'))
-        opFec   = OperacionesFechas
-        for t in tareaActual:
-            fechaPlazo = t.fecha_plazo
-            context["dd"]   = opFec.diferencia_dias(fechaPlazo)
-            
-        context["fechaActual"]      = opFec.fecha_actual()
-        return context
-
-    def eliminar_tarea(request, pk):
-        tarea = Tarea.objects.get(id_tarea=pk)
-        tarea.delete()
-        return HttpResponseRedirect(reverse('AppWebHome:verTareas')+"?page=1")
-
-class VerTareaView(LoginRequiredMixin, ListView):
-    model               = Tarea
-    paginate_by         = 9
-    template_name       = "cruds/crud-tarea/ver-tarea.html"
-    context_object_name = "tareas"
-
-    def get_queryset(self): # llena el context_object_name con los datos que traigo
-        rol = self.request.user.rol_id_rol.rol
-        # jerar = self.request.user.jerarquia_id_jerarquia.jerarquia
-
-        if rol != 'Administrador':
-            datos = Tarea.objects.tareas_usuarios(self.request.user.id_usuario).order_by('-id_tarea')
-        else:
-            datos = Tarea.objects.all().order_by('-id_tarea')
-
-        return datos
-
-    def get_context_data(self, **kwargs):
-        opFec   = OperacionesFechas
-        idRol = self.request.user.rol_id_rol.id_rol
-
-        if idRol != 1:
-            tareas  = Tarea.objects.tareas_usuarios(self.request.user.id_usuario).order_by('-id_tarea')
-        else:
-            tareas  = Tarea.objects.all().order_by('-id_tarea')
-        
-        pagina = int(self.request.GET['page'])
-        indiceInicio = OperacionesPaginas.calcular_indice_inicio(pagina)
-        indiceFinal = OperacionesPaginas.calcular_indice_final(pagina)
-        
-        context = super().get_context_data(**kwargs)
-        dd = []
-        pa = []
-        i = 0
-        for t in tareas:
-            if i < indiceFinal:
-                fechaInicio = t.fecha_inicio
-                fechaPlazo = t.fecha_plazo
-                dd.append(opFec.diferencia_dias(fechaPlazo))
-                pa.append(opFec.porcentaje_actual(fechaInicio, fechaPlazo))
-                i = i+1
-            else:
-                nada ="nada"
-        i = indiceInicio
-        # print(i)
-        # print(dd)
-        del dd[0:i]
-        del pa[0:i]
-
-        # print(dd)
-        context["diferenciaDias"]       = dd 
-        context["porcentajeActual"]     = pa 
-        context["fechaActual"]          = opFec.fecha_actual()
-        return context
-
-
+# Vista para crear una tarea.
 class TareaCreateView(LoginRequiredMixin, FormView):
-    model = Tarea
-    form_class      = TareaForm
-    template_name   = "cruds/crud-tarea/crear-tarea.html"
-    success_url     = reverse_lazy("AppWebHome:crearTarea")
-
-    # Validación del formulario
+    model         = Tarea
+    form_class    = TareaForm
+    template_name = "cruds/crud-tarea/crear-tarea.html"
+    success_url   = reverse_lazy("AppWebHome:crearTarea")
+    # Validación del formulario y posterior creación de tarea.
     def form_valid(self, form):
-        idUsuario   = Usuario(self.request.POST.get('id_usuario'))
+        id_user     = self.request.POST.get('id_usuario')
         idFlujo     = Flujo(self.request.POST.get('flujo_id_flujo'))
-        idEstado    = Estado(2)
         datos       = form.cleaned_data
         if idFlujo != None:
-
-            Tarea.objects.crear_tarea(
-                datos['tarea'],
-                datos['descripcion'],
-                datos['fecha_inicio'],
-                datos['fecha_plazo'],
-                idUsuario,
-                idFlujo,
-                porcentaje_cumplido = 0,
-                estado_id_estado    = idEstado,
-                )
+            ModificacionesModelos.crear_tarea(datos, id_user, idFlujo)
+            Correo.notificar_nueva_tarea(id_user)
             return super(TareaCreateView, self).form_valid(form)
-
         else:
             return HttpResponseRedirect(reverse('AppWebHome:home'))
-
-    # Formulario inválido
+    # Formulario inválido.
     def form_invalid(self, form):
         self.request.session['acusete'] = 'form inválido'
         return super(TareaCreateView, self).form_invalid(form)
-
-    # Obtención de otros datos
+    # Obtención de otros datos.
     def get_context_data(self, *args, **kwargs):
         context             = super().get_context_data(**kwargs)
         context["usuarios"] = Usuario.objects.traer_datos_usuarios()
@@ -231,148 +133,173 @@ class TareaCreateView(LoginRequiredMixin, FormView):
         context["tareas"]   = Tarea.objects.all()
         return context
 
+# Vista para ver todas las tareas.
+class VerTareaView(LoginRequiredMixin, ListView):
+    model               = Tarea
+    paginate_by         = 9
+    template_name       = "cruds/crud-tarea/ver-tarea.html"
+    context_object_name = "tareas"
+    # Llenado de la información que almacena la variable 'context_object_name'.
+    def get_queryset(self):
+        return FuncionesTareas.lista_tareas_rol(self)
+    # Obtención de otros datos.
+    def get_context_data(self, **kwargs):
+        context                     = super().get_context_data(**kwargs)
+        dictDdPa                    = FuncionesTareas.dict_dd_pa(self)
+        context["diferenciaDias"]   = dictDdPa['dd'] 
+        context["porcentajeActual"] = dictDdPa['pa']
+        context["fechaActual"]      = OperacionesFechas.fecha_actual()
+        return context
+
+# Vista para ver el detalle de la tarea.
+class TareaDetailView(LoginRequiredMixin, DetailView):
+    model               = Tarea
+    template_name       = "cruds/crud-tarea/detalle-tarea.html"
+    context_object_name = "tarea"
+    # Obtención de otros datos.
+    def get_context_data(self, *args, **kwargs):
+        context             = super().get_context_data(**kwargs)
+        tareaActual         = Tarea.objects.tareas_id(self.kwargs.get('pk'))
+        for t in tareaActual:
+            fechaPlazo         = t.fecha_plazo
+            context["dd"]      = OperacionesFechas.diferencia_dias(fechaPlazo)
+        context["usuarios"]    = Usuario.objects.traer_datos_usuarios()
+        context["flujos"]      = Flujo.objects.traer_datos_flujo()
+        context["fechaActual"] = OperacionesFechas.fecha_actual()
+        return context
+    # Permite editar la tarea.
+    def editar_tarea(request):
+        return ModificacionesModelos.editar_tarea(request)
+    # Permite eliminar la tarea.
+    def eliminar_tarea(request, pk):
+        return ModificacionesModelos.borrar_tarea(request, pk)
 
 
 #-----------------------------#
 # crud flujos                 #
 #-----------------------------#
+
+# Vista general del Crud de flujos.
 class CRUDFlujoView(LoginRequiredMixin, TemplateView):
-    model           = Flujo
     template_name   = "cruds/crud-flujo/crud_flujo.html"
 
+# Vista para crear un flujo.
 class FlujoCreateView(LoginRequiredMixin, FormView):
     model           = Flujo
     form_class      = FlujoForm
     template_name   = "cruds/crud-flujo/crear-flujo.html"
     success_url     = reverse_lazy("AppWebHome:crearFlujo")
-
-    # Validación del formulario
+    # Validación del formulario y posterior creación de flujo.
     def form_valid(self, form):
         idEstado     = Estado(self.request.POST.get('estado_id_estado'))
         datos        = form.cleaned_data
         if idEstado != None:
-
-            Flujo.objects.crear_flujo(
-                datos['nombre_flujo'],
-                datos['descripcion'],
-                idEstado,
-                )
+            ModificacionesModelos.crear_flujo(datos, idEstado)
             return super(FlujoCreateView, self).form_valid(form)
-
         else:
             return HttpResponseRedirect(reverse('AppWebHome:home'))
-
-    # Formulario inválido
+    # Formulario inválido.
     def form_invalid(self, form):
         self.request.session['acusete'] = 'form inválido'
         return super(FlujoCreateView, self).form_invalid(form)
-
-    # Obtención de otros datos
+    # Obtención de otros datos.
     def get_context_data(self, *args, **kwargs):
         context             = super().get_context_data(**kwargs)
         context["estados"]  = Estado.objects.traer_datos_estado()
         return context
-
+    
+# Vista para ver todos los flujos.
 class FlujoListView(LoginRequiredMixin, ListView):
     model               = Flujo
     template_name       = "cruds/crud-flujo/ver-flujos.html"
     context_object_name = "flujos"
-
+    # Obtención de otros datos.
     def get_context_data(self, **kwargs):
-        opFec                   = OperacionesFechas
-        context                 = super().get_context_data(**kwargs)
-        context["fechaActual"]  = opFec.fecha_actual()
+        context                = super().get_context_data(**kwargs)
+        context["fechaActual"] = OperacionesFechas.fecha_actual()
         return context
 
+# Vista para ver el detalle del flujo.
 class FlujoDetailView(LoginRequiredMixin, DetailView):
     model               = Flujo
     template_name       = "cruds/crud-flujo/detalle-flujo.html"
     context_object_name = "flujo"
-
+    # Obtención de otros datos.
     def get_context_data(self, *args, **kwargs):
-        opFec                   = OperacionesFechas
         context                 = super().get_context_data(**kwargs)
         context["estados"]      = Estado.objects.traer_datos_estado()
-        context["tareas"]      = Tarea.objects.all()
-        context["fechaActual"]  = opFec.fecha_actual()
+        context["tareas"]       = Tarea.objects.all()
+        context["fechaActual"]  = OperacionesFechas.fecha_actual()
         return context
+
 
 #-----------------------------#
 # crud jerarquías             #
 #-----------------------------#
+
+# Vista general del Crud de jerarquías.
 class CRUDJerarquiaView(LoginRequiredMixin, ListView):
-    model           = Jerarquia
-    template_name   = "cruds/crud-jerarquia/crud_jerarquia.html"
+    model               = Jerarquia
+    template_name       = "cruds/crud-jerarquia/crud_jerarquia.html"
     context_object_name = "jerarquias"
 
+# Vista para crear, editar y borrar una jerarquía.
 class JerarquiaCreateView(LoginRequiredMixin, FormView):
     model           = Jerarquia
     form_class      = JerarquiaForm
     template_name   = "cruds/crud-jerarquia/crear-jerarquia.html"
     success_url     = reverse_lazy("AppWebHome:crearJerarquia")
-
-    # Validación del formulario
+    # Validación del formulario y posterior creación de una jerarquía.
     def form_valid(self, form):
         datos = form.cleaned_data
-        Jerarquia.objects.crear_jerarquia(
-            datos['jerarquia'],
-            )
+        ModificacionesModelos.crear_jerarquia(datos)
         return super(JerarquiaCreateView, self).form_valid(form)
-
-    # Formulario inválido
+    # Formulario inválido.
     def form_invalid(self, form):
         self.request.session['acusete'] = 'form inválido'
         return super(JerarquiaCreateView, self).form_invalid(form)
-
-    # Obtención de otros datos
+    # Obtención de otros datos.
     def get_context_data(self, *args, **kwargs):
         context                 = super().get_context_data(**kwargs)
-        opFec                   = OperacionesFechas
-        context["fechaActual"]  = opFec.fecha_actual()
+        context["fechaActual"]  = OperacionesFechas.fecha_actual()
         context["jerarquias"]   = Jerarquia.objects.traer_datos_jerarquia()
         return context
-
+    # Eliminación de una jerarquía.
     def eliminar_jerarquia(request, id):
-        jerarquia = Jerarquia.objects.get(id_jerarquia=id)
-        jerarquia.delete()
-        return HttpResponseRedirect(reverse('AppWebHome:crearJerarquia'))
+        return ModificacionesModelos.borrar_jerarquia(request, id)
 
 
 #-----------------------------#
 # crud roles                  #
 #-----------------------------#
+
+# Vista general del Crud de roles.
 class CRUDRolView(LoginRequiredMixin, ListView):
     model           = Rol
     template_name   = "cruds/crud-rol/crud_rol.html"
     context_object_name = "roles"
 
+# Vista para crear, editar y borrar un rol.
 class RolCreateView(LoginRequiredMixin, FormView):
     model           = Rol
     form_class      = RolForm
     template_name   = "cruds/crud-rol/crear-rol.html"
     success_url     = reverse_lazy("AppWebHome:crearRol")
-
     # Validación del formulario
     def form_valid(self, form):
         datos = form.cleaned_data
-        Rol.objects.crear_rol(
-            datos['rol'],
-            )
+        Rol.objects.crear_rol(datos['rol'],)
         return super(RolCreateView, self).form_valid(form)
-
     # Formulario inválido
     def form_invalid(self, form):
         self.request.session['acusete'] = 'form inválido'
         return super(RolCreateView, self).form_invalid(form)
-
     # Obtención de otros datos
     def get_context_data(self, *args, **kwargs):
         context                 = super().get_context_data(**kwargs)
-        opFec                   = OperacionesFechas
-        context["fechaActual"]  = opFec.fecha_actual()
+        context["fechaActual"]  = OperacionesFechas.fecha_actual()
         context["roles"]        = Rol.objects.all()
         return context
-
     def eliminar_rol(request, id):
         rol = Rol.objects.get(id_rol=id)
         rol.delete()
@@ -410,8 +337,7 @@ class UnidadCreateView(LoginRequiredMixin, FormView):
     # Obtención de otros datos
     def get_context_data(self, *args, **kwargs):
         context                 = super().get_context_data(**kwargs)
-        opFec                   = OperacionesFechas
-        context["fechaActual"]  = opFec.fecha_actual()
+        context["fechaActual"]  = OperacionesFechas.fecha_actual()
         context["unidades"]     = Unidad.objects.traer_datos_unidad()
         return context
 
@@ -480,9 +406,8 @@ class UsuarioListView(LoginRequiredMixin, ListView):
     context_object_name = "usuarios"
 
     def get_context_data(self, **kwargs):
-        opFec                   = OperacionesFechas
         context                 = super().get_context_data(**kwargs)
-        context["fechaActual"]  = opFec.fecha_actual()
+        context["fechaActual"]  = OperacionesFechas.fecha_actual()
         return context
 
 
@@ -491,9 +416,50 @@ class UsuarioDetailView(LoginRequiredMixin, DetailView):
     template_name = "cruds/crud-usuario/detalle-usuario.html"
     context_object_name = "usuario"
 
+    # Obtención de otros datos
+    def get_context_data(self, **kwargs):
+        context                 = super().get_context_data(**kwargs)
+        context["calles"]       = Calle.objects.all()
+        context["jerarquias"]   = Jerarquia.objects.all()
+        context["roles"]        = Rol.objects.all()
+        context["unidades"]     = Unidad.objects.all()
+        return context
+
+    def editar_usuario(request):
+
+        id_usuario = request.POST['id_usuario']
+        nomUsuario = request.POST['usuario']
+        contraUsuario = request.POST['contra']
+        nombres = request.POST['nombres']
+        apellidos = request.POST['apellidos']
+        rut = request.POST['rut']
+        correo = request.POST['correo']
+        celular = request.POST['celular']
+        id_calle = request.POST['calle']
+        id_rol = request.POST['rol']
+        id_unidad = request.POST['unidad']
+        id_jerarquia = request.POST['jerarquia']
+
+        usuario = Usuario.objects.get(id_usuario=id_usuario)
+        usuario.usuario                     = nomUsuario
+        usuario.contraseña                  = contraUsuario
+        usuario.nombres                     = nombres
+        usuario.apellidos                   = apellidos
+        usuario.rut                         = rut
+        usuario.correo                      = correo
+        usuario.celular                     = celular 
+        usuario.calle_id_calle_id           = id_calle
+        usuario.rol_id_rol_id               = id_rol
+        usuario.unidad_id_unidad_id         = id_unidad
+        usuario.jerarquia_id_jerarquia_id   = id_jerarquia
+
+        usuario.save()
+        return HttpResponseRedirect('/detalle-usuario/'+id_usuario+'/')
+
     def eliminar_usuario(request, pk):
         usuario = Usuario.objects.get(id_usuario=pk)
         usuario.delete()
+        messages.success(request, 'El usuario se ha borrado con éxito')
         return HttpResponseRedirect(reverse('AppWebHome:verUsuarios'))
 #----------------------------------------------------------------------------------------------------------------#
 # Prueba/Test
@@ -526,4 +492,28 @@ class PruebaView(LoginRequiredMixin, TemplateView):
 class LogoutView(View):
     def get(self, request):
         logout(request)
+        messages.success(request, 'Se ha cerrado la sesión correctamente.')
         return HttpResponseRedirect(reverse('AppWebHome:login'))
+
+class PanelControlView(LoginRequiredMixin, ListView):
+    model = Tarea
+    template_name = 'principal/panelControl.html'
+    context_object_name = "tareas"
+
+    
+    # Obtención de otros datos
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+
+        context['cantTareas'] = CantidadTareas.color_RGY()
+
+        context['cantUnidades'] = CantidadTareas.unidad_color_RGY()
+        context['ultimoCantUnidad'] = len(CantidadTareas.unidad_color_RGY())
+
+        context['cantidadJerarquias'] = CantidadTareas.jerarquia()
+        context['ultimoCantJerar'] = len(CantidadTareas.jerarquia())
+        
+        return context
+    
+

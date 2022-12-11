@@ -11,62 +11,367 @@
 
     {% load static %}
 
+    <link rel="stylesheet" href="{% static 'css/estilo/BGcrud.css' %}">
+    <link rel="stylesheet" href="{% static 'css/estilo/estiloPerfil.css' %}">
+
     <div class="cajon">
+
+        <a href="{% url 'AppWebHome:verUsuarios' %}" style="position:absolute; top:0; right:0;">
+            <img class="btn-cerrar-1"id="img-icono-2" src="/static/img/iconos app/volveer.png" alt="imagen para cerrar">
+        </a>
 
         <div class="caja-arriba">
 
-            <div class="tarjeta-perfil" style="grid-template-rows: 120px 490px 88px;">
+            <div class="tarjeta-perfil">
 
                 <div class="tarjeta-perfil-imagen"></div>
+                <form id="formulario-usuario" action="{% url 'AppWebHome:editarUsuario' %}" method="POST">{% csrf_token %}
 
-                <div class="tarjeta-texto">
+                    <div class="tarjeta-texto">
 
-                    <span class="c-azul">{{ usuario.rut }}</span>
-                    <h2>{{usuario.usuario}}</h2>
-                    <h3>Contraseña:</h3>
-                    <p>{{ usuario.contraseña }}</p>
-                    <h3>Nombre Completo:</h3>
-                    <p>{{ usuario.nombres }} {{ usuario.apellidos }}</p>
-                    <h3>Contacto:</h3>
-                    <p>{{ usuario.correo }}</p>
-                    <p>{{ usuario.celular }}</p>
-                    <h3>Dirección:</h3>
-                    <p>{{ usuario.calle_id_calle.calle }}, {{ usuario.calle_id_calle.comuna_id_comuna.comuna }},</p>
-                    <p>{{ usuario.calle_id_calle.comuna_id_comuna.ciudad_id_ciudad.ciudad }}</p>
-                    <h3>Rol:</h3>
-                    <p>{{ usuario.rol_id_rol.rol }}</p>
-                    <h3>Unidad:</h3>
-                    <p>{{ usuario.unidad_id_unidad.unidad }}</p>
-                    <h3>Jerarquia:</h3>
-                    <p>{{ usuario.jerarquia_id_jerarquia.jerarquia }}</p>
+                        <hr class="hrPerfil">
+                        <input type="hidden" name="id_usuario" id="id_usuario" value="{{ usuario.id_usuario }}">
 
-                </div>
+                        <input type="text" name="rut" id="rut" class="c-verde fs-13px form-perfil" value="{{ usuario.rut }}">
 
-                <div class="tarjeta-perfil-stats sbg-azul">
+                        <br>
 
-                    <a href="{% url 'AppWebHome:verUsuarios' %}">
-                        <div class="stat left">
-                            <img id="img-icono-2" src="/static/img/iconos/deshacer.png" alt="imagen para crear">
-                            <div class="valor">Volver</div>
+                        <input type="text" name="usuario" id="usuario" class="form-perfil h2" value="{{ usuario.usuario }}">
+
+                        <h3>Contraseña:</h3>
+                        <div class="campoPerfil">
+                            <input type="password" name="contra" id="contra" class="form-perfil" value="{{ usuario.contraseña }}">
+                            <span class="show">Mostrar</span>
                         </div>
-                    </a>
-                    <div class="stat border">
-                        <img id="img-icono-2" src="/static/img/iconos/actualizar.png" alt="imagen para crear">
-                        <div class="valor">Actualizar</div>
+
+                        <hr class="hrPerfil">
+
+                        <h2>Nombre Completo</h2>
+
+                        <table class="direccionPerfil">
+
+                            <tr class="trDireccion">
+                                <td class="tdDireccion"><h3>Nombres:</h3></td>
+                                <td class="tdDireccion"><h3>Apellidos:</h3></td>
+                            </tr>
+
+                            <tr class="trDireccion">
+                                <td class="tdDireccion"><input type="text" name="nombres"   id="nombres"   class="form-perfil" value="{{ usuario.nombres }}"></td>
+                                <td class="tdDireccion"><input type="text" name="apellidos" id="apellidos" class="form-perfil" value="{{ usuario.apellidos }}"></td>
+                            </tr>
+
+                        </table>
+
+                        <hr class="hrPerfil">
+
+                        <h2>Contacto</h2>
+
+                        <table class="direccionPerfil">
+
+                            <tr class="trDireccion">
+                                <td class="tdDireccion"><h3>Correo:</h3></td>
+                                <td class="tdDireccion"><h3>Celular:</h3></td>
+                            </tr>
+
+                            <tr class="trDireccion">
+                                <td class="tdDireccion"><input type="text" name="correo"  id="correo"  class="form-perfil" value="{{ usuario.correo }}"></td>
+                                <td class="tdDireccion"><input type="text" name="celular" id="celular" class="form-perfil" value="{{ usuario.celular }}"></td>
+                            </tr>
+
+                        </table>
+
+                        <hr class="hrPerfil">
+
+                        <h2>Dirección</h2>
+
+                        <table class="direccionPerfil">
+
+                            <tr class="trDireccion">
+                                <td class="tdDireccion"><h3>Calle:</h3></td>
+                            </tr>
+
+                            <tr class="trDireccion">
+                                <!-- <td class="tdDireccion"><input type="text" name="calleDireccion"  id="calleDireccion"  class="form-perfil" value="{{ usuario.calle_id_calle.calle }}"></td> -->
+                                <td class="tdDireccion">
+                                    <div class="callePerfil">
+                                        <select name="calle" id="calle" class="callePerfil">
+                                            <option value="{{ usuario.calle_id_calle.id_calle }}" selected>{{ usuario.calle_id_calle.calle }}</option>
+                                            
+                                            {% for c in calles %}
+                                                
+                                                {% if  c.id_calle  !=  usuario.calle_id_calle.id_calle  %}
+                                                    <option value="{{ c.id_calle }}">{{ c.calle }}</option>
+                                                {% endif %}
+                                                    
+                                            {% endfor %}
+                                            <!-- <option>Otro... </option> -->
+
+                                        </select>
+                                        <!-- <input class="callePerfil" type="text" placeholder="Otro...(escribir)" id="other-text"> -->
+                                        <i></i>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <table class="direccionPerfil">
+                            <tr class="trDireccion">
+                                <td class="tdDireccion"><h3>Comuna:</h3></td>
+                                <td class="tdDireccion"><h3>Ciudad:</h3></td>
+                                <td class="tdDireccion"><h3>Región:</h3></td>
+                            </tr>
+
+                            <tr class="trDireccion">
+                                <td class="tdDireccion"><p>{{ usuario.calle_id_calle.comuna_id_comuna.comuna }}</p></td>
+                                <td class="tdDireccion"><p>{{ usuario.calle_id_calle.comuna_id_comuna.ciudad_id_ciudad.ciudad }}</p></td>
+                                <td class="tdDireccion"><p>{{ usuario.calle_id_calle.comuna_id_comuna.ciudad_id_ciudad.region_id_region.region }}</p></td>
+                            </tr>
+
+                        </table>
+
+                        <hr class="hrPerfil">
+
+                        <h2>Cargo</h2>
+
+                        <table class="direccionPerfil">
+                            
+                            {% if usuario.rol_id_rol.rol == 'Administrador' or usuario.rol_id_rol.rol == 'Diseñador de Procesos' %}
+
+                                <tr class="trDireccion">
+                                    <td class="tdDireccion"><h3>Rol:</h3></td>
+                                </tr>
+
+                                <tr class="trDireccion">
+                                    <td class="tdDireccion">
+                                        <div class="callePerfil">
+                                            <select name="rol" id="rol" class="callePerfil">
+                                                <option value="{{ usuario.rol_id_rol.id_rol }}" selected>{{ usuario.rol_id_rol.rol }}</option>
+                                                
+                                                {% for r in roles %}
+                                                    
+                                                    {% if  r.id_rol  !=  usuario.rol_id_rol.id_rol  %}
+                                                        <option value="{{ r.id_rol }}">{{ r.rol }}</option>
+                                                    {% endif %}
+                                                        
+                                                {% endfor %}
+                                            </select>
+                                            <i></i>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <input type="hidden" name="unidad"    id="unidad"    value="{{ usuario.unidad_id_unidad.id_unidad }}">
+                                <input type="hidden" name="jerarquia" id="jerarquia" value="{{ usuario.jerarquia_id_jerarquia.id_jerarquia }}">
+
+                            {% else %}
+
+                                <tr class="trDireccion">
+                                    <td class="tdDireccion"><h3>Rol:</h3></td>
+                                    <td class="tdDireccion"><h3>Unidad:</h3></td>
+                                    <td class="tdDireccion"><h3>Jerarquia:</h3></td>
+                                </tr>
+
+                                <tr class="trDireccion">
+                                    <td class="tdDireccion">
+                                        <div class="callePerfil">
+                                            <select name="rol" id="rol" class="callePerfil">
+                                                <option value="{{ usuario.rol_id_rol.id_rol }}" selected>{{ usuario.rol_id_rol.rol }}</option>
+                                                
+                                                {% for r in roles %}
+                                                    
+                                                    {% if  r.id_rol  !=  usuario.rol_id_rol.id_rol  %}
+                                                        <option value="{{ r.id_rol }}">{{ r.rol }}</option>
+                                                    {% endif %}
+                                                        
+                                                {% endfor %}
+                                            </select>
+                                            <i></i>
+                                        </div>
+                                    </td>
+                                    <td class="tdDireccion">
+                                        <div class="callePerfil">
+                                            <select name="unidad" id="unidad" class="callePerfil">
+                                                <option value="{{ usuario.unidad_id_unidad.id_unidad }}" selected>{{ usuario.unidad_id_unidad.unidad }}</option>
+                                                
+                                                {% for u in unidades %}
+                                                    
+                                                    {% if  u.id_unidad  !=  usuario.unidad_id_unidad.id_unidad  %}
+                                                        <option value="{{ u.id_unidad }}">{{ u.unidad }}</option>
+                                                    {% endif %}
+                                                        
+                                                {% endfor %}
+                                            </select>
+                                            <i></i>
+                                        </div>
+                                    </td>
+                                    <td class="tdDireccion">
+                                        <div class="callePerfil">
+                                            <select name="jerarquia" id="jerarquia" class="callePerfil">
+                                                <option value="{{ usuario.jerarquia_id_jerarquia.id_jerarquia }}" selected>{{ usuario.jerarquia_id_jerarquia.jerarquia }}</option>
+                                                
+                                                {% for j in jerarquias %}
+                                                    
+                                                    {% if  j.id_jerarquia  !=  usuario.jerarquia_id_jerarquia.id_jerarquia  %}
+                                                        <option value="{{ j.id_jerarquia }}">{{ j.jerarquia }}</option>
+                                                    {% endif %}
+                                                        
+                                                {% endfor %}
+                                            </select>
+                                            <i></i>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            {% endif %}
+
+                        </table>
+
                     </div>
-                    <a href="/borrrar/{{ usuario.id_usuario }}">
-                        <div class="stat right">
-                            <img id="img-icono-2" src="/static/img/iconos/borrar.png" alt="imagen para crear">
-                            <div class="valor">Borrar</div>
-                        </div>
-                    </a>
 
-                </div>
 
+                    <div class="tarjeta-perfil-stats">
+                        
+                        {% if user.rol_id_rol.rol == 'Administrador' %}
+                            <button onclick="deshacerCambiosUsuario()" type="button" class="stat left">
+                                <img id="img-icono-2" src="/static/img/iconos app/deshacer.png" alt="imagen para crear">
+                                <div class="valor">Deshacer</div>
+                            </button>
+                            <button onclick="actualizarUsuario()" type="button" class="stat border">
+                                <img id="img-icono-2" src="/static/img/iconos app/actualizar.png" alt="imagen para crear">
+                                <div class="valor">Actualizar</div>
+                            </button>
+                            <button onclick="borrarUsuario()" type="button" class="stat right">
+                                <img id="img-icono-2" src="/static/img/iconos app/eliminar.png" alt="imagen para crear">
+                                <div class="valor">Borrar</div>
+                            </button>
+                        {% elif user.rol_id_rol.rol == 'Funcionario' %}
+                            <a href="{% url 'AppWebHome:verUsuarios' %}">
+                                <div class="stat left">
+                                    <img id="img-icono-2" src="/static/img/iconos app/deshacer.png" alt="imagen para ver cantidad de tareas">
+                                    <div class="valor">Volver</div>
+                                </div>
+                            </a>
+                            <a href="{% url 'AppWebHome:verTareas' %}?page=1"><!-- Cambiar a ver tareas usuarios  -->
+                                <div class="stat border">
+                                    <img id="img-icono-2" src="/static/img/iconos app/tareas.png" alt="imagen para crear">
+                                    <div class="valor">Cantidad Tareas</div>
+                                </div>
+                            </a>
+                            <div class="stat right">
+                                <img id="img-icono-2" src="/static/img/iconos app/empleados.png" alt="imagen para crear">
+                                
+                                {% if usuario.jerarquia_id_jerarquia.jerarquia == 'Subordinado' %}
+
+                                    <div class="valor">No posee Subordinados</div>
+
+                                {% else %}
+
+                                    <div class="valor">Cantidad Subordinados</div>
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+                </form>
             </div>
 
         </div>
 
     </div>
+    <script>
+        document.querySelector('.campoPerfil span').addEventListener('click', e => {
+            const passwordInput = document.querySelector('#contra');
+            if (e.target.classList.contains('show')) {
+                e.target.classList.remove('show');
+                e.target.textContent = 'Ocultar';
+                passwordInput.type = 'text';
+            } else {
+                e.target.classList.add('show');
+                e.target.textContent = 'Mostrar';
+                passwordInput.type = 'password';
+            }
+        });
+
+        function deshacerCambiosUsuario() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Al deshacer los cambios, los datos volverán a ser los originales.',
+                icon: 'warning',
+                showDenyButton: true,
+                denyButtonText: 'Si, deshacer',
+                confirmButtonText: 'No, cancelar',
+            }).then((result) => {
+                if (result.isDenied) {
+                    Swal.fire(
+                        '¡Deshecho!',
+                        'Los cambios realizados en el usuario "{{ usuario.usuario }} se deshicieron."',
+                        'success'
+                    )
+                    setTimeout(function(){ window.location.href = "{% url 'AppWebHome:detalleUsuario' usuario.id_usuario %}"; }, 1500);
+                } else if (result.isConfirmed) {
+                    Swal.fire(
+                        'Cancelado',
+                        'Los cambios en el usuario "{{ usuario.usuario }}" están a salvo :)',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        function actualizarUsuario() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Actualizar el usuario "{{ usuario.usuario }}" será permanente.',
+                icon: 'warning',
+                showDenyButton: true,
+                confirmButtonText: 'Si, actualizar',
+                denyButtonText: `No, cancelar`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        '¡Guardado!',
+                        'El usuario "{{ usuario.usuario }}" ha sido actualizada.',
+                        'success'
+                    )
+                    setTimeout(function(){ document.forms["formulario-usuario"].submit(); }, 1500);
+                } else if (result.isDenied) {
+                    Swal.fire(
+                        'Cancelado',
+                        'Los cambios no fueron guardados.',
+                        'info'
+                    )
+                }
+            })
+        }
+
+        function borrarUsuario() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Borrar el usuario "{{ usuario.usuario }}" será permanente.',
+                icon: 'warning',
+                showDenyButton: true,
+                denyButtonText: 'Si, borrar',
+                confirmButtonText: 'No, cancelar',
+            }).then((result) => {
+                if (result.isDenied) {
+
+                    window.location.href = "/borrar-usuario/{{ usuario.id_usuario }}";
+
+                } else if (result.isConfirmed) {
+                    Swal.fire(
+                        'Cancelado',
+                        'El usuario "{{ usuario.usuario }}" está a salvo :)',
+                        'error'
+                    )
+                }
+            })
+
+            
+        }
+    </script>
 
 {% endblock contenido %}

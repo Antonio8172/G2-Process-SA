@@ -7,9 +7,11 @@
 
 {% block contenido %}
 
+<link rel="stylesheet" href="{% static 'css/estilo/BGcrud.css' %}">
+
 <div class="cajon">
     <a href="{% url 'AppWebHome:crudTarea' %}" style="position:absolute; top:0; right:0;">
-        <img class="btn-cerrar-1"id="img-icono-2" src="/static/img/iconos/cerrar.png" alt="imagen para cerrar">
+        <img class="btn-cerrar-1"id="img-icono-2" src="/static/img/iconos app/volveer.png" alt="imagen para cerrar">
     </a>
     <div class="caja-arriba">
         <div class="tarjeta-form">
@@ -48,7 +50,19 @@
                                     {% for u in usuarios %}
                                         
                                         {% if u.rol_id_rol.rol != 'Administrador' and u.rol_id_rol.rol != 'Diseñador de Procesos' %}
-                                            <option value="{{u.id_usuario}}">{{u.id_usuario}} - {{u.usuario}}</option>
+
+                                            {% if user.rol_id_rol.rol == 'Funcionario' and user.jerarquia_id_jerarquia.jerarquia == 'Funcionario' %}
+
+                                                {% if u.jerarquia_id_jerarquia.jerarquia != 'Gerente' and u.jerarquia_id_jerarquia.jerarquia != 'Funcionario' %}
+                                                    <option value="{{ u.id_usuario }}|{{ u.nombres }}">{{u.id_usuario}} - {{u.usuario}}</option>
+                                                {% endif %}
+
+                                            {% else %}
+
+                                                <option value="{{u.id_usuario}}">{{u.id_usuario}} - {{u.usuario}}</option>
+
+                                            {% endif %}
+
                                         {% endif %}
                                             
                                     {% endfor %}
@@ -69,20 +83,17 @@
                     </table>
                 </div>
                 <div class="tarjeta-botones">
-                    <a href="{% url 'AppWebHome:crearTarea' %}">
-                        <div class="stat left">
-                            <img id="img-icono-2" src="/static/img/iconos/limpiar.png" alt="imagen para limpiar campos">
-                            <div class="valor">Limpiar</div>
-                        </div>
-                    </a>
-                    <button type="submit" class="stat border">
-                        <img src="/static/img/iconos/crear.png" alt="imagen para crear" id="img-icono-2">
-                        <!-- <input type="image" src="/static/img/iconos/crear.png" alt="imagen para crear" id="img-icono-2"> -->
+                    <button onclick="limpiarCampos()" type="button" class="stat left">
+                        <img id="img-icono-2" src="/static/img/iconos app/polvo.png" alt="imagen para limpiar campos">
+                        <div class="valor">Limpiar</div>
+                    </button>
+                    <button onclick="crearTarea()" type="button" class="stat border">
+                        <img src="/static/img/iconos app/creaar.png" alt="imagen para crear" id="img-icono-2">
                         <div class="valor">Agregar</div>
                     </button>
                     <a href="{% url 'AppWebHome:verTareas' %}?page=1">
                         <div class="stat right">
-                            <img id="img-icono-2" src="/static/img/iconos/tarea.png" alt="imagen para ver tareas">
+                            <img id="img-icono-2" src="/static/img/iconos app/tareas.png" alt="imagen para ver tareas">
                             <div class="valor">Ver tareas</div>
                         </div>
                     </a>
@@ -102,7 +113,7 @@
                   <p>Jerarquía: jerarquía</p>
                   <p>Rol: rol</p>
                </div>
-               <div class="tarjeta-stats" style="background-color: orange;">
+               <div class="tarjeta-stats">
                   <div class="stat left">
                      <div class="value">Cantidad</div>
                      <div class="type">Tareas</div>
@@ -124,9 +135,9 @@
             function changeFunc() {
                 var selectBox = document.getElementById("id_usuario");
                 let selectedValue = selectBox.options[selectBox.selectedIndex].value;
-                alert(selectedValue) // alerta para verificar que obtiene el id del usuario
+                // alert(selectedValue) // alerta para verificar que obtiene el id del usuario
                 document.getElementById("prueba").innerHTML =   '{% for u in usuarios %}'+
-                                                                    '{% with iduserid='+selectedValue+' %}'+
+                                                                    '{% with iduserid=7 %}'+
                                                                         '{% if u.id_usuario == iduserid %}'+
                                                                             '<div class="tarjeta">'+
                                                                                 '<div class="tarjeta-imagen"></div>'+
@@ -139,7 +150,7 @@
                                                                                     '<p>Jerarquía: {{ u.jerarquia_id_jerarquia.jerarquia }}</p>'+
                                                                                     '<p>Rol: {{ u.rol_id_rol.rol }}</p>'+
                                                                                 '</div>'+
-                                                                                '<div class="tarjeta-stats" style="background-color: orange;">'+
+                                                                                '<div class="tarjeta-stats">'+
                                                                                     '<div class="stat left">'+
                                                                                         '<div class="value">4<sup>m</sup></div>'+
                                                                                         '<div class="type">Tareas</div>'+
@@ -160,12 +171,64 @@
 
             }
             
+            function limpiarCampos() {
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: 'Al limpiar los campos, los datos ingresados se perderán para siempre :(.',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    denyButtonText: 'Si, limpiar',
+                    confirmButtonText: 'No, cancelar',
+                }).then((result) => {
+                    if (result.isDenied) {
+                        Swal.fire(
+                            '¡Limpio!',
+                            'Los campos del formulario están en blanco."',
+                            'success'
+                        )
+                        setTimeout(function(){ window.location.href = "{% url 'AppWebHome:crearTarea' %}"; }, 1500);
+                    } else if (result.isConfirmed) {
+                        Swal.fire(
+                            'Cancelado',
+                            'Los campos del formulario están a salvo :)',
+                            'error'
+                        )
+                    }
+                })
+            }
+
+            function crearTarea() {
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: 'Estás a punto de crear una nueva tarea.',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    confirmButtonText: 'Si, crear',
+                    denyButtonText: `No, cancelar`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                            '¡Guardado!',
+                            'Se ha creado una nueva tarea.',
+                            'success'
+                        )
+                        setTimeout(function(){ document.forms["formulario-tarea"].submit(); }, 1500);
+                    } else if (result.isDenied) {
+                        Swal.fire(
+                            'Cancelado',
+                            'No se ha creado nada.',
+                            'info'
+                        )
+                    }
+                })
+            }
+
         </script>
     </div>
     <div class="caja-abajo">
         <div class="tarjeta-tabla" style="grid-template-columns: 100%;">
   
-            <div class="tarjeta-tabla-titulo" style="background-color: orange;"><h1>Flujos</h1></div>
+            <div class="tarjeta-tabla-titulo"><h1>Flujos</h1></div>
     
             <div class="tarjeta-tabla-texto" style="padding: 5px 5%; overflow-y: scroll;">
     

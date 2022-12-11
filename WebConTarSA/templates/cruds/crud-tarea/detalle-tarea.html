@@ -7,6 +7,8 @@
 
 {% block contenido %}
 
+<link rel="stylesheet" href="{% static 'css/estilo/BGcrud.css' %}">
+
 <div class="cajon">
     <a href="{% url 'AppWebHome:verTareas' %}?page=1" style="position:absolute; top:0; right:0;">
         <img class="btn-cerrar-1"id="img-icono-2" src="/static/img/iconos/cerrar.png" alt="imagen para cerrar">
@@ -17,7 +19,7 @@
             <div class="tarjeta-titulo sbg-{% if dd >= 7 %}verde{% elif dd < 7 and dd >= 0 %}amarillo{% else %}rojo{% endif %}">
                     <textarea name="" id="" cols="30" rows="2" style="resize: none; border: 0px;font-size: 24px; text-align: center; font-family: monospace; width: 330px; height: 55px; margin-top: 5px;color: white; background-color: rgba(255, 255, 255, 0);" readonly>{{ tarea.tarea }}</textarea>
             </div>
-            <form method="POST" id="formulario-tarea"> {% csrf_token %}
+            <form method="POST" id="formulario-tarea" action="{% url 'AppWebHome:editarTarea' %}"> {% csrf_token %}
                 <div class="tarjeta-texto">
                     <table style="padding: 21px 5%;">
                         <tbody>
@@ -42,14 +44,14 @@
                             </tr>
                             <tr>
                                 <td><input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ tarea.fecha_inicio|date:'Y-m-d' }}"></td>
-                                <td><input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ tarea.fecha_plazo|date:'Y-m-d' }}"></td>
+                                <td><input type="date" name="fecha_plazo" id="fecha_plazo" value="{{ tarea.fecha_plazo|date:'Y-m-d' }}"></td>
                             </tr>
                             <tr>
                                 <td>ID Persona Asignada:</td>
-                                <td><select name="usuario_persona_id_persona" class="form-control" required id="usuario_persona_id_persona">
+                                <td><select name="id_usuario" class="form-control" required id="id_usuario">
                                     <option value="{{ tarea.usuario_id_usuario.id_usuario }}" selected>- {{ tarea.usuario_id_usuario.id_usuario }} - {{ tarea.usuario_id_usuario.nombres }}-</option>
                                     {% for u in usuarios %}
-                                        <option value="{{u.persona_id_persona.id_persona}}">{{u.persona_id_persona.id_persona}} - {{u.usuario}}</option>
+                                        <option value="{{u.id_usuario}}">{{u.id_usuario}} - {{u.usuario}}</option>
                                     {% endfor %}
                                 </select></td>
                             </tr>
@@ -66,24 +68,109 @@
                     </table>
                 </div>
                 <div class="tarjeta-botones sbg-{% if dd >= 7 %}verde{% elif dd < 7 and dd >= 0 %}amarillo{% else %}rojo{% endif %}">
-                    <a href="{% url 'AppWebHome:detalleTarea' tarea.id_tarea %}">
-                        <div class="stat left">
-                            <img id="img-icono-2" src="/static/img/iconos/deshacer.png" alt="imagen para crear">
-                            <div class="valor">Deshacer</div>
-                        </div>
-                    </a>
-                    <div class="stat border">
-                        <img id="img-icono-2" src="/static/img/iconos/actualizar.png" alt="imagen para crear">
+                    
+                    <button onclick="deshacerCambios()" type="button" class="stat left">
+                        <img id="img-icono-2" src="/static/img/iconos app/deshacer.png" alt="imagen para deshacer">
+                        <div class="valor">Deshacer</div>
+                    </button>
+
+                    <button onclick="actualizarTarea()" type="button" class="stat border">
+
+                        <img id="img-icono-2" src="/static/img/iconos app/actualizar.png" alt="imagen para actualizar">
                         <div class="valor">Actualizar</div>
-                    </div>
-                    <a href="/borrar/{{ tarea.id_tarea }}">
-                        <div class="stat right">
-                            <img id="img-icono-2" src="/static/img/iconos/borrar.png" alt="imagen para crear">
-                            <div class="valor">Borrar</div>
-                        </div>
-                    </a>
+
+                    </button>
+
+                    <button onclick="borrarTarea()" type="button" class="stat right">
+
+                        <img id="img-icono-2" src="/static/img/iconos app/eliminar.png" alt="imagen para borrar">
+                        <div class="valor">Borrar</div>
+
+                    </button>
+
                 </div>
+
             </form>
+
+            <script>
+
+                function deshacerCambios() {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: 'Al deshacer los cambios, los datos volverán a ser los originales.',
+                        icon: 'warning',
+                        showDenyButton: true,
+                        denyButtonText: 'Si, deshacer',
+                        confirmButtonText: 'No, cancelar',
+                    }).then((result) => {
+                        if (result.isDenied) {
+                            Swal.fire(
+                                '¡Deshecho!',
+                                'Los cambios realizados en la tarea "{{ tarea.tarea }} se deshicieron."',
+                                'success'
+                            )
+                            setTimeout(function(){ window.location.href = "{% url 'AppWebHome:detalleTarea' tarea.id_tarea %}"; }, 1500);
+                        } else if (result.isConfirmed) {
+                            Swal.fire(
+                                'Cancelado',
+                                'Los cambios en la tarea "{{ tarea.tarea }}" están a salvo :)',
+                                'error'
+                            )
+                        }
+                    })
+                }
+
+                function actualizarTarea() {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: 'Actualizar la tarea "{{ tarea.tarea }}" será permanente.',
+                        icon: 'warning',
+                        showDenyButton: true,
+                        confirmButtonText: 'Si, actualizar',
+                        denyButtonText: `No, cancelar`,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire(
+                                '¡Guardado!',
+                                'La tarea "{{ tarea.tarea }}" ha sido actualizada.',
+                                'success'
+                            )
+                            setTimeout(function(){ document.forms["formulario-tarea"].submit(); }, 1500);
+                        } else if (result.isDenied) {
+                            Swal.fire(
+                                'Cancelado',
+                                'Los cambios no fueron guardados.',
+                                'info'
+                            )
+                        }
+                    })
+                }
+
+                function borrarTarea() {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: 'Borrar la tarea "{{ tarea.tarea }}" será permanente.',
+                        icon: 'warning',
+                        showDenyButton: true,
+                        denyButtonText: 'Si, borrar',
+                        confirmButtonText: 'No, cancelar',
+                    }).then((result) => {
+                        if (result.isDenied) {
+
+                            window.location.href = "/borrar-tarea/{{ tarea.id_tarea }}";
+
+                        } else if (result.isConfirmed) {
+                            Swal.fire(
+                                'Cancelado',
+                                'La tarea "{{ tarea.tarea }}" está a salvo :)',
+                                'error'
+                            )
+                        }
+                    })
+
+                    
+                }
+            </script>
         </div>
         <div class="xd">
             

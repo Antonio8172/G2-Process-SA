@@ -6,15 +6,18 @@ Crear Jerarquía
 {% endblock titulo %}
 
 {% block contenido %}
+
+    <link rel="stylesheet" href="{% static 'css/estilo/BGcrud.css' %}">
+
     <div class="cajon">
         
         <a href="{% url 'AppWebHome:crudJerarquia' %}" style="position:absolute; top:0; right:0;">
-            <img class="btn-cerrar-1" id="img-icono-2" src="/static/img/iconos/cerrar.png" alt="imagen para cerrar">
+            <img class="btn-cerrar-1" id="img-icono-2" src="/static/img/iconos app/volveer.png" alt="imagen para cerrar">
         </a>
 
         <div class="caja-arriba">
             <div class="tarjeta-form" style="grid-template-rows: 65px 102px 89px;">
-                <div class="tarjeta-titulo" style="background-color: orangered;"><h2>Crear nueva jerarquía</h2></div>
+                <div class="tarjeta-titulo" style="background-color: rgb(97, 15, 173);"><h2>Crear nueva jerarquía</h2></div>
                 <form method="POST"> {% csrf_token %}
                     <div class="tarjeta-texto">
                         <table style="padding: 25px 8%;">
@@ -30,20 +33,20 @@ Crear Jerarquía
                             </tbody>
                         </table>
                     </div>
-                    <div class="tarjeta-botones" style="background-color: orangered;">
+                    <div class="tarjeta-botones">
                         <a href="{% url 'AppWebHome:crearJerarquia' %}">
                             <div class="stat left">
-                                <img id="img-icono-2" src="/static/img/iconos/limpiar.png" alt="imagen para eliminar datos">
+                                <img id="img-icono-2" src="/static/img/iconos app/polvo.png" alt="imagen para eliminar datos">
                                 <div class="valor">Limpiar</div>
                             </div>
                         </a>
                         <button type="submit" class="stat border">
-                            <img src="/static/img/iconos/crear.png" alt="imagen para crear datos" id="img-icono-2">
+                            <img src="/static/img/iconos app/creaar.png" alt="imagen para crear datos" id="img-icono-2">
                             <div class="valor">Agregar</div>
                         </button>
                         <a href="{% url 'AppWebHome:crearJerarquia' %}">
                             <div class="stat right">
-                                <img id="img-icono-2" src="/static/img/iconos/actualizar.png" alt="imagen para actualizar datos">
+                                <img id="img-icono-2" src="/static/img/iconos app/actualizar.png" alt="imagen para actualizar datos">
                                 <div class="valor">Actualizar</div>
                             </div>
                         </a>
@@ -52,7 +55,7 @@ Crear Jerarquía
             </div>
             <div class="tarjeta-tabla" style="grid-template-columns: 300px;">
 
-                <div class="tarjeta-tabla-titulo" style="background-color: orangered;"><h1>Jerarquías</h1></div>
+                <div class="tarjeta-tabla-titulo" style="background-color: rgb(97, 15, 173);"><h1>Jerarquías</h1></div>
         
                 <div class="tarjeta-tabla-texto" style="padding: 5px 10%; overflow-y: scroll;">
         
@@ -69,15 +72,19 @@ Crear Jerarquía
             
                         <tbody>
                             {% for jerarquia in jerarquias %}
-                                <tr class="tr2">
-                                <td class="td2 ID">{{jerarquia.id_jerarquia}}</td>
-                                <td class="td2 Nombre">{{jerarquia.jerarquia}}</td>
-                                <!-- <td class="td2" style="padding-left: 20px;">
-                                    <button>
-                                        <img src="/static/img/iconos/deshacer.png" alt="imagen para agregar a la tabla" id="img-icono-3">
-                                    </button>
-                                </td> -->
-                                <td class="td2" style="width: 40px;"><a class="a2" href="borrar/{{ jerarquia.id_jerarquia }}">borrar</a></td>
+                                <tr class="tr1">
+                                    <td class="td1 ID">{{jerarquia.id_jerarquia}}</td>
+                                    <td class="td1 Nombre">{{jerarquia.jerarquia}}</td>
+                                    <!-- <td class="td1" style="padding-left: 20px;">
+                                        <button>
+                                            <img src="/static/img/iconos/deshacer.png" alt="imagen para agregar a la tabla" id="img-icono-3">
+                                        </button>
+                                    </td> -->
+                                    <td class="td1" style="width: 40px;">
+                                        <a class="a1" href="borrar/{{ jerarquia.id_jerarquia }}">
+                                            <img src="/static/img/iconos app/eliminar.png" alt="imagen para eliminar una jerarquía" style="width: 20px;">
+                                        </a>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>

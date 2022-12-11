@@ -7,6 +7,8 @@ Ver Tareas
 {% block contenido %}
 {% load static %}
 
+<link rel="stylesheet" href="{% static 'css/estilo/BGcrud.css' %}">
+
 <div class="cajon">
 
     <div class="caja-arriba">
@@ -24,42 +26,44 @@ Ver Tareas
             </div>
             <div class="row">
 
-                {% for t in tareas %}
+                <div class="cartas-principales">
 
-                <div class="column">
-                    <a href="{% url 'AppWebHome:detalleTarea' t.id_tarea %}" class="card">
+                    {% for t in tareas %}
 
-                        {% for dd in diferenciaDias %}
+                    <div class="carta-principal">
+                            <a href="{% url 'AppWebHome:detalleTarea' t.id_tarea %}" class="card">
 
-                            {% if forloop.counter0 == forloop.parentloop.counter0 %}
+                                {% for dd in diferenciaDias %}
 
-                                <p class="cabecera-card {% if dd < 0 %}bg-rojo{% elif dd < 7 and dd >= 0 %}bg-amarillo{% else %}bg-verde{% endif %}">{{t.fecha_inicio}} {{ dd }}- {{t.fecha_plazo}}</p>
-                                <div class="contenido-card">
-                                    <textarea rows="2" cols="25" style="resize: none; cursor:pointer; font-size: 20px; text-align: center; font-family: monospace;" readonly>{{t.tarea}}</textarea>
-                                </div>
-                                <p class="pie-card {% if dd < 0 %}bg-rojo{% elif dd < 7 and dd >= 0 %}bg-amarillo{% else %}bg-verde{% endif %}">
-                                    
-                                    {% for pa in porcentajeActual %}
-                                        
-                                        
-                                        {% if forloop.counter0 == forloop.parentloop.counter0 %}
+                                    {% if forloop.counter0 == forloop.parentloop.counter0 %}
 
-                                            {{ pa }}%
+                                        <p class="cabecera-card {% if dd < 0 %}bg-rojo{% elif dd < 7 and dd >= 0 %}bg-amarillo{% else %}bg-verde{% endif %}">{{t.fecha_inicio}} {{ dd }}- {{t.fecha_plazo}}</p>
+                                        <div class="contenido-card">
+                                            <textarea rows="2" cols="25" style="resize: none; cursor:pointer; font-size: 20px; text-align: center; font-family: monospace;" readonly>{{t.tarea}}</textarea>
+                                        </div>
+                                        <p class="pie-card {% if dd < 0 %}bg-rojo{% elif dd < 7 and dd >= 0 %}bg-amarillo{% else %}bg-verde{% endif %}">
                                             
-                                        {% endif %}
-                                            
-                                    {% endfor %}
-                                        
-                                </p>
-                            {% endif %}
+                                            {% for pa in porcentajeActual %}
+                                                
+                                                
+                                                {% if forloop.counter0 == forloop.parentloop.counter0 %}
 
-                        {% endfor %}
+                                                    {{ pa }}%
+                                                    
+                                                {% endif %}
+                                                    
+                                            {% endfor %}
+                                                
+                                        </p>
+                                    {% endif %}
 
-                    </a>
+                                {% endfor %}
+
+                            </a>
+                    </div>
+
+                    {% endfor %}
                 </div>
-
-                {% endfor %}
-
             </div>
 
         </div>

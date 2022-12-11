@@ -7,6 +7,8 @@
 {% block contenido %}
 {% load static %}
 
+<link rel="stylesheet" href="{% static 'css/estilo/BGcrud.css' %}">
+
 <div class="cajon">
 
     <div class="caja-arriba">
@@ -20,18 +22,25 @@
             </div>
             <div class="row">
 
+                <div class="cartas-principales">
                 {% for f in flujos %}
 
-                <div class="column">
-                    <a href="{% url 'AppWebHome:detalleFlujo' f.id_flujo %}" class="card">
-                        <p class="cabecera-card">ID: {{ f.id_flujo }}</p>
-                        <div class="contenido-card">
-                            <textarea rows="2" cols="25" style="resize: none; cursor:pointer; font-size: 20px; text-align: center; font-family: monospace;" readonly>{{ f.nombre_flujo }}</textarea>
-                        </div>
-                    </a>
-                </div>
+                    <div class="carta-principal">
 
+                        <!-- <div class="column"> -->
+                            <a href="{% url 'AppWebHome:detalleFlujo' f.id_flujo %}" class="card">
+                                <p class="cabecera-card">ID: {{ f.id_flujo }}</p>
+                                <div class="contenido-card">
+                                    <textarea rows="2" cols="25" style="resize: none; cursor:pointer; font-size: 20px; text-align: center; font-family: monospace;" readonly>{{ f.nombre_flujo }}</textarea>
+                                </div>
+                            </a>
+                        <!-- </div> -->
+
+                    </div>
+                    
+                    
                 {% endfor %}
+                </div>
 
             </div>
 

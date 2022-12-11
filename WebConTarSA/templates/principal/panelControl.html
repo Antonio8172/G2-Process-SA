@@ -1,0 +1,322 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block titulo %}
+    Panel de Control
+{% endblock titulo %}
+
+
+{% block contenido %}
+
+    <link rel="stylesheet" href="{% static 'css/estilo/BGcrud.css' %}">
+
+    <div class="cajon">
+        <div class="caja-arriba">
+            <div class="titulo-graficos" style="width: 100%;">
+
+                <h1>Gráficos</h1>
+
+            </div>
+
+            <script src="//cdn.amcharts.com/lib/4/core.js"></script>
+            <script src="//cdn.amcharts.com/lib/4/charts.js"></script>
+            <script src="//cdn.amcharts.com/lib/4/themes/animated.js"></script>
+            <script src="//cdn.amcharts.com/lib/4/themes/kelly.js"></script>
+
+            <style>
+                /* --------------------------------------------- */
+                /* Pantallas medianas, punto de quiebre: 1050px  */
+                /* --------------------------------------------- */
+                @media only screen and (min-width: 65.625em) {
+                    
+                    /* ----------------------------------------------- */
+                    /* Cartas Principales                              */
+                    /* ----------------------------------------------- */
+
+                    /* Divide las cartas principales en 3 columnas */
+                    .cartas-principales {
+                        column-count: 1;
+                    }
+
+                    .graficos {
+                        width: 800px; height: 500px;
+                        background-color: rgba(255, 255, 255, 0.5);
+                    }
+                    .stat.border {
+                        border: 1px solid black; background-color: rgba(255, 255, 255, 0.5);
+                    }
+                    .stat.border:hover {
+                        background-color: rgb(97, 15, 173);
+                    }
+                }
+            </style>
+            <!-- Datos de la cantidad de tareas por color actualmente -->
+            <!-- <input type="hidden" id="cantidadColor" value="{{ cantTareas }}"> -->
+            <input type="hidden" id="cantidadVerde" value="{{ cantTareas.Verdes }}">
+            <input type="hidden" id="cantidadAmarillo" value="{{ cantTareas.Amarillas }}">
+            <input type="hidden" id="cantidadRojo" value="{{ cantTareas.Rojas }}">
+            
+            <!-- Datos de la cantidad de tareas por unidad y por color actualmente. -->
+            <input type="hidden" name="" id="cantidadUnidad" value="{{ cantUnidades }}">
+            {% for key, value in cantUnidades.items %}
+                <input type="hidden" id="cantidadU{{ key }}" value="{{ value }}">
+            {% endfor %}
+            <input type="hidden" id="ultimoCantUnidad" value="{{ ultimoCantUnidad }}">
+            
+            <!-- Datos de la cantidad de tareas por jerarquía -->
+            <input type="hidden" id="cantidadJerar" value="{{ cantidadJerarquias }}">
+            {% for key, value in cantidadJerarquias.items %}
+                <input type="hidden" id="cantidadJ{{ key }}" value="{{ value }}">
+            {% endfor %}
+            <input type="hidden" id="ultimoCantJerar" value="{{ ultimoCantJerar }}">
+
+            <div class="tarjeta-botones">
+                <div class="stat left oculto"></div>
+                <button onclick="descargarPDF()" type="button" class="stat border">
+                    <img src="/static/img/iconos app/pdf.png" alt="imagen para crear" id="img-icono-2">
+                    <div class="valor">Convertir a PDF</div>
+                </button>
+                <div class="stat right oculto"></div>
+            </div>
+
+            <div class="cartas-principales">
+
+                <div class="carta-principal">
+
+                    <div class="graficos" id="cantTareasxColor"></div>
+
+                </div>
+                <div class="carta-principal">
+                    
+                    <div class="graficos" id="cantTareasxColorxUnidad"></div>
+
+                </div>
+                <div class="carta-principal">
+                    
+                    <div class="graficos" id="cantTareasxJerarquias"></div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="caja-abajo">
+            <div class="tarjeta-botones">
+                <div class="stat left oculto"></div>
+                <button onclick="descargarPDF()" type="button" class="stat border">
+                    <img src="/static/img/iconos app/pdf.png" alt="imagen para crear" id="img-icono-2">
+                    <div class="valor">Convertir a PDF</div>
+                </button>
+                <div class="stat right oculto"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Obtención de datos por JSON
+            // var cantidadColor = document.getElementById("cantidadColor").value;
+            // cantidadColor = cantidadColor.replaceAll("'", '"');
+            // var nuevaCantColor = JSON.parse(cantidadColor)
+            var cantidadVerde = document.getElementById("cantidadVerde").value;
+            var cantidadAmarillo = document.getElementById("cantidadAmarillo").value;
+            var cantidadRojo = document.getElementById("cantidadRojo").value;
+
+            var ultimoCantUnidad = document.getElementById("ultimoCantUnidad").value;
+            var datosCantidadUnidad = []
+
+            for (var i = 0; i < ultimoCantUnidad; i++) {
+                var cantidadUnidad = document.getElementById("cantidadU"+i).value;
+                cantidadUnidad = cantidadUnidad.replaceAll("'", '"');
+                var nuevaCant = JSON.parse(cantidadUnidad)
+                
+                datosCantidadUnidad.push(nuevaCant)
+            }
+            
+            var ultimoCantJerar = document.getElementById("ultimoCantJerar").value;
+            var datosCantidadJerar = []
+
+            for (var i = 0; i < ultimoCantJerar; i++) {
+                var cantidadJerar = document.getElementById("cantidadJ"+i).value;
+                cantidadJerar = cantidadJerar.replaceAll("'", '"');
+                var nuevaCant = JSON.parse(cantidadJerar)
+                
+                datosCantidadJerar.push(nuevaCant)
+            }
+
+        // Dona3D: Cantidad de Tareas por Color
+
+            // Set theme
+            am4core.useTheme(am4themes_animated);
+
+            // Create chart instance
+            var chart = am4core.create("cantTareasxColor", am4charts.PieChart3D);
+
+            // Let's cut a hole in our Pie chart the size of 40% the radius
+            chart.innerRadius = am4core.percent(40);
+
+            // Add data
+            chart.data = [{
+                "Color": "Rojo",
+                "Cantidad": cantidadRojo
+                }, {
+                "Color": "Amarillo",
+                "Cantidad": cantidadAmarillo
+                }, {
+                "Color": "Verde",
+                "Cantidad": cantidadVerde
+            }];
+
+            // Add and configure Series
+            var pieSeries = chart.series.push(new am4charts.PieSeries3D());
+            pieSeries.dataFields.value = "Cantidad";
+            pieSeries.dataFields.category = "Color";
+            pieSeries.slices.template.stroke = am4core.color("black");
+            pieSeries.slices.template.strokeWidth = 1;
+            pieSeries.slices.template.strokeOpacity = 1;
+
+            // Disabling labels and ticks on inner circle
+            pieSeries.labels.template.disabled = true;
+            pieSeries.ticks.template.disabled = true;
+
+            // Disable sliding out of slices
+            pieSeries.slices.template.states.getKey("hover").properties.shiftRadius = 0;
+            pieSeries.slices.template.states.getKey("hover").properties.scale = 1.1;
+
+            // Añadiendo leyendas al gráfico.
+            chart.legend = new am4charts.Legend();
+
+            // Agregando color para cada serie.
+            pieSeries.colors.list = [
+                am4core.color("red"),
+                am4core.color("yellow"),
+                am4core.color("green"),
+            ];
+
+            // Add chart title
+            var title = chart.titles.create();
+            title.text = "Cantidad de Tareas por Color";
+            title.fontSize = 30;
+            title.marginBottom = 5;
+
+
+        // Barras Laterales: Cantidad de tareas por color por unidad
+
+            // Apply chart themes
+            am4core.useTheme(am4themes_animated);
+            am4core.useTheme(am4themes_kelly);
+
+            // Create chart instance
+            var chart = am4core.create("cantTareasxColorxUnidad", am4charts.XYChart);
+
+            chart.marginRight = 400;
+
+            // Add data
+            chart.data = datosCantidadUnidad;
+
+            //console.log('chart', chart);
+
+            // Create axes
+            var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "Unidad";
+            categoryAxis.title.text = "Unidades Internas";
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.renderer.minGridDistance = 20;
+
+            var  valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+            valueAxis.title.text = "Cantidad de tareas por Color";
+
+            // Create series
+            var series = chart.series.push(new am4charts.ColumnSeries());
+            series.dataFields.valueX = "Rojas";
+            series.dataFields.categoryY = "Unidad";
+            series.name = "Rojas";
+            series.tooltipText = "{name}: [bold]{valueX}[/]";
+            series.fill = am4core.color("red");
+            series.stroke = am4core.color("white");
+            series.stacked = true;
+            
+            
+            var series2 = chart.series.push(new am4charts.ColumnSeries());
+            series2.dataFields.valueX = "Amarillas";
+            series2.dataFields.categoryY = "Unidad";
+            series2.name = "Amarillas";
+            series2.tooltipText = "{name}: [bold]{valueX}[/]";
+            series2.fill = am4core.color("yellow");
+            series2.stroke = am4core.color("white");
+            series2.stacked = true;
+            
+            var series3 = chart.series.push(new am4charts.ColumnSeries());
+            series3.dataFields.valueX = "Verdes";
+            series3.dataFields.categoryY = "Unidad";
+            series3.name = "Verdes";
+            series3.tooltipText = "{name}: [bold]{valueX}[/]";
+            series3.fill = am4core.color("green");
+            series3.stroke = am4core.color("white");
+            series3.stacked = true;
+
+            // Add cursor
+            chart.cursor = new am4charts.XYCursor();
+
+            // Add chart title
+            var title = chart.titles.create();
+            title.text = "Cantidad de Tareas por Unidad";
+            title.fontSize = 30;
+            title.marginBottom = 15;
+
+        // Barras: Cantidad de tareas por jerarquías
+
+            am4core.useTheme(am4themes_animated);
+
+            var chart = am4core.create("cantTareasxJerarquias", am4charts.XYChart);
+            chart.colors.saturation = 0.4;
+            // chart.title.text = "Cantidad de Tareas por Jerarquías"
+
+            chart.data = datosCantidadJerar;
+
+
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.dataFields.category = "Jerarquia";
+            categoryAxis.title.text = "Jerarquías";
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.renderer.minGridDistance = 20;
+            categoryAxis.renderer.minWidth = 120;
+
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            valueAxis.title.text = "Cantidad";
+            valueAxis.renderer.maxLabelPosition = 0.98;
+
+            var series = chart.series.push(new am4charts.ColumnSeries());
+            series.dataFields.categoryX = "Jerarquia";
+            series.dataFields.valueY = "Cantidad";
+            series.tooltipText = "{valueY.value}";
+            series.sequencedInterpolation = true;
+            series.defaultState.transitionDuration = 1000;
+            series.sequencedInterpolationDelay = 100;
+            series.columns.template.strokeOpacity = 0;
+
+            chart.cursor = new am4charts.XYCursor();
+            chart.cursor.behavior = "zoomX";
+
+            // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
+            series.columns.template.adapter.add("fill", (fill, target) => {
+            return target.dataItem ? chart.colors.getIndex(target.dataItem.index) : fill;
+            });
+
+            var fillModifier = new am4core.LinearGradientModifier();
+            fillModifier.brightnesses = [0, 1, 1, 0];
+            fillModifier.offsets = [0, 0.45, 0.55, 1];
+            fillModifier.gradient.rotation = 0;
+            series.columns.template.fillModifier = fillModifier;
+
+            // Add chart title
+            var title = chart.titles.create();
+            title.text = "Cantidad de Tareas por Jerarquía";
+            title.fontSize = 30;
+            title.marginBottom = 5;
+
+    </script>
+
+{% endblock contenido %}
+    
+    

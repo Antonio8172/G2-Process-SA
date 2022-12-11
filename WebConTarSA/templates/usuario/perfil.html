@@ -11,6 +11,9 @@
 
     {% load static %}
 
+    <link rel="stylesheet" href="{% static 'css/estilo/BGusuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'css/estilo/estiloPerfil.css' %}">
+
     <div class="cajon">
 
         <div class="caja-arriba">
@@ -19,56 +22,257 @@
 
                 <div class="tarjeta-perfil-imagen"></div>
 
-                <div class="tarjeta-texto">
+                <form id="formulario-perfil" action="{% url 'AppWebHome:editarPerfil' %}" method="POST">{% csrf_token %}
 
-                    <span class="date">{{ user.rut }}</span>
-                    <h2>{{user.usuario}}</h2>
-                    <h3>Nombre Completo:</h3>
-                    <p>{{ user.nombres }} {{ user.apellidos }}</p>
-                    <h3>Contacto:</h3>
-                    <p>{{ user.correo }}</p>
-                    <p>{{ user.celular }}</p>
-                    <h3>Dirección:</h3>
-                    <p>{{ user.calle_id_calle.calle }}, {{ user.calle_id_calle.comuna_id_comuna.comuna }},</p>
-                    <p>{{ user.calle_id_calle.comuna_id_comuna.ciudad_id_ciudad.ciudad }}</p>
-                    <h3>Rol:</h3>
-                    <p>{{ user.rol_id_rol.rol }}</p>
-                    <h3>Unidad:</h3>
-                    <p>{{ user.unidad_id_unidad.unidad }}</p>
-                    <h3>Jerarquia:</h3>
-                    <p>{{ user.jerarquia_id_jerarquia.jerarquia }}</p>
+                    <div class="tarjeta-texto">
 
-                </div>
+                        <hr class="hrPerfil">
+                        <input type="hidden" name="id_usuario" id="id_usuario" value="{{ user.id_usuario }}">
 
-                <div class="tarjeta-perfil-stats">
+                        <input type="text" name="rut" id="rut" class="c-verde fs-13px form-perfil" value="{{ user.rut }}">
 
-                    <div class="stat left">
+                        <br>
 
-                        <div class="value">4<sup>m</sup></div>
-                        <div class="type">Tareas</div>
+                        <input type="text" name="usuario" id="usuario" class="form-perfil h2" value="{{ user.usuario }}">
+
+                        <h3>Contraseña:</h3>
+                        <div class="campoPerfil">
+                            <input type="password" name="contra" id="contra" class="form-perfil" value="{{ user.contraseña }}">
+                            <span class="show">Mostrar</span>
+                        </div>
+
+                        <hr class="hrPerfil">
+
+                        <h2>Nombre Completo</h2>
+
+                        <table class="direccionPerfil">
+
+                            <tr class="trDireccion">
+                                <td class="tdDireccion"><h3>Nombres:</h3></td>
+                                <td class="tdDireccion"><h3>Apellidos:</h3></td>
+                            </tr>
+
+                            <tr class="trDireccion">
+                                <td class="tdDireccion"><input type="text" name="nombres"   id="nombres"   class="form-perfil" value="{{ user.nombres }}"></td>
+                                <td class="tdDireccion"><input type="text" name="apellidos" id="apellidos" class="form-perfil" value="{{ user.apellidos }}"></td>
+                            </tr>
+
+                        </table>
+
+                        <hr class="hrPerfil">
+
+                        <h2>Contacto</h2>
+
+                        <table class="direccionPerfil">
+
+                            <tr class="trDireccion">
+                                <td class="tdDireccion"><h3>Correo:</h3></td>
+                                <td class="tdDireccion"><h3>Celular:</h3></td>
+                            </tr>
+
+                            <tr class="trDireccion">
+                                <td class="tdDireccion"><input type="text" name="correo"  id="correo"  class="form-perfil" value="{{ user.correo }}"></td>
+                                <td class="tdDireccion"><input type="text" name="celular" id="celular" class="form-perfil" value="{{ user.celular }}"></td>
+                            </tr>
+
+                        </table>
+
+                        <hr class="hrPerfil">
+
+                        <h2>Dirección</h2>
+
+                        <table class="direccionPerfil">
+
+                            <tr class="trDireccion">
+                                <td class="tdDireccion"><h3>Calle:</h3></td>
+                            </tr>
+
+                            <tr class="trDireccion">
+                                <!-- <td class="tdDireccion"><input type="text" name="calleDireccion"  id="calleDireccion"  class="form-perfil" value="{{ user.calle_id_calle.calle }}"></td> -->
+                                <td class="tdDireccion">
+                                    <div class="callePerfil">
+                                        <select name="calle" id="calle" class="callePerfil">
+                                            <option value="{{ user.calle_id_calle.id_calle }}" selected>{{ user.calle_id_calle.calle }}</option>
+                                            
+                                            {% for c in calles %}
+                                                
+                                                {% if  c.id_calle  !=  user.calle_id_calle.id_calle  %}
+                                                    <option value="{{ c.id_calle }}">{{ c.calle }}</option>
+                                                {% endif %}
+                                                    
+                                            {% endfor %}
+                                            <!-- <option>Otro... </option> -->
+
+                                        </select>
+                                        <!-- <input class="callePerfil" type="text" placeholder="Otro...(escribir)" id="other-text"> -->
+                                        <i></i>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <table class="direccionPerfil">
+                            <tr class="trDireccion">
+                                <td class="tdDireccion"><h3>Comuna:</h3></td>
+                                <td class="tdDireccion"><h3>Ciudad:</h3></td>
+                                <td class="tdDireccion"><h3>Región:</h3></td>
+                            </tr>
+
+                            <tr class="trDireccion">
+                                <td class="tdDireccion"><p>{{ user.calle_id_calle.comuna_id_comuna.comuna }}</p></td>
+                                <td class="tdDireccion"><p>{{ user.calle_id_calle.comuna_id_comuna.ciudad_id_ciudad.ciudad }}</p></td>
+                                <td class="tdDireccion"><p>{{ user.calle_id_calle.comuna_id_comuna.ciudad_id_ciudad.region_id_region.region }}</p></td>
+                            </tr>
+
+                        </table>
+
+                        <hr class="hrPerfil">
+
+                        <h2>Cargo</h2>
+
+                        <table class="direccionPerfil">
+                            
+                            {% if user.rol_id_rol.rol == 'Administrador' or user.rol_id_rol.rol == 'Diseñador de Procesos' %}
+
+                                <tr class="trDireccion">
+                                    <td class="tdDireccion"><h3>Rol:</h3></td>
+                                </tr>
+
+                                <tr class="trDireccion">
+                                    <td class="tdDireccion"><p>{{ user.rol_id_rol.rol }}</p></td>
+                                </tr>
+
+                            {% else %}
+
+                                <tr class="trDireccion">
+                                    <td class="tdDireccion"><h3>Rol:</h3></td>
+                                    <td class="tdDireccion"><h3>Unidad:</h3></td>
+                                    <td class="tdDireccion"><h3>Jerarquia:</h3></td>
+                                </tr>
+
+                                <tr class="trDireccion">
+                                    <td class="tdDireccion"><p>{{ user.rol_id_rol.rol }}</p></td>
+                                    <td class="tdDireccion"><p>{{ user.unidad_id_unidad.unidad }}</p></td>
+                                    <td class="tdDireccion"><p>{{ user.jerarquia_id_jerarquia.jerarquia }}</p></td>
+                                </tr>
+
+                            {% endif %}
+
+                        </table>
 
                     </div>
 
-                    <div class="stat border">
+                    
+                    <div class="tarjeta-perfil-stats">
+                        
+                        {% if user.rol_id_rol.rol == 'Administrador' or user.rol_id_rol.rol == 'Diseñador de Procesos' %}
+                        
+                        <div class="stat left">
+                            
+                            <div class="value">No posees</div>
+                            <div class="type">Tareas</div>
+                            
+                        </div>
+                        
+                        <button onclick="actualizarPerfil()" type="button" class="stat border">
+                            
+                            <div class="value"><img id="img-icono-2" src="/static/img/iconos app/editar.png" alt="imagen para editar" ></div>
+                            <div class="type">Editar</div>
+                            
+                        </button>
+                        
+                        <div class="stat right">
 
-                        <div class="value">5123</div>
-                        <div class="type">Subordinados</div>
+                            <div class="value">No posees</div>
+                            <div class="type">Subordinados</div>
+                            
+                        </div>
+                        
+                        {% else %}
 
+                        <div class="stat left">
+                            
+                            <div class="value">Cantidad</div>
+                            <div class="type">Tareas</div>
+                            
+                        </div>
+                        
+                        <button onclick="actualizarPerfil()" type="button" class="stat border">
+                            
+                            <div class="value"><img id="img-icono-2" src="/static/img/iconos app/editar.png" alt="imagen para editar"></div>
+                            <div class="type">Editar</div>
+                            
+                        </button>
+                        
+                        <div class="stat right">
+                            
+                            <div class="value">Cantidad</div>
+                            <div class="type">Subordinados</div>
+                            
+                        </div>
+                        
+                        {% endif %}
+                    
                     </div>
 
-                    <div class="stat right">
-
-                        <div class="value">32</div>
-                        <div class="type">Flujos</div>
-
-                    </div>
-
-                </div>
+                </form>
 
             </div>
-
+            
         </div>
 
     </div>
+
+    <script>
+        document.querySelector('.campoPerfil span').addEventListener('click', e => {
+            const passwordInput = document.querySelector('#contra');
+            if (e.target.classList.contains('show')) {
+                e.target.classList.remove('show');
+                e.target.textContent = 'Ocultar';
+                passwordInput.type = 'text';
+            } else {
+                e.target.classList.add('show');
+                e.target.textContent = 'Mostrar';
+                passwordInput.type = 'password';
+            }
+        });
+
+        function actualizarPerfil() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Actualizar tus datos de usuario será permanente.',
+                icon: 'warning',
+                showDenyButton: true,
+                confirmButtonText: 'Si, actualizar',
+                denyButtonText: `No, cancelar`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        '¡Guardado!',
+                        'Tus datos han sido actualizados.',
+                        'success'
+                    )
+                    setTimeout(function(){ document.forms["formulario-perfil"].submit(); }, 1500);
+                } else if (result.isDenied) {
+                    Swal.fire(
+                        'Cancelado',
+                        'Los cambios no fueron guardados.',
+                        'info'
+                    )
+                }
+            })
+        }
+        // let otherText = document.querySelector("#other-text");
+        // let select = document.querySelector("select");
+
+        // select.addEventListener("change", () => {
+        //     if(select.value == "Otro..."){
+        //         otherText.style.zIndex = 0 + "";
+        //     }else{
+        //         otherText.style.zIndex = -1 + "";
+        //     }
+        // });
+    </script>
 
 {% endblock contenido %}

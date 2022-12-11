@@ -2,13 +2,17 @@
 {% load static %}
 
 {% block titulo %}
-    Flujo: {{ flujo.flujo }}
+    Flujo: {{ flujo.nombre_flujo }}
 {% endblock titulo %}
 
 {% block contenido %}
+
+    <link rel="stylesheet" href="{% static 'css/estilo/BGcrud.css' %}">
+
     <div class="cajon">
-        <a href="{% url 'AppWebHome:crudFlujo' %}" style="position:absolute; top:0; right:0;">
-            <img class="btn-cerrar-1"id="img-icono-2" src="/static/img/iconos/cerrar.png" alt="imagen para cerrar">
+        <a href="{% url 'AppWebHome:verFlujos' %}" style="position:absolute; top:0; right:0;">
+            <img class="btn-cerrar-1"id="img-icono-2" src="/static/img/iconos app/volveer.png
+            " alt="imagen para cerrar">
         </a>
         <div class="caja-arriba">
             <div class="tarjeta-form">
@@ -51,16 +55,16 @@
                     <div class="tarjeta-botones">
                         <a href="{% url 'AppWebHome:detalleFlujo' flujo.id_flujo %}">
                             <div class="stat left">
-                                <img id="img-icono-2" src="/static/img/iconos/deshacer.png" alt="imagen para crear">
+                                <img id="img-icono-2" src="/static/img/iconos app/deshacer.png" alt="imagen para crear">
                                 <div class="valor">Deshacer</div>
                             </div>
                         </a>
                         <div class="stat border">
-                            <img id="img-icono-2" src="/static/img/iconos/actualizar.png" alt="imagen para crear">
+                            <img id="img-icono-2" src="/static/img/iconos app/actualizar.png" alt="imagen para crear">
                             <div class="valor">Actualizar</div>
                         </div>
                         <div class="stat right">
-                            <img id="img-icono-2" src="/static/img/iconos/borrar.png" alt="imagen para crear">
+                            <img id="img-icono-2" src="/static/img/iconos app/eliminar.png" alt="imagen para crear">
                             <div class="valor">Borrar</div>
                         </div>
                     </div>

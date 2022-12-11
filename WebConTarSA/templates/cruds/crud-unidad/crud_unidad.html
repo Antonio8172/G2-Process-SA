@@ -7,6 +7,8 @@
 {% block contenido %}
     {% load static %}
 
+    <link rel="stylesheet" href="{% static 'css/estilo/BGcrud.css' %}">
+
     <div class="cajon">
 
       <div class="caja-arriba">
@@ -17,7 +19,7 @@
             
           <div class="carta-principal">
             <a href="{% url 'AppWebHome:crearUnidad' %}" class="button button-1">
-              <img id="img-icono" src="/static/img/iconos/nuevaUnidad.png" alt="#"><br><br>Crear Nueva Unidad
+              <img id="img-icono" src="/static/img/iconos app/nuevasUnidades.png" alt="#"><br><br>Crear Nueva Unidad
             </a>
         
           </div>

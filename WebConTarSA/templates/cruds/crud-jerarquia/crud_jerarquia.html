@@ -8,6 +8,8 @@
 {% block contenido %}
   {% load static %}
 
+  <link rel="stylesheet" href="{% static 'css/estilo/BGcrud.css' %}">
+
   <div class="cajon">
 
     <div class="caja-arriba">
@@ -20,7 +22,7 @@
           
           <a href="{% url 'AppWebHome:crearJerarquia' %}" class="button button-1">
             
-            <img id="img-icono" src="/static/img/iconos/nuevaJerarquia.png" alt="#"><br><br>Crear Nueva Jerarquía
+            <img id="img-icono" src="/static/img/iconos app/nuevasJerarquias.png" alt="#"><br><br>Crear Nueva Jerarquía
             
           </a>
           

@@ -9,12 +9,8 @@
 {% block contenido %}
 {% load static %}
 
-{% if user.rol_id_rol.rol == 'Funcionario' and user.jerarquia_id_jerarquia.jerarquia == 'Funcionario' %}
+<link rel="stylesheet" href="{% static 'css/estilo/BGusuarios.css' %}">
 
-    <h1>hola</h1>
-    
-{% endif %}
-    
 <div class="main-header">
     <h1 style="text-align: center;">Hola! {{ user.jerarquia_id_jerarquia.jerarquia }} {{ user.usuario }}</h1>
     <div class="main-header__heading">¡Hola {{ user.nombres }} {{ user.apellidos }}!</div>
@@ -26,7 +22,7 @@
     {% if user.jerarquia_id_jerarquia.jerarquia == 'Subordinado' %}
         <div class="carta-principal">
             <a href="{% url 'AppWebHome:verTareas' %}?page=1" class="button button-1">
-                <img src="/static/img/iconos/tarea.png" alt="imagen de tareas" id="img-icono">
+                <img src="/static/img/iconos app/verTarea.png" alt="imagen de tareas" id="img-icono">
                 <br>
                 Ver Tareas
             </a>
@@ -35,15 +31,15 @@
     
         <div class="carta-principal">
             <a href="{% url 'AppWebHome:crudTarea' %}" class="button button-1">
-                <img src="/static/img/iconos/tarea.png" alt="imagen de tareas" id="img-icono">
+                <img src="/static/img/iconos app/tareas.png" alt="imagen de tareas" id="img-icono">
                 <br>
                 CRUD Tareas
             </a>
         </div>
 
         <div class="carta-principal">
-            <a href="{% url 'AppWebHome:login' %}" class="button button-2">
-                <img src="/static/img/iconos/usuarios.png" alt="imagen de usuarios" id="img-icono">
+            <a href="{% url 'AppWebHome:verUsuarios' %}" class="button button-1">
+                <img src="/static/img/iconos app/empleados1.png" alt="imagen de usuarios" id="img-icono">
                 <br>
                 Subordinados
             </a>
@@ -53,7 +49,7 @@
 
     <div class="carta-principal">
         <a href="{% url 'AppWebHome:verFlujos' %}" class="button button-1">
-            <img src="/static/img/iconos/verFlujos.png" alt="imagen de flujos" id="img-icono">
+            <img src="/static/img/iconos app/flujo.png" alt="imagen de flujos" id="img-icono">
             <br>
             Flujos
         </a>
@@ -61,10 +57,10 @@
 
     
     {% if user.jerarquia_id_jerarquia.jerarquia == 'Gerente' %}
-        <!-- <div class="carta-principal"></div> -->
+        <div class="carta-principal oculto"></div>
         <div class="carta-principal">
-            <a href="" class="button button-1">
-                <img src="/static/img/iconos/panel-de-control.png" alt="Imagen para el panel de control" id="img-icono">
+            <a href="{% url 'AppWebHome:panelControl' %}" class="button button-1">
+                <img src="/static/img/iconos app/analitica.png" alt="Imagen para el panel de control" id="img-icono">
                 <br>
                 Panel de Control
             </a>

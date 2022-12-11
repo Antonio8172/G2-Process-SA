@@ -100,3 +100,6 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'applications.home.backends.UsuarioBackend', 
 ]
+
+# Messages
+MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"

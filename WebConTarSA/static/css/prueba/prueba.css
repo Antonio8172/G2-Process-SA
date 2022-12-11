@@ -27,7 +27,7 @@ body {
   /* left: 10px; */
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 119, 0, 0.2);
+  background-color: rgb(255 255 255 / 50%);
   /* background-color: #727272; */
   border-radius: 50%;
   z-index: 3;
@@ -48,7 +48,7 @@ body {
   justify-content: space-between;
   padding: 0 16px;
   /* background-color: #202020; */
-  background-image: linear-gradient(to bottom, #000000 0%, #454545 100%);
+  background-image: linear-gradient(to bottom, #ffa600 0%, #ffffff 100%);
 }
 
 /* Make room for the menu icon on mobile */
@@ -69,7 +69,7 @@ body {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
   z-index: 2; /* Needs to sit above the hamburger menu icon */
   /* background-color: #394263; */
-  background-image: linear-gradient(to right, #000000 0%, #696969 100%);
+  background-image: linear-gradient(to right, #ffa600 0%, #ffffff 100%);
 }
 
 .sidenav.active {
@@ -85,15 +85,19 @@ body {
   font-size: 20px;
   color: #ddd;
 }
+.sidenav__list-item, button.accordion {
+  background-color: rgba(255, 255, 255, 0.8);
+  position: relative;
+}
 
 .sidenav__list {
-  padding: 0;
+  padding: 15px 0px;
   margin-top: 10px;
   list-style-type: none;
 }
 
 .sidenav__list-perfil {
-  padding: 0;
+  padding: 0px;
   margin-top: 85px;
   list-style-type: none;
 }
@@ -105,8 +109,9 @@ body {
 }
 
 .sidenav__list-item {
+  margin: 5px 0px;
   padding: 10px 0px 10px 40px;
-  color: #ddd;
+  color: black;
 }
 
 a {
@@ -114,19 +119,13 @@ a {
 }
 
 .sidenav__list-item:hover {
-  background-color: rgba(255, 119, 0, 0.2);
+  background-color: rgba(255, 166, 0, 0.661);
   cursor: pointer;
 }
 
 .main {
   grid-area: main;
   background: radial-gradient(circle at center, black 0, #383838, #858585 100%);
-
-
-
-  /* background-color: #454545; */
-  /* background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898;
-  background-blend-mode: multiply,multiply; */
 }
 
 .main-header {
@@ -134,9 +133,10 @@ a {
   justify-content: space-between;
   margin: 20px;
   padding: 20px;
-  height: 150px;
-  background-color: #cbcbcd;
-  color: slategray;
+  height: 130px;
+  border-radius: 10px;
+  background-color: #5d1e989e;
+  color: white;
 }
 
 .main-overview {
@@ -166,8 +166,9 @@ a {
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
+  color: black;
   /* background-color: #202020; */
-  background-image: linear-gradient(to top, #000000 0%, #585656 100%);
+  background-image: linear-gradient(to top, #ffa600 0%, #ffffff 100%);
 }
 
 /* Non-mobile styles, 750px breakpoint */
@@ -199,40 +200,42 @@ a {
 
 /* ------------------------------------------------------------------------------------------ */
 .panel a {
-  color: #a39d9d;
+  color: #000000a3;
   padding: 5px 60px;
   text-decoration: none;
   display: block;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 .panel a:hover {
-  background-color: rgba(255, 119, 0, 0.2);
-  color: white;
+  background-color: rgba(255, 166, 0, 0.661);
+  color: black;
 }
 .active {
-  background-color: rgba(255, 119, 0, 0.2);
+  background-color: rgba(255, 166, 0, 0.661);
 }
 
 .accordion {
-  background-color: rgba(0,0,0,0);
-  color: #ddd;
+  color: rgb(0, 0, 0);
   cursor: pointer;
   padding: 10px 40px;
+  margin-top: 5px;
   width: 100%;
   border: none;
   text-align: left;
   outline: none;
-  font-size: 15px;
+  font-size: 16px;
+  font-family: monospace;
 }
 
 .active, .accordion:hover {
-  background-color: rgba(255, 119, 0, 0.2);
-  color:white;
+  background-color: rgba(255, 166, 0, 0.661);
+  color: black;
 }
 
 .accordion:after {
   content: '\002B';
-  color: #777;
+  color: rgb(45, 45, 45);
   font-weight: bold;
   float: right;
   margin-left: 5px;
