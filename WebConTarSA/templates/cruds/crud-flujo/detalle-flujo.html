@@ -17,7 +17,7 @@
         <div class="caja-arriba">
             <div class="tarjeta-form">
                 <div class="tarjeta-titulo"><textarea name="" id="" cols="30" rows="2" style="resize: none; border: 0px;font-size: 24px; text-align: center; font-family: monospace; width: 330px; height: 55px; margin-top: 5px;color: white; background-color: rgba(255, 255, 255, 0);" readonly>{{ flujo.nombre_flujo }}</textarea></div>
-                <form method="POST"> {% csrf_token %}
+                <form method="POST" id="formulario-flujo" action="{% url 'AppWebHome:editarFlujo' %}"> {% csrf_token %}
                     <div class="tarjeta-texto">
                         <table style="padding: 55px 8%;">
                             <tbody>
@@ -53,22 +53,106 @@
                         </table>
                     </div>
                     <div class="tarjeta-botones">
-                        <a href="{% url 'AppWebHome:detalleFlujo' flujo.id_flujo %}">
-                            <div class="stat left">
-                                <img id="img-icono-2" src="/static/img/iconos app/deshacer.png" alt="imagen para crear">
-                                <div class="valor">Deshacer</div>
-                            </div>
-                        </a>
-                        <div class="stat border">
-                            <img id="img-icono-2" src="/static/img/iconos app/actualizar.png" alt="imagen para crear">
+                        <button onclick="deshacerCambios()" type="button" class="stat left">
+
+                            <img id="img-icono-2" src="/static/img/iconos app/deshacer.png" alt="imagen para deshacer cambios">
+                            <div class="valor">Deshacer</div>
+
+                        </button>
+                        <button onclick="actualizarFlujo()" type="button" class="stat border">
+
+                            <img id="img-icono-2" src="/static/img/iconos app/actualizar.png" alt="imagen para actualizar">
                             <div class="valor">Actualizar</div>
-                        </div>
-                        <div class="stat right">
-                            <img id="img-icono-2" src="/static/img/iconos app/eliminar.png" alt="imagen para crear">
+
+                        </button>
+                        <button onclick="borrarFlujo()" type="button" class="stat right">
+
+                            <img id="img-icono-2" src="/static/img/iconos app/eliminar.png" alt="imagen para borrar">
                             <div class="valor">Borrar</div>
-                        </div>
+
+                        </button>
                     </div>
                 </form>
+                
+            <script>
+
+                function deshacerCambios() {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: 'Al deshacer los cambios, los datos volverán a ser los originales.',
+                        icon: 'warning',
+                        showDenyButton: true,
+                        denyButtonText: 'Si, deshacer',
+                        confirmButtonText: 'No, cancelar',
+                    }).then((result) => {
+                        if (result.isDenied) {
+                            Swal.fire(
+                                '¡Deshecho!',
+                                'Los cambios realizados en la flujo "{{ flujo.nombre_flujo }} se deshicieron."',
+                                'success'
+                            )
+                            setTimeout(function(){ window.location.href = "{% url 'AppWebHome:detalleFlujo' flujo.id_flujo %}"; }, 1500);
+                        } else if (result.isConfirmed) {
+                            Swal.fire(
+                                'Cancelado',
+                                'Los cambios en la flujo "{{ flujo.nombre_flujo }}" están a salvo :)',
+                                'error'
+                            )
+                        }
+                    })
+                }
+
+                function actualizarFlujo() {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: 'Actualizar el flujo "{{ flujo.nombre_flujo }}" será permanente.',
+                        icon: 'warning',
+                        showDenyButton: true,
+                        confirmButtonText: 'Si, actualizar',
+                        denyButtonText: `No, cancelar`,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire(
+                                '¡Guardado!',
+                                'El flujo "{{ flujo.nombre_flujo }}" ha sido actualizada.',
+                                'success'
+                            )
+                            setTimeout(function(){ document.forms["formulario-flujo"].submit(); }, 1500);
+                        } else if (result.isDenied) {
+                            Swal.fire(
+                                'Cancelado',
+                                'Los cambios no fueron guardados.',
+                                'info'
+                            )
+                        }
+                    })
+                }
+
+                function borrarFlujo() {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: 'Borrar la flujo "{{ flujo.nombre_flujo }}" será permanente.',
+                        icon: 'warning',
+                        showDenyButton: true,
+                        denyButtonText: 'Si, borrar',
+                        confirmButtonText: 'No, cancelar',
+                    }).then((result) => {
+                        if (result.isDenied) {
+
+                            window.location.href = "/borrar-flujo/{{ flujo.id_flujo }}";
+
+                        } else if (result.isConfirmed) {
+                            Swal.fire(
+                                'Cancelado',
+                                'La flujo "{{ flujo.nombre_flujo }}" está a salvo :)',
+                                'error'
+                            )
+                        }
+                    })
+
+                    
+                }
+            </script>
             </div>
             <div class="tarjeta-tabla" style="grid-template-columns: 600px;">
                 <div class="tarjeta-tabla-titulo"><h1>Tareas</h1></div>

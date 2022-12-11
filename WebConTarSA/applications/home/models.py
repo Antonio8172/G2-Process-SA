@@ -41,11 +41,6 @@ class Estado(models.Model):
     id_estado   = models.BigAutoField(primary_key=True)
     estado      = models.CharField(max_length=50)
 
-    objects     = EstadoManager()
-
-    def init(self,  id_estado):
-       self.id_estado= id_estado
-
     class Meta:
         managed = False
         db_table = 'estado'

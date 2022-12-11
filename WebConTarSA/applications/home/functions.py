@@ -160,6 +160,29 @@ class ModificacionesModelos():
                                         idEstado,)
         return flujoCreado
 
+# Editar flujo
+    def editar_flujo(request):
+        id_flujo         = request.POST['id_flujo']
+        nomflujo         = request.POST['nombre_flujo']
+        descripcion      = request.POST['descripcion']
+        estado_id_estado = request.POST['estado_id_estado']
+
+        flujo = Flujo.objects.get(id_flujo=id_flujo)
+
+        flujo.nombre_flujo        = nomflujo
+        flujo.descripcion         = descripcion
+        flujo.estado_id_estado_id = estado_id_estado
+
+        flujo.save()
+        return HttpResponseRedirect('/detalle-flujo/'+id_flujo+'/')
+
+# Borrar flujo
+    def borrar_flujo(request, pk):
+        flujo = Flujo.objects.get(id_flujo=pk)
+        flujo.delete()
+        messages.success(request, 'El flujo se ha borrado con éxito')
+        return HttpResponseRedirect(reverse('AppWebHome:verFlujos'))
+
 # Crear Jerarquía
     def crear_jerarquia(datos):
         jerarquiaCreada = Jerarquia.objects.crear_jerarquia(datos['jerarquia'],)

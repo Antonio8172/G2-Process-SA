@@ -11,7 +11,7 @@ from django.db.models import Q
 #----------------------------------------------------------------------------------------------------------------#
 
 class UsuarioManager(models.Manager):
-
+    # Permite crear un nuevo Usuario.
     def crear_usuario(
                     self, 
                     nombreUsuario, 
@@ -42,7 +42,6 @@ class UsuarioManager(models.Manager):
             **extra_fields
         )
         return usuario
-
     # Usuario
     def traer_datos_usuario(self, username, password):
         return self.filter(
@@ -50,17 +49,15 @@ class UsuarioManager(models.Manager):
             contraseña  = password
         ).values_list()
 
-    def traer_datos_usuarios(self):
-        return self.all()
-
     def usuario_exists(self, username, password):
         return self.filter(
             usuario     = username,
             contraseña  = password
         ).exists()
 
+
 class TareaManager(models.Manager):
-    
+    # Permite crear una nueva tarea.
     def crear_tarea(self, nombreTarea, descTarea, fechaInicio, fechaPlazo, idUsuario, idFlujo, **extra_fields):
         tarea = self.create(
             tarea               = nombreTarea,
@@ -72,22 +69,16 @@ class TareaManager(models.Manager):
             **extra_fields
         )
         return tarea
-
-    def traer_datos_tareas(self):
-        return self.all()
-        
+    # Trae las tareas que corresponden al usuario solicitado.
     def tareas_usuarios(self, id_usuario):
-        return self.filter(
-            usuario_id_usuario_id = id_usuario
-        )
-
+        return self.filter(usuario_id_usuario_id = id_usuario)
+    # Trae la tarea solicitada.
     def tareas_id(self, id_tarea):
-        return self.filter(
-            id_tarea = id_tarea
-        )
+        return self.filter(id_tarea = id_tarea)
+
 
 class FlujoManager(models.Manager):
-
+    # Permite crear un nuevo flujo.
     def crear_flujo(self, nombreFlujo, descFlujo, idEstado, **extra_fields):
         flujo = self.create(
             nombre_flujo        = nombreFlujo,
@@ -97,19 +88,12 @@ class FlujoManager(models.Manager):
         )
         return flujo
 
-    def traer_datos_flujo(self):
-        return self.all()
-
-class EstadoManager(models.Manager):
-
-    def traer_datos_estado(self):
-        return self.all()
 
 class RolManager(models.Manager):
     
     def is_rol_nombre(self, rol_id):
         return self.all().filter(
-            Q(rol="Funcionario") | Q(rol="Diseñador de Procesos") | Q(rol="Administrador") | Q(rol="Desarrollador")
+            Q(rol="Funcionario") | Q(rol="Diseñador de Procesos") | Q(rol="Administrador")
         ).filter(
             id_rol = rol_id
         ).exists()
@@ -147,4 +131,3 @@ class UnidadManager(models.Manager):
 
     def traer_datos_unidad(self):
         return self.all()
-

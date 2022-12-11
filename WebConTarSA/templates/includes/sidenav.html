@@ -17,7 +17,7 @@
     }
 </style>
     
-    {% if user.rol_id_rol.rol == 'Administrador' or user.rol_id_rol.rol == 'Diseñador de Procesos' or user.rol_id_rol.rol == 'Funcionario' or user.rol_id_rol.rol == 'Desarrollador' %}
+    {% if user.rol_id_rol.rol == 'Administrador' or user.rol_id_rol.rol == 'Diseñador de Procesos' or user.rol_id_rol.rol == 'Funcionario' %}
 
         <ul class="sidenav__list-perfil">
             <a href="{% url 'AppWebHome:perfil' %}">
@@ -226,7 +226,7 @@
 
     {% endif %}
 
-    {% if user.rol_id_rol.rol == 'Administrador' or user.rol_id_rol.rol == 'Diseñador de Procesos' or user.rol_id_rol.rol == 'Funcionario' or user.rol_id_rol.rol == 'Desarrollador' %}
+    {% if user.rol_id_rol.rol == 'Administrador' or user.rol_id_rol.rol == 'Diseñador de Procesos' or user.rol_id_rol.rol == 'Funcionario' %}
         </ul>
 
         <div class="sidenav__list-logout">
