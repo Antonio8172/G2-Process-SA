@@ -3,8 +3,6 @@
 #----------------------------------------------------------------------------------------------------------------#
 
 from django.urls                import reverse_lazy, reverse
-from django.contrib.auth        import logout
-from django.contrib             import messages
 from django.http                import HttpResponseRedirect
 from django.views.generic       import TemplateView, ListView, FormView, DetailView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -52,14 +50,12 @@ class PerfilListView(LoginRequiredMixin, ListView):
 
 class LogoutView(View):
     def get(self, request):
-        logout(request)
-        messages.success(request, 'Se ha cerrado la sesión correctamente.')
-        return HttpResponseRedirect(reverse('AppWebHome:login'))
+        return Login.cerrar_sesion(self, request)
 
 
 class PanelControlView(LoginRequiredMixin, ListView):
-    model = Tarea
-    template_name = 'principal/panelControl.html'
+    model               = Tarea
+    template_name       = 'principal/panelControl.html'
     context_object_name = "tareas"
     # Obtención de otros datos
     def get_context_data(self, **kwargs):
@@ -298,8 +294,8 @@ class JerarquiaCreateView(LoginRequiredMixin, FormView):
 
 # Vista general del Crud de roles.
 class CRUDRolView(LoginRequiredMixin, ListView):
-    model           = Rol
-    template_name   = "cruds/crud-rol/crud_rol.html"
+    model               = Rol
+    template_name       = "cruds/crud-rol/crud_rol.html"
     context_object_name = "roles"
 
 # Vista para crear, editar y borrar un rol.
@@ -334,8 +330,8 @@ class RolCreateView(LoginRequiredMixin, FormView):
 
 # Vista general del Crud de unidades.
 class CRUDUnidadView(LoginRequiredMixin, ListView):
-    model           = Unidad
-    template_name   = "cruds/crud-unidad/crud_unidad.html"
+    model               = Unidad
+    template_name       = "cruds/crud-unidad/crud_unidad.html"
     context_object_name = "unidades"
 
 # Vista para crear, editar y borrar una unidad.
@@ -374,9 +370,9 @@ class CRUDUsuarioView(LoginRequiredMixin, TemplateView):
 
 # Vista para crear un flujo.
 class UsuarioCreateView(LoginRequiredMixin, FormView):
-    model = Usuario
-    form_class = UsuarioForm
-    template_name = "cruds/crud-usuario/crear-usuario.html"
+    model           = Usuario
+    form_class      = UsuarioForm
+    template_name   = "cruds/crud-usuario/crear-usuario.html"
     success_url     = reverse_lazy("AppWebHome:crearUsuario")
     # Validación del formulario y posterior creación del usuario.
     def form_valid(self, form):
@@ -402,8 +398,8 @@ class UsuarioCreateView(LoginRequiredMixin, FormView):
 
 # Vista para ver todos los flujos.
 class UsuarioListView(LoginRequiredMixin, ListView):
-    model = Usuario
-    template_name = "cruds/crud-usuario/ver-usuarios.html"
+    model               = Usuario
+    template_name       = "cruds/crud-usuario/ver-usuarios.html"
     context_object_name = "usuarios"
     # Obtención de otros datos.
     def get_context_data(self, **kwargs):
@@ -413,8 +409,8 @@ class UsuarioListView(LoginRequiredMixin, ListView):
 
 # Vista para ver el detalle del flujo.
 class UsuarioDetailView(LoginRequiredMixin, DetailView):
-    model = Usuario
-    template_name = "cruds/crud-usuario/detalle-usuario.html"
+    model               = Usuario
+    template_name       = "cruds/crud-usuario/detalle-usuario.html"
     context_object_name = "usuario"
     # Obtención de otros datos.
     def get_context_data(self, **kwargs):

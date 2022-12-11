@@ -3,7 +3,7 @@
 #----------------------------------------------------------------------------------------------------------------#
 
 from .models import *
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
@@ -67,6 +67,12 @@ class Login():
 
         messages.warning(request, 'No posees los permisos necesarios para ingresar a esta página')
         return HttpResponseRedirect(reverse(redirect_to))
+
+# Cerrado de sesión con su respectivo mensaje de alerta y redirección.
+    def cerrar_sesion(sel, request):
+        logout(request)
+        messages.success(request, 'Se ha cerrado la sesión correctamente.')
+        return HttpResponseRedirect(reverse('AppWebHome:login'))
 
 
 class ModificacionesModelos():
