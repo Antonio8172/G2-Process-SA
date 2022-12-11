@@ -3,12 +3,8 @@
 <header class="header">
 
   <div class="header__search">
-    
-    {% if user.rol_id_rol.id_rol == 4 %} <!-- Desarrollador -->
 
-      <a href="{% url 'AppWebHome:prueba' %}">
-
-    {% elif user.rol_id_rol.id_rol == 3 %} <!-- Funcionario -->
+    {% if user.rol_id_rol.id_rol == 3 %} <!-- Funcionario -->
 
       <a href="{% url 'AppWebHome:funcionario' %}">
 

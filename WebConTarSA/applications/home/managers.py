@@ -73,14 +73,6 @@ class TareaManager(models.Manager):
         )
         return tarea
 
-    # def actualizar_tarea(self, tarea_id):
-    #     self.filter(
-    #         id_tarea=tarea_id
-    #     ).update(
-    #         estado_tarea="Finalizada",
-    #         porc_cumplimiento=100
-    #     )
-
     def traer_datos_tareas(self):
         return self.all()
         

@@ -49,6 +49,29 @@ class PerfilListView(LoginRequiredMixin, ListView):
     def editar_perfil(request):
         return ModificacionesModelos.editar_perfil(request)
 
+
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        messages.success(request, 'Se ha cerrado la sesión correctamente.')
+        return HttpResponseRedirect(reverse('AppWebHome:login'))
+
+
+class PanelControlView(LoginRequiredMixin, ListView):
+    model = Tarea
+    template_name = 'principal/panelControl.html'
+    context_object_name = "tareas"
+    # Obtención de otros datos
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cantTareas']         = CantidadTareas.color_RGY()
+        context['cantUnidades']       = CantidadTareas.unidad_color_RGY()
+        context['ultimoCantUnidad']   = len(CantidadTareas.unidad_color_RGY())
+        context['cantidadJerarquias'] = CantidadTareas.jerarquia()
+        context['ultimoCantJerar']    = len(CantidadTareas.jerarquia())
+        return context
+
+
 #----------------------------------------------------------------------------------------------------------------#
 # Usuarios
 #----------------------------------------------------------------------------------------------------------------#
@@ -207,7 +230,7 @@ class FlujoCreateView(LoginRequiredMixin, FormView):
         context             = super().get_context_data(**kwargs)
         context["estados"]  = Estado.objects.traer_datos_estado()
         return context
-    
+
 # Vista para ver todos los flujos.
 class FlujoListView(LoginRequiredMixin, ListView):
     model               = Flujo
@@ -285,112 +308,90 @@ class RolCreateView(LoginRequiredMixin, FormView):
     form_class      = RolForm
     template_name   = "cruds/crud-rol/crear-rol.html"
     success_url     = reverse_lazy("AppWebHome:crearRol")
-    # Validación del formulario
+    # Validación del formulario y posterior creación del rol.
     def form_valid(self, form):
         datos = form.cleaned_data
-        Rol.objects.crear_rol(datos['rol'],)
+        ModificacionesModelos.crear_rol((datos))
         return super(RolCreateView, self).form_valid(form)
-    # Formulario inválido
+    # Formulario inválido.
     def form_invalid(self, form):
         self.request.session['acusete'] = 'form inválido'
         return super(RolCreateView, self).form_invalid(form)
-    # Obtención de otros datos
+    # Obtención de otros datos.
     def get_context_data(self, *args, **kwargs):
         context                 = super().get_context_data(**kwargs)
         context["fechaActual"]  = OperacionesFechas.fecha_actual()
         context["roles"]        = Rol.objects.all()
         return context
+    # Eliminación de un rol.
     def eliminar_rol(request, id):
-        rol = Rol.objects.get(id_rol=id)
-        rol.delete()
-        return HttpResponseRedirect(reverse('AppWebHome:crearRol'))
-
+        return ModificacionesModelos.borrar_rol(request, id)
 
 
 #-----------------------------#
 # crud unidades               #
 #-----------------------------#
+
+# Vista general del Crud de unidades.
 class CRUDUnidadView(LoginRequiredMixin, ListView):
     model           = Unidad
     template_name   = "cruds/crud-unidad/crud_unidad.html"
     context_object_name = "unidades"
 
+# Vista para crear, editar y borrar una unidad.
 class UnidadCreateView(LoginRequiredMixin, FormView):
     model           = Unidad
     form_class      = UnidadForm
     template_name   = "cruds/crud-unidad/crear-unidad.html"
     success_url     = reverse_lazy("AppWebHome:crearUnidad")
-
-    # Validación del formulario
+    # Validación del formulario y posterior creación de la unidad.
     def form_valid(self, form):
         datos = form.cleaned_data
-        Unidad.objects.crear_unidad(
-            datos['unidad'],
-            )
+        ModificacionesModelos.crear_unidad(datos)
         return super(UnidadCreateView, self).form_valid(form)
-
-    # Formulario inválido
+    # Formulario inválido.
     def form_invalid(self, form):
         self.request.session['acusete'] = 'form inválido'
         return super(UnidadCreateView, self).form_invalid(form)
-
-    # Obtención de otros datos
+    # Obtención de otros datos.
     def get_context_data(self, *args, **kwargs):
         context                 = super().get_context_data(**kwargs)
         context["fechaActual"]  = OperacionesFechas.fecha_actual()
         context["unidades"]     = Unidad.objects.traer_datos_unidad()
         return context
-
+    # Eliminación de una unidad.
     def eliminar_unidad(request, id):
-        unidad = Unidad.objects.get(id_unidad=id)
-        unidad.delete()
-        return HttpResponseRedirect(reverse('AppWebHome:crearUnidad'))
+        return ModificacionesModelos.borrar_unidad(request, id)
+
 
 #-----------------------------#
 # crud usuarios               #
 #-----------------------------#
+
+# Vista general del Crud de usuarios.
 class CRUDUsuarioView(LoginRequiredMixin, TemplateView):
-    model           = Usuario
     template_name   = "cruds/crud-usuario/crud_usuario.html"
 
-
+# Vista para crear un flujo.
 class UsuarioCreateView(LoginRequiredMixin, FormView):
     model = Usuario
     form_class = UsuarioForm
     template_name = "cruds/crud-usuario/crear-usuario.html"
     success_url     = reverse_lazy("AppWebHome:crearUsuario")
-
-    # Validación del formulario
+    # Validación del formulario y posterior creación del usuario.
     def form_valid(self, form):
         idCalle     = Calle(self.request.POST.get('calle_id_calle'))
         idJerarquia = Jerarquia(self.request.POST.get('jerarquia_id_jerarquia'))
         idRol       = Rol(self.request.POST.get('rol_id_rol'))
         idUnidad    = Unidad(self.request.POST.get('unidad_id_unidad'))
         datos       = form.cleaned_data
-
-        Usuario.objects.crear_usuario(
-            datos['usuario'],
-            datos['contraseña'],
-            datos['nombres'],
-            datos['apellidos'],
-            datos['rut'],
-            datos['correo'],
-            datos['celular'],
-            idCalle,
-            idJerarquia,
-            idRol,
-            idUnidad,
-            is_active = 1,
-            )
+        ModificacionesModelos.crear_usuario(datos, idCalle, idJerarquia, idRol, idUnidad)
         return super(UsuarioCreateView, self).form_valid(form)
-
-
-    # Formulario inválido
+    # Formulario inválido.
     def form_invalid(self, form):
         self.request.session['acusete'] = 'form inválido'
         return super(UsuarioCreateView, self).form_invalid(form)
-
-    # Obtención de otros datos
+    # Obtención de otros datos.
     def get_context_data(self, *args, **kwargs):
         context                 = super().get_context_data(**kwargs)
         context["calles"]       = Calle.objects.all()
@@ -399,121 +400,33 @@ class UsuarioCreateView(LoginRequiredMixin, FormView):
         context["unidades"]     = Unidad.objects.all()
         return context
 
-
+# Vista para ver todos los flujos.
 class UsuarioListView(LoginRequiredMixin, ListView):
     model = Usuario
     template_name = "cruds/crud-usuario/ver-usuarios.html"
     context_object_name = "usuarios"
-
+    # Obtención de otros datos.
     def get_context_data(self, **kwargs):
         context                 = super().get_context_data(**kwargs)
         context["fechaActual"]  = OperacionesFechas.fecha_actual()
         return context
 
-
+# Vista para ver el detalle del flujo.
 class UsuarioDetailView(LoginRequiredMixin, DetailView):
     model = Usuario
     template_name = "cruds/crud-usuario/detalle-usuario.html"
     context_object_name = "usuario"
-
-    # Obtención de otros datos
+    # Obtención de otros datos.
     def get_context_data(self, **kwargs):
-        context                 = super().get_context_data(**kwargs)
-        context["calles"]       = Calle.objects.all()
-        context["jerarquias"]   = Jerarquia.objects.all()
-        context["roles"]        = Rol.objects.all()
-        context["unidades"]     = Unidad.objects.all()
+        context               = super().get_context_data(**kwargs)
+        context["calles"]     = Calle.objects.all()
+        context["jerarquias"] = Jerarquia.objects.all()
+        context["roles"]      = Rol.objects.all()
+        context["unidades"]   = Unidad.objects.all()
         return context
-
+    # Permite editar el usuario.
     def editar_usuario(request):
-
-        id_usuario = request.POST['id_usuario']
-        nomUsuario = request.POST['usuario']
-        contraUsuario = request.POST['contra']
-        nombres = request.POST['nombres']
-        apellidos = request.POST['apellidos']
-        rut = request.POST['rut']
-        correo = request.POST['correo']
-        celular = request.POST['celular']
-        id_calle = request.POST['calle']
-        id_rol = request.POST['rol']
-        id_unidad = request.POST['unidad']
-        id_jerarquia = request.POST['jerarquia']
-
-        usuario = Usuario.objects.get(id_usuario=id_usuario)
-        usuario.usuario                     = nomUsuario
-        usuario.contraseña                  = contraUsuario
-        usuario.nombres                     = nombres
-        usuario.apellidos                   = apellidos
-        usuario.rut                         = rut
-        usuario.correo                      = correo
-        usuario.celular                     = celular 
-        usuario.calle_id_calle_id           = id_calle
-        usuario.rol_id_rol_id               = id_rol
-        usuario.unidad_id_unidad_id         = id_unidad
-        usuario.jerarquia_id_jerarquia_id   = id_jerarquia
-
-        usuario.save()
-        return HttpResponseRedirect('/detalle-usuario/'+id_usuario+'/')
-
+        return ModificacionesModelos.editar_usuario(request)
+    # Permite borrar el usuario.
     def eliminar_usuario(request, pk):
-        usuario = Usuario.objects.get(id_usuario=pk)
-        usuario.delete()
-        messages.success(request, 'El usuario se ha borrado con éxito')
-        return HttpResponseRedirect(reverse('AppWebHome:verUsuarios'))
-#----------------------------------------------------------------------------------------------------------------#
-# Prueba/Test
-#----------------------------------------------------------------------------------------------------------------#
-class PruebaView(LoginRequiredMixin, TemplateView):
-    template_name = "prueba/prueba.html"
-
-    def get_context_data(self, *args, **kwargs):
-        context             = super().get_context_data(**kwargs)
-        context["usuarios"] = Usuario.objects.traer_datos_usuarios()
-        context["flujos"]   = Flujo.objects.traer_datos_flujo()
-        context["tareas"]   = Tarea.objects.all()
-        return context
-
-    def get(self, request, *args, **kwargs):
-        id_rol = self.request.user.rol_id_rol.id_rol
-
-        if id_rol != 4:
-            messages.warning(request, "No puedes ingresar a esta dirección web") 
-            if( id_rol == 3 ):
-                return HttpResponseRedirect(reverse('AppWebHome:funcionario'))
-            elif( id_rol == 2 ):
-                return HttpResponseRedirect(reverse('AppWebHome:diseñador'))
-            elif( id_rol == 1 ):
-                return HttpResponseRedirect(reverse('AppWebHome:administrador'))
-            else:
-                return HttpResponseRedirect(reverse('AppWebHome:perfil'))
-        return super(PruebaView, self).get(request, *args, **kwargs)
-
-class LogoutView(View):
-    def get(self, request):
-        logout(request)
-        messages.success(request, 'Se ha cerrado la sesión correctamente.')
-        return HttpResponseRedirect(reverse('AppWebHome:login'))
-
-class PanelControlView(LoginRequiredMixin, ListView):
-    model = Tarea
-    template_name = 'principal/panelControl.html'
-    context_object_name = "tareas"
-
-    
-    # Obtención de otros datos
-    def get_context_data(self, **kwargs):
-
-        context = super().get_context_data(**kwargs)
-
-        context['cantTareas'] = CantidadTareas.color_RGY()
-
-        context['cantUnidades'] = CantidadTareas.unidad_color_RGY()
-        context['ultimoCantUnidad'] = len(CantidadTareas.unidad_color_RGY())
-
-        context['cantidadJerarquias'] = CantidadTareas.jerarquia()
-        context['ultimoCantJerar'] = len(CantidadTareas.jerarquia())
-        
-        return context
-    
-
+        return ModificacionesModelos.borrar_usuario(request, pk)

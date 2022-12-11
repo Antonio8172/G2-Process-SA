@@ -77,7 +77,4 @@ urlpatterns = [
     path('borrar-usuario/<int:pk>/',        views.UsuarioDetailView.eliminar_usuario,   name = 'borrarUsuario'),
     path('editar-usuario/',                   views.UsuarioDetailView.editar_usuario,   name = 'editarUsuario'),
 
-    # Prueba/Test
-    path('prueba/',                     views.PruebaView.as_view(),             name = 'prueba'),
-
 ]

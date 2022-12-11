@@ -163,7 +163,88 @@ class ModificacionesModelos():
     def borrar_jerarquia(request, id):
         jerarquia = Jerarquia.objects.get(id_jerarquia=id)
         jerarquia.delete()
+        messages.success(request, 'La jerarquía se ha borrado con éxito')
         return HttpResponseRedirect(reverse('AppWebHome:crearJerarquia'))
+
+# Crear Rol
+    def crear_rol(datos):
+        rolCreado = Rol.objects.crear_rol(datos['rol'],)
+        return rolCreado
+
+# Borrar Rol
+    def borrar_rol(request, id):
+        rol = Rol.objects.get(id_rol=id)
+        rol.delete()
+        messages.success(request, 'El rol se ha borrado con éxito')
+        return HttpResponseRedirect(reverse('AppWebHome:crearRol'))
+
+# Crear Unidad
+    def crear_unidad(datos):
+        unidadCreada = Unidad.objects.crear_unidad(datos['unidad'])
+        return unidadCreada
+
+# Borrar Unidad
+    def borrar_unidad(request, id):
+        unidad = Unidad.objects.get(id_unidad=id)
+        unidad.delete()
+        messages.success(request, 'La unidad se ha borrado con éxito')
+        return HttpResponseRedirect(reverse('AppWebHome:crearUnidad'))
+
+# Crear Usuario
+    def crear_usuario(datos, idCalle, idJerarquia, idRol, idUnidad):
+        usuarioCreado = Usuario.objects.crear_usuario(
+            datos['usuario'],
+            datos['contraseña'],
+            datos['nombres'],
+            datos['apellidos'],
+            datos['rut'],
+            datos['correo'],
+            datos['celular'],
+            idCalle,
+            idJerarquia,
+            idRol,
+            idUnidad,
+            is_active = 1,)
+        return usuarioCreado
+
+# Editar Usuario
+    def editar_usuario(request):
+        id_usuario    = request.POST['id_usuario']
+        nomUsuario    = request.POST['usuario']
+        contraUsuario = request.POST['contra']
+        nombres       = request.POST['nombres']
+        apellidos     = request.POST['apellidos']
+        rut           = request.POST['rut']
+        correo        = request.POST['correo']
+        celular       = request.POST['celular']
+        id_calle      = request.POST['calle']
+        id_rol        = request.POST['rol']
+        id_unidad     = request.POST['unidad']
+        id_jerarquia  = request.POST['jerarquia']
+
+        usuario = Usuario.objects.get(id_usuario=id_usuario)
+
+        usuario.usuario                   = nomUsuario
+        usuario.contraseña                = contraUsuario
+        usuario.nombres                   = nombres
+        usuario.apellidos                 = apellidos
+        usuario.rut                       = rut
+        usuario.correo                    = correo
+        usuario.celular                   = celular 
+        usuario.calle_id_calle_id         = id_calle
+        usuario.rol_id_rol_id             = id_rol
+        usuario.unidad_id_unidad_id       = id_unidad
+        usuario.jerarquia_id_jerarquia_id = id_jerarquia
+
+        usuario.save()
+        return HttpResponseRedirect('/detalle-usuario/'+id_usuario+'/')
+
+# Borrar Usuario
+    def borrar_usuario(request, pk):
+        usuario = Usuario.objects.get(id_usuario=pk)
+        usuario.delete()
+        messages.success(request, 'El usuario se ha borrado con éxito')
+        return HttpResponseRedirect(reverse('AppWebHome:verUsuarios'))
 
 
 class OperacionesFechas():
