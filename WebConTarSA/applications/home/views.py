@@ -370,6 +370,9 @@ class FlujoDetailView(LoginRequiredMixin, DetailView):
     def eliminar_flujo(request, pk):
         return ModificacionesModelos.borrar_flujo(request, pk)
 
+    def ejecutar_flujo(request, pk):
+        return ModificacionesModelos.ejecutar_flujo(request, pk)
+
 
 #-----------------------------#
 # crud jerarquías             #

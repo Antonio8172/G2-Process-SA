@@ -27,54 +27,110 @@
                                 </tr>
                                 <tr>
                                     <td>Nombre Flujo: </td>
-                                    <td><input type="text" name="nombre_flujo" id="nombre_flujo" value="{{ flujo.nombre_flujo }}"></td>
+                                    <td><input type="text" name="nombre_flujo" id="nombre_flujo" value="{{ flujo.nombre_flujo }}"{% if user.rol_id_rol.rol != 'Administrador' and user.rol_id_rol.rol != 'Diseñador de Procesos' %}readonly{% endif %}></td>
                                 </tr>
                                 <tr>
                                     <td>Descripción</td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                <td colspan="2"><textarea name="descripcion" id="descripcion" cols="40" rows="4">{{ flujo.descripcion }}</textarea></td>
+                                <td colspan="2"><textarea name="descripcion" id="descripcion" style="resize: none;"cols="40" rows="4"{% if user.rol_id_rol.rol != 'Administrador' and user.rol_id_rol.rol != 'Diseñador de Procesos' %}readonly{% endif %}>{{ flujo.descripcion }}</textarea></td>
                                 </tr>
                                 <tr>
                                     <td>ID Estado:</td>
                                     <td><select name="estado_id_estado" class="form-control" required id="estado_id_estado">
                                         <option value="{{ flujo.estado_id_estado.id_estado }}" selected>{{ flujo.estado_id_estado.id_estado }} - {{ flujo.estado_id_estado.estado }}</option>
-                                        {% for estado in estados %}
-                                            
-                                            {% if flujo.estado_id_estado.id_estado != estado.id_estado %}
-                                                <option value="{{estado.id_estado}}">{{estado.id_estado}} - {{estado.estado}}</option>
-                                            {% endif %}
-                                                
-                                        {% endfor %}
+                                        {% if user.rol_id_rol.rol != 'Administrador' and user.rol_id_rol.rol != 'Diseñador de Procesos' %}
+                                        {% else %}
+                                            {% for estado in estados %}
+                                                {% if flujo.estado_id_estado.id_estado != estado.id_estado %}
+                                                    <option value="{{estado.id_estado}}">{{estado.id_estado}} - {{estado.estado}}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
                                     </select></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="tarjeta-botones">
+                    
+                    <div class="tarjeta-botones" style="border: 1px solid black">
+                    {% if user.rol_id_rol.rol != 'Administrador' and user.rol_id_rol.rol != 'Diseñador de Procesos' %}
+                        
+                        {% if flujo.estado_id_estado.estado == 'Inactivo' or flujo.estado_id_estado.estado == 'Completado' %}
+                            <a href="{% url 'AppWebHome:verFlujos' %}">
+                                <div class="stat left" style="border: 0px;">
+                                    <img id="img-icono-2" src="/static/img/iconos app/volveer.png" alt="imagen para ver cantidad de tareas">
+                                    <div class="valor">Volver</div>
+                                </div>
+                            </a>
+                            <div class="stat border oculto"></div>
+                            <button onclick="ejecutarFlujo()" type="button" class="stat right"style="border: 0px;">
+                                
+                                <img id="img-icono-2" src="/static/img/iconos app/eject.png" alt="imagen para borrar">
+                                <div class="valor">Ejecutar</div>
+                                
+                            </button>
+                        {% else %}
+                            <div class="stat left oculto"></div>
+                            <a href="{% url 'AppWebHome:verFlujos' %}">
+                                <div class="stat border" style="border: 0px;">
+                                    <img id="img-icono-2" src="/static/img/iconos app/volveer.png" alt="imagen para ver cantidad de tareas">
+                                    <div class="valor">Volver</div>
+                                </div>
+                            </a>
+                            <div class="stat right oculto"></div>
+                        {% endif %}
+                            
+                    {% else %}
                         <button onclick="deshacerCambios()" type="button" class="stat left">
-
+                            
                             <img id="img-icono-2" src="/static/img/iconos app/deshacer.png" alt="imagen para deshacer cambios">
                             <div class="valor">Deshacer</div>
 
                         </button>
                         <button onclick="actualizarFlujo()" type="button" class="stat border">
-
+                            
                             <img id="img-icono-2" src="/static/img/iconos app/actualizar.png" alt="imagen para actualizar">
                             <div class="valor">Actualizar</div>
-
+                            
                         </button>
                         <button onclick="borrarFlujo()" type="button" class="stat right">
-
+                            
                             <img id="img-icono-2" src="/static/img/iconos app/eliminar.png" alt="imagen para borrar">
                             <div class="valor">Borrar</div>
-
+                            
                         </button>
+                    {% endif %}
                     </div>
                 </form>
                 
             <script>
+                function ejecutarFlujo() {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: 'Al ejecutar el flujo, esta pasará a estar en proceso.',
+                        icon: 'warning',
+                        confirmButtonText: 'Si, ejecutar',
+                        showDenyButton: true,
+                        denyButtonText: 'No, cancelar',
+                    }).then((result) => {
+                        if (result.isDenied) {
+                            Swal.fire(
+                                'Cancelado',
+                                'El flujo "{{ flujo.nombre_flujo }}" no se inició :)',
+                                'info'
+                            )
+                        } else if (result.isConfirmed) {
+                            Swal.fire(
+                                '¡Ejecutado!',
+                                'El flujo "{{ flujo.nombre_flujo }}" cambiará de estado en los próximos segundos :)',
+                                'success'
+                            )
+                            setTimeout(function(){ window.location.href = "{% url 'AppWebHome:ejecutarFlujo' flujo.id_flujo %}"; }, 1500);
+                        }
+                    })
+                }
 
                 function deshacerCambios() {
                     Swal.fire({
@@ -88,14 +144,14 @@
                         if (result.isDenied) {
                             Swal.fire(
                                 '¡Deshecho!',
-                                'Los cambios realizados en la flujo "{{ flujo.nombre_flujo }} se deshicieron."',
+                                'Los cambios realizados en el flujo "{{ flujo.nombre_flujo }} se deshicieron."',
                                 'success'
                             )
                             setTimeout(function(){ window.location.href = "{% url 'AppWebHome:detalleFlujo' flujo.id_flujo %}"; }, 1500);
                         } else if (result.isConfirmed) {
                             Swal.fire(
                                 'Cancelado',
-                                'Los cambios en la flujo "{{ flujo.nombre_flujo }}" están a salvo :)',
+                                'Los cambios en el flujo "{{ flujo.nombre_flujo }}" están a salvo :)',
                                 'error'
                             )
                         }

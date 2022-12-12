@@ -197,6 +197,15 @@ class ModificacionesModelos():
         messages.success(request, 'El flujo se ha borrado con éxito')
         return HttpResponseRedirect(reverse('AppWebHome:verFlujos'))
 
+# Ejecutar flujo
+    def ejecutar_flujo(request, pk):
+        flujo = Flujo.objects.get(id_flujo=pk)
+        estado = Estado.objects.get(id_estado=3)
+        flujo.estado_id_estado_id = estado
+        flujo.save()
+        return HttpResponseRedirect('/detalle-flujo/'+ str(flujo.id_flujo) +'/')
+
+
 # Crear Jerarquía
     def crear_jerarquia(datos):
         jerarquiaCreada = Jerarquia.objects.crear_jerarquia(datos['jerarquia'],)

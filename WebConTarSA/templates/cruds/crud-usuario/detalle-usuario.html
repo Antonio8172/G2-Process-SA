@@ -22,8 +22,8 @@
 
         <div class="caja-arriba">
 
-            <div class="tarjeta-perfil">
-
+            <div class="tarjeta-perfil"{% if user.rol_id_rol.rol != 'Administrador' %}style="grid-template-rows: 130px 781px auto;"{% endif %}>
+    
                 <div class="tarjeta-perfil-imagen"></div>
                 <form id="formulario-usuario" action="{% url 'AppWebHome:editarUsuario' %}" method="POST">{% csrf_token %}
 
@@ -37,12 +37,16 @@
                         <br>
 
                         <input type="text" name="usuario" id="usuario" class="form-perfil h2" value="{{ usuario.usuario }}">
-
-                        <h3>Contraseña:</h3>
-                        <div class="campoPerfil">
-                            <input type="password" name="contra" id="contra" class="form-perfil" value="{{ usuario.contraseña }}">
-                            <span class="show">Mostrar</span>
-                        </div>
+                        {% if user.rol_id_rol.rol == 'Administrador' %}
+                            <h3>Contraseña:</h3>
+                            <div class="campoPerfil">
+                                <input type="password" name="contra" id="contra" class="form-perfil" value="{{ usuario.contraseña }}">
+                                <span class="show">Mostrar</span>
+                            </div>
+                        {% else %}
+                            <h3 class="oculto"></h3>
+                            <div class="campoPerfiloculto"></div>
+                        {% endif %}
 
                         <hr class="hrPerfil">
 

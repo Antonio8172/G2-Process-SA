@@ -61,6 +61,7 @@ urlpatterns = [
     path('detalle-flujo/<int:pk>/',         views.FlujoDetailView.as_view(),                    name = 'detalleFlujo'),
     path('borrar-flujo/<int:pk>/',          views.FlujoDetailView.eliminar_flujo,               name = 'borrarFlujo'),
     path('editar-flujo/',                   views.FlujoDetailView.editar_flujo,                 name = 'editarFlujo'),
+    path('ejecutar-flujo/<int:pk>/',        views.FlujoDetailView.ejecutar_flujo,               name = 'ejecutarFlujo'),
 
         #jerarquía
     path('crud-jerarquia/',                     views.CRUDJerarquiaView.as_view(),              name = 'crudJerarquia'),

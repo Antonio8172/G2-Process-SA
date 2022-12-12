@@ -45,7 +45,8 @@
                             </tr>
                             <tr>
                                 <td>ID Persona Asignada:</td>
-                                <td><select name="id_usuario" class="form-control" required id="id_usuario" onchange="changeFunc();">
+                                <div class="oculto" id="idUsuarioInput"><input type="hidden" id="id_usuario" name="id_usuario" value=""></div>
+                                <td><select name="idUsuarioSelect" class="form-control" required id="idUsuarioSelect" onchange="changeFunc();">
                                     <option value selected>- Seleccionar ID -</option>
                                     {% for u in usuarios %}
                                         
@@ -54,12 +55,12 @@
                                             {% if user.rol_id_rol.rol == 'Funcionario' and user.jerarquia_id_jerarquia.jerarquia == 'Funcionario' %}
 
                                                 {% if u.jerarquia_id_jerarquia.jerarquia != 'Gerente' and u.jerarquia_id_jerarquia.jerarquia != 'Funcionario' %}
-                                                    <option value="{{ u.id_usuario }}|{{ u.nombres }}">{{u.id_usuario}} - {{u.usuario}}</option>
+                                                    <option value="{{ u.id_usuario }}|{{ u.rut }}|{{ u.usuario }}|{{ u.correo }}|{{ u.celular }}|{{ u.unidad_id_unidad.unidad }}|{{ u.jerarquia_id_jerarquia.jerarquia }}|{{ u.rol_id_rol.rol }}">{{u.id_usuario}} - {{u.usuario}}</option>
                                                 {% endif %}
 
                                             {% else %}
 
-                                                <option value="{{u.id_usuario}}">{{u.id_usuario}} - {{u.usuario}}</option>
+                                                <option value="{{ u.id_usuario }}|{{ u.rut }}|{{ u.usuario }}|{{ u.correo }}|{{ u.celular }}|{{ u.unidad_id_unidad.unidad }}|{{ u.jerarquia_id_jerarquia.jerarquia }}|{{ u.rol_id_rol.rol }}">{{u.id_usuario}} - {{u.usuario}}</option>
 
                                             {% endif %}
 
@@ -133,42 +134,36 @@
         <script type="text/javascript">
 
             function changeFunc() {
-                var selectBox = document.getElementById("id_usuario");
+                var selectBox = document.getElementById("idUsuarioSelect");
                 let selectedValue = selectBox.options[selectBox.selectedIndex].value;
-                // alert(selectedValue) // alerta para verificar que obtiene el id del usuario
-                document.getElementById("prueba").innerHTML =   '{% for u in usuarios %}'+
-                                                                    '{% with iduserid=7 %}'+
-                                                                        '{% if u.id_usuario == iduserid %}'+
-                                                                            '<div class="tarjeta">'+
-                                                                                '<div class="tarjeta-imagen"></div>'+
-                                                                                '<div class="tarjeta-texto">'+
-                                                                                    '<span class="date">{{ u.rut }}</span>'+
-                                                                                    '<h2>{{ u.usuario }}</h2>'+
-                                                                                    '<p>Correo: {{ u.correo }}</p>'+
-                                                                                    '<p>Celular: {{ u.celular }}</p>'+
-                                                                                    '<p>Unidad: {{ u.unidad_id_unidad.unidad }}</p>'+
-                                                                                    '<p>Jerarquía: {{ u.jerarquia_id_jerarquia.jerarquia }}</p>'+
-                                                                                    '<p>Rol: {{ u.rol_id_rol.rol }}</p>'+
-                                                                                '</div>'+
-                                                                                '<div class="tarjeta-stats">'+
-                                                                                    '<div class="stat left">'+
-                                                                                        '<div class="value">4<sup>m</sup></div>'+
-                                                                                        '<div class="type">Tareas</div>'+
-                                                                                    '</div>'+
-                                                                                    '<div class="stat border">'+
-                                                                                        '<div class="value">5123</div>'+
-                                                                                        '<div class="type">Subordinados</div>'+
-                                                                                    '</div>'+
-                                                                                    '<div class="stat right">'+
-                                                                                        '<div class="value">32</div>'+
-                                                                                        '<div class="type">Flujos</div>'+
-                                                                                    '</div>'+
-                                                                                '</div>'+
-                                                                            '</div>'+
-                                                                        '{% endif %}'+
-                                                                    '{% endwith %}'+
-                                                                '{% endfor %}';
-
+                const usuarioArray = selectedValue.split("|");
+                document.getElementById("prueba").innerHTML =   '<div class="tarjeta">'+
+                                                                    '<div class="tarjeta-imagen"></div>'+
+                                                                    '<div class="tarjeta-texto">'+
+                                                                        '<span class="date">'+usuarioArray[1]+'</span>'+
+                                                                        '<h2>'+usuarioArray[2]+'</h2>'+
+                                                                        '<p>Correo: '+usuarioArray[3]+'</p>'+
+                                                                        '<p>Celular: '+usuarioArray[4]+'</p>'+
+                                                                        '<p>Unidad: '+usuarioArray[5]+'</p>'+
+                                                                        '<p>Jerarquía: '+usuarioArray[6]+'</p>'+
+                                                                        '<p>Rol: '+usuarioArray[7]+'</p>'+
+                                                                    '</div>'+
+                                                                    '<div class="tarjeta-stats">'+
+                                                                        '<div class="stat left">'+
+                                                                            '<div class="value">4<sup>m</sup></div>'+
+                                                                            '<div class="type">Tareas</div>'+
+                                                                        '</div>'+
+                                                                        '<div class="stat border">'+
+                                                                            '<div class="value">5123</div>'+
+                                                                            '<div class="type">Subordinados</div>'+
+                                                                        '</div>'+
+                                                                        '<div class="stat right">'+
+                                                                            '<div class="value">32</div>'+
+                                                                            '<div class="type">Flujos</div>'+
+                                                                        '</div>'+
+                                                                    '</div>'+
+                                                                '</div>';
+                document.getElementById("idUsuarioInput").innerHTML = '<input type="hidden" id="id_usuario" name="id_usuario" value="'+usuarioArray[0]+'">';
             }
             
             function limpiarCampos() {
