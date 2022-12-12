@@ -34,7 +34,7 @@
                     /* Cartas Principales                              */
                     /* ----------------------------------------------- */
 
-                    /* Divide las cartas principales en 3 columnas */
+                    /* Divide las cartas principales en 1 columnas */
                     .cartas-principales {
                         column-count: 1;
                     }
@@ -52,7 +52,6 @@
                 }
             </style>
             <!-- Datos de la cantidad de tareas por color actualmente -->
-            <!-- <input type="hidden" id="cantidadColor" value="{{ cantTareas }}"> -->
             <input type="hidden" id="cantidadVerde" value="{{ cantTareas.Verdes }}">
             <input type="hidden" id="cantidadAmarillo" value="{{ cantTareas.Amarillas }}">
             <input type="hidden" id="cantidadRojo" value="{{ cantTareas.Rojas }}">
@@ -314,6 +313,33 @@
             title.text = "Cantidad de Tareas por Jerarquía";
             title.fontSize = 30;
             title.marginBottom = 5;
+
+
+            function descargarPDF() {
+                Swal.fire({
+                    title: '¿Quieres descargar el contenido en PDF?',
+                    text: 'Descargarás la información de los gráficos que puedes visualizar en este panel.',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    confirmButtonText: 'Si, descargar',
+                    denyButtonText: `No, cancelar`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                            '¡Perfecto!',
+                            'Serás redirigido en unos segundos al PDF que podrás descargar.',
+                            'success'
+                        )
+                        setTimeout(function(){ window.location.href = "{% url 'AppWebHome:descargarPDF' %}"; }, 1500);
+                    } else if (result.isDenied) {
+                        Swal.fire(
+                            'Cancelado',
+                            '.',
+                            'info'
+                        )
+                    }
+                })
+            }
 
     </script>
 

@@ -65,7 +65,6 @@ Crear Jerarquía
                             <tr>
                                 <th class="ID">ID</th>
                                 <th class="Nombre">Jerarquía</th>
-                                <!-- <th>Agregar</th> -->
                                 <th>borrar</th>
                             </tr>
                         </thead>
@@ -75,13 +74,8 @@ Crear Jerarquía
                                 <tr class="tr1">
                                     <td class="td1 ID">{{jerarquia.id_jerarquia}}</td>
                                     <td class="td1 Nombre">{{jerarquia.jerarquia}}</td>
-                                    <!-- <td class="td1" style="padding-left: 20px;">
-                                        <button>
-                                            <img src="/static/img/iconos/deshacer.png" alt="imagen para agregar a la tabla" id="img-icono-3">
-                                        </button>
-                                    </td> -->
                                     <td class="td1" style="width: 40px;">
-                                        <a class="a1" href="borrar/{{ jerarquia.id_jerarquia }}">
+                                        <a class="a1" href="/borrar-jerarquia/{{ jerarquia.id_jerarquia }}">
                                             <img src="/static/img/iconos app/eliminar.png" alt="imagen para eliminar una jerarquía" style="width: 20px;">
                                         </a>
                                     </td>

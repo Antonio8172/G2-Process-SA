@@ -67,6 +67,33 @@ class PanelControlView(LoginRequiredMixin, ListView):
         context['ultimoCantJerar']    = len(CantidadTareas.jerarquia())
         return context
 
+class PDFview(TemplateView):
+    model               = Tarea
+    template_name       = 'PDF/graficos1.html'
+    context_object_name = "tareas"
+    # Obtención de otros datos
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cantTareas']         = CantidadTareas.color_RGY()
+        context['cantUnidades']       = CantidadTareas.unidad_color_RGY()
+        context['ultimoCantUnidad']   = len(CantidadTareas.unidad_color_RGY())
+        context['cantidadJerarquias'] = CantidadTareas.jerarquia()
+        context['ultimoCantJerar']    = len(CantidadTareas.jerarquia())
+        return context
+
+class GraficosPDFView(View):
+    def get(self, request, *args, **kwargs):
+        responsable = request.user.nombres + ' ' + request.user.apellidos
+        datos = {
+            'responsable'        : responsable,
+            'fechaActual'        : OperacionesFechas.fecha_actual(),
+            'cantTareas'         : CantidadTareas.color_RGY(),
+            'cantUnidades'       : CantidadTareas.unidad_color_RGY(),
+            'cantidadJerarquias' : CantidadTareas.jerarquia(),
+        }
+        pdf = Html2Pdf.render_2_pdf('PDF/graficos1.html', datos)
+        return HttpResponse(pdf, content_type='application/pdf')
+
 
 #----------------------------------------------------------------------------------------------------------------#
 # Usuarios
@@ -183,7 +210,7 @@ class UsuarioDetailView(LoginRequiredMixin, DetailView):
     def editar_usuario(request):
         return ModificacionesModelos.editar_usuario(request)
 
-    # Permite borrar el usuario.
+    # Permite eliminar el usuario.
     def eliminar_usuario(request, pk):
         return ModificacionesModelos.borrar_usuario(request, pk)
 
@@ -271,6 +298,9 @@ class TareaDetailView(LoginRequiredMixin, DetailView):
     # Permite eliminar la tarea.
     def eliminar_tarea(request, pk):
         return ModificacionesModelos.borrar_tarea(request, pk)
+
+    def reportar_problema(request):
+        return ModificacionesModelos.reportar_problema(request)
 
 
 #-----------------------------#

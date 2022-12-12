@@ -65,7 +65,6 @@ Crear Rol
                             <tr>
                                 <th class="ID">ID</th>
                                 <th class="Nombre">Rol</th>
-                                <!-- <th>Agregar</th> -->
                                 <th>borrar</th>
                             </tr>
                         </thead>
@@ -75,13 +74,8 @@ Crear Rol
                                 <tr class="tr1">
                                 <td class="td1 ID">{{rol.id_rol}}</td>
                                 <td class="td1 Nombre">{{rol.rol}}</td>
-                                <!-- <td class="td2" style="padding-left: 20px;">
-                                    <button>
-                                        <img src="/static/img/iconos/deshacer.png" alt="imagen para agregar a la tabla" id="img-icono-3">
-                                    </button>
-                                </td> -->
                                 <td class="td1" style="width: 40px;">
-                                    <a class="a1" href="borrar/{{ rol.id_rol }}">
+                                    <a class="a1" href="/borrar-rol/{{ rol.id_rol }}">
                                         <img src="/static/img/iconos app/eliminar.png" alt="imagen para eliminar un rol" style="width: 20px;">        
                                     </a>
                                 </td>

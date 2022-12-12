@@ -65,7 +65,6 @@ Crear Unidad
                             <tr>
                                 <th class="ID">ID</th>
                                 <th class="Nombre">Unidad</th>
-                                <!-- <th>Agregar</th> -->
                                 <th>borrar</th>
                             </tr>
                         </thead>
@@ -75,13 +74,8 @@ Crear Unidad
                                 <tr class="tr1">
                                 <td class="td1 ID">{{unidad.id_unidad}}</td>
                                 <td class="td1 Nombre">{{unidad.unidad}}</td>
-                                <!-- <td class="td1" style="padding-left: 20px;">
-                                    <button>
-                                        <img src="/static/img/iconos/deshacer.png" alt="imagen para agregar a la tabla" id="img-icono-3">
-                                    </button>
-                                </td> -->
                                 <td class="td1" style="width: 40px;">
-                                    <a class="a1" href="borrar/{{ unidad.id_unidad }}">
+                                    <a class="a1" href="/borrar-unidad/{{ unidad.id_unidad }}">
                                         <img src="/static/img/iconos app/eliminar.png" alt="imagen para eliminar una unidad" style="width: 20px;">        
                                     </a>
                                 </td>

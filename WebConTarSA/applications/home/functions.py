@@ -149,9 +149,23 @@ class ModificacionesModelos():
     def borrar_tarea(request, pk):
         tarea = Tarea.objects.get(id_tarea=pk)
         tarea.delete()
-        messages.success(request, 'La tarea se ha borrado con éxito')
+        messages.success(request, 'La tarea se ha borrado con éxito.')
         return HttpResponseRedirect(reverse('AppWebHome:verTareas')+"?page=1")
 
+# Reportar tarea
+    def reportar_problema(request):
+        id_tarea = request.POST['id_tarea']
+        reporte  = request.POST['reporte']
+
+        tarea = Tarea.objects.get(id_tarea=id_tarea)
+
+        tarea.reporte               = reporte
+        tarea.usuario_id_usuario_id = 42
+
+        tarea.save()
+        Correo.notificar_reporte(tarea.usuario_id_usuario_id, tarea)
+        messages.success(request, 'Tu reporte se ha enviado con éxito.')
+        return HttpResponseRedirect(reverse('AppWebHome:verTareas')+"?page=1")
 # Crear Flujo
     def crear_flujo(datos, idEstado):
         flujoCreado = Flujo.objects.crear_flujo(
@@ -405,7 +419,11 @@ class CantidadTareas():
         i            = 0
         # Se define el diccionario para su posterior modificación.
         for u in unidades:
-            dictCantidad[i] = {"Unidad": u.unidad,"Rojas": 0, "Verdes": 0, "Amarillas": 0}
+            dictCantidad[i] = {"Unidad": u.unidad,"Rojas": 0, "Verdes": 0, "Amarillas": 0, 'numero': ''}
+            if i % 2 == 0:
+                dictCantidad[i]["numero"] = 'par'
+            else:
+                dictCantidad[i]["numero"] = 'impar'
             i += 1
 
         for t in tareas:
@@ -425,6 +443,7 @@ class CantidadTareas():
                     else:
                         dictCantidad[i]["Amarillas"] += 1
                     break
+                    
                 i+= 1
 
         return dictCantidad
@@ -438,7 +457,11 @@ class CantidadTareas():
         i=0
         # Se define el diccionario para su posterior modificación.
         for j in jerarquias:
-            dictCantidad[i] = {"Jerarquia": j.jerarquia,"Cantidad": 0}
+            dictCantidad[i] = {"Jerarquia": j.jerarquia,"Cantidad": 0, 'numero': ''}
+            if i % 2 == 0:
+                dictCantidad[i]["numero"] = 'par'
+            else:
+                dictCantidad[i]["numero"] = 'impar'
             i += 1
 
         for t in tareas:
@@ -467,6 +490,25 @@ class Correo():
 
         email = EmailMultiAlternatives(
             'Tienes una nueva tarea asignada.',
+            'Descripción de prueba',
+            settings.EMAIL_HOST_USER,
+            [correo]
+        )
+        email.attach_alternative(content, 'text/html')
+        return email.send()
+
+    def notificar_reporte(idUsuario, tarea):
+        context = {
+            'tarea'  : tarea
+        }
+        usuario = Usuario.objects.get(id_usuario=idUsuario)
+        correo = usuario.correo
+
+        template = get_template('correos-templates/reporteTarea.html')
+        content = template.render(context)
+
+        email = EmailMultiAlternatives(
+            'Reportaron una tarea.',
             'Descripción de prueba',
             settings.EMAIL_HOST_USER,
             [correo]

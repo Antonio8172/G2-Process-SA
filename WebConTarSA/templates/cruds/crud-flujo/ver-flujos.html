@@ -26,15 +26,25 @@
                 {% for f in flujos %}
 
                     <div class="carta-principal">
-
-                        <!-- <div class="column"> -->
                             <a href="{% url 'AppWebHome:detalleFlujo' f.id_flujo %}" class="card">
                                 <p class="cabecera-card">ID: {{ f.id_flujo }}</p>
                                 <div class="contenido-card">
                                     <textarea rows="2" cols="25" style="resize: none; cursor:pointer; font-size: 20px; text-align: center; font-family: monospace;" readonly>{{ f.nombre_flujo }}</textarea>
                                 </div>
+                                <p class="pie-card">
+                                    
+                                    {% if f.estado_id_estado.estado == "Completado" %}
+                                        <img src="/static/img/iconos app/completado.png" alt="" id="img-icono-2">
+                                    {% elif f.estado_id_estado.estado == "Inactivo" %}
+                                        <img src="/static/img/iconos app/inactivo.png" alt="" id="img-icono-2">
+                                    {% elif f.estado_id_estado.estado == "En Proceso" %}
+                                        <img src="/static/img/iconos app/enproceso.png" alt="" id="img-icono-2">
+
+
+                                    {% endif %}
+                                        
+                                </p>
                             </a>
-                        <!-- </div> -->
 
                     </div>
                     
