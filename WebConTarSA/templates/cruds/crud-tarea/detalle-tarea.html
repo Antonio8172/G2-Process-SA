@@ -56,7 +56,7 @@
                                     {% if user.rol_id_rol.rol == "Funcionario" and user.jerarquia_id_jerarquia.jerarquia == "Subordinado" %}
                                     {% else %}
                                         {% for u in usuarios %}
-                                            <option value="{{u.id_usuario}}">{{u.id_usuario}} - {{u.usuario}}</option>
+                                            <option value="{{ u.id_usuario }}|{{ u.rut }}|{{ u.usuario }}|{{ u.correo }}|{{ u.celular }}|{{ u.unidad_id_unidad.unidad }}|{{ u.jerarquia_id_jerarquia.jerarquia }}|{{ u.rol_id_rol.rol }}">{{u.id_usuario}} - {{u.usuario}}</option>
                                         {% endfor %}
                                     {% endif %}
                                 </select></td>
@@ -214,7 +214,7 @@
             document.getElementById("prueba").innerHTML =   '<div class="tarjeta">'+
                                                                 '<div class="tarjeta-imagen"></div>'+
                                                                 '<div class="tarjeta-texto">'+
-                                                                    '<span class="date">'+usuarioArray[1]+'</span>'+
+                                                                    '<span class="c-{% if dd >= 7 %}verde{% elif dd < 7 and dd >= 0 %}amarillo{% else %}rojo{% endif %} fs-13px contorno-negro">'+usuarioArray[1]+'</span>'+
                                                                     '<h2>'+usuarioArray[2]+'</h2>'+
                                                                     '<p>Correo: '+usuarioArray[3]+'</p>'+
                                                                     '<p>Celular: '+usuarioArray[4]+'</p>'+
@@ -222,7 +222,7 @@
                                                                     '<p>Jerarquía: '+usuarioArray[6]+'</p>'+
                                                                     '<p>Rol: '+usuarioArray[7]+'</p>'+
                                                                 '</div>'+
-                                                                '<div class="tarjeta-stats">'+
+                                                                '<div class="tarjeta-stats sbg-{% if dd >= 7 %}verde{% elif dd < 7 and dd >= 0 %}amarillo{% else %}rojo{% endif %}">'+
                                                                     '<div class="stat left">'+
                                                                         '<div class="value">4<sup>m</sup></div>'+
                                                                         '<div class="type">Tareas</div>'+
