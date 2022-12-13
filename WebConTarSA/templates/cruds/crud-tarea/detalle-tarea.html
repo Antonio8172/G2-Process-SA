@@ -50,7 +50,8 @@
                             </tr>
                             <tr>
                                 <td>ID Persona Asignada:</td>
-                                <td><select name="id_usuario" class="form-control" required id="id_usuario">
+                                <div class="oculto" id="idUsuarioInput"><input type="hidden" id="id_usuario" name="id_usuario" value=""></div>
+                                <td><select name="idUsuarioSelect" class="form-control" required id="idUsuarioSelect" onchange="changeFunc();">
                                     <option value="{{ tarea.usuario_id_usuario.id_usuario }}" selected>- {{ tarea.usuario_id_usuario.id_usuario }} - {{ tarea.usuario_id_usuario.nombres }}-</option>
                                     {% if user.rol_id_rol.rol == "Funcionario" and user.jerarquia_id_jerarquia.jerarquia == "Subordinado" %}
                                     {% else %}
@@ -123,161 +124,10 @@
                 </div>
 
             </form>
-
-            <script>
-
-                function deshacerCambiosTarea() {
-                    Swal.fire({
-                        title: '¿Estás seguro?',
-                        text: 'Al deshacer los cambios, los datos volverán a ser los originales.',
-                        icon: 'warning',
-                        showDenyButton: true,
-                        denyButtonText: 'Si, deshacer',
-                        confirmButtonText: 'No, cancelar',
-                    }).then((result) => {
-                        if (result.isDenied) {
-                            Swal.fire(
-                                '¡Deshecho!',
-                                'Los cambios realizados en la tarea "{{ tarea.tarea }} se deshicieron."',
-                                'success'
-                            )
-                            setTimeout(function(){ window.location.href = "{% url 'AppWebHome:detalleTarea' tarea.id_tarea %}"; }, 1500);
-                        } else if (result.isConfirmed) {
-                            Swal.fire(
-                                'Cancelado',
-                                'Los cambios en la tarea "{{ tarea.tarea }}" están a salvo :)',
-                                'error'
-                            )
-                        }
-                    })
-                }
-
-                function actualizarTarea() {
-                    Swal.fire({
-                        title: '¿Estás seguro?',
-                        text: 'Actualizar la tarea "{{ tarea.tarea }}" será permanente.',
-                        icon: 'warning',
-                        showDenyButton: true,
-                        confirmButtonText: 'Si, actualizar',
-                        denyButtonText: `No, cancelar`,
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            Swal.fire(
-                                '¡Guardado!',
-                                'La tarea "{{ tarea.tarea }}" ha sido actualizada.',
-                                'success'
-                            )
-                            setTimeout(function(){ document.forms["formulario-tarea"].submit(); }, 1500);
-                        } else if (result.isDenied) {
-                            Swal.fire(
-                                'Cancelado',
-                                'Los cambios no fueron guardados.',
-                                'info'
-                            )
-                        }
-                    })
-                }
-
-                
-                async function reportarTarea() {
-
-                    Swal.fire({
-                        title: 'Reportando Tarea',
-                        html: '<form method="POST" id="formulario-reporte" action="reportar-tarea/">{% csrf_token %}'+
-                            '<input type="hidden" name="id_tarea" id="id_tarea" value="{{ tarea.id_tarea }}">'+
-                            '<textarea name="reporte" id="reporte" cols="43" rows="4" style="resize:none; font-family:monospace;" placeholder="Escribe tu reporte aquí..." required></textarea>'+
-                            '</form>',
-                        confirmButtonText: 'Enviar',
-                        showDenyButton: true,
-                        denyButtonText: 'Cancelar',
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            setTimeout(function(){ document.forms["formulario-reporte"].submit(); }, 1500);
-                        }
-                    })
-                }
-
-                function deshacerCambiosTarea() {
-                    Swal.fire({
-                        title: '¿Estás seguro?',
-                        text: 'Al deshacer los cambios, los datos volverán a ser los originales.',
-                        icon: 'warning',
-                        showDenyButton: true,
-                        denyButtonText: 'Si, deshacer',
-                        confirmButtonText: 'No, cancelar',
-                    }).then((result) => {
-                        if (result.isDenied) {
-                            Swal.fire(
-                                '¡Deshecho!',
-                                'Los cambios realizados en la tarea "{{ tarea.tarea }} se deshicieron."',
-                                'success'
-                            )
-                            setTimeout(function(){ window.location.href = "{% url 'AppWebHome:detalleTarea' tarea.id_tarea %}"; }, 1500);
-                        } else if (result.isConfirmed) {
-                            Swal.fire(
-                                'Cancelado',
-                                'Los cambios en la tarea "{{ tarea.tarea }}" están a salvo :)',
-                                'error'
-                            )
-                        }
-                    })
-                }
-
-                function actualizarTarea() {
-                    Swal.fire({
-                        title: '¿Estás seguro?',
-                        text: 'Actualizar la tarea "{{ tarea.tarea }}" será permanente.',
-                        icon: 'warning',
-                        showDenyButton: true,
-                        confirmButtonText: 'Si, actualizar',
-                        denyButtonText: `No, cancelar`,
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            Swal.fire(
-                                '¡Guardado!',
-                                'La tarea "{{ tarea.tarea }}" ha sido actualizada.',
-                                'success'
-                            )
-                            setTimeout(function(){ document.forms["formulario-tarea"].submit(); }, 1500);
-                        } else if (result.isDenied) {
-                            Swal.fire(
-                                'Cancelado',
-                                'Los cambios no fueron guardados.',
-                                'info'
-                            )
-                        }
-                    })
-                }
-
-                function borrarTarea() {
-                    Swal.fire({
-                        title: '¿Estás seguro?',
-                        text: 'Borrar la tarea "{{ tarea.tarea }}" será permanente.',
-                        icon: 'warning',
-                        showDenyButton: true,
-                        denyButtonText: 'Si, borrar',
-                        confirmButtonText: 'No, cancelar',
-                    }).then((result) => {
-                        if (result.isDenied) {
-
-                            window.location.href = "/borrar-tarea/{{ tarea.id_tarea }}";
-
-                        } else if (result.isConfirmed) {
-                            Swal.fire(
-                                'Cancelado',
-                                'La tarea "{{ tarea.tarea }}" está a salvo :)',
-                                'error'
-                            )
-                        }
-                    })
-
-                    
-                }
-            </script>
         </div>
         {% if user.rol_id_rol.rol == "Funcionario" and user.jerarquia_id_jerarquia.jerarquia == "Subordinado" %}
         {% else %}
-        <div class="xd">
+        <div id="prueba">
             
             <div class="tarjeta">
                 <div class="tarjeta-imagen"></div>
@@ -355,5 +205,188 @@
   
     </div>
     {% endif %}
+
+    <script>
+        function changeFunc() {
+            var selectBox = document.getElementById("idUsuarioSelect");
+            let selectedValue = selectBox.options[selectBox.selectedIndex].value;
+            const usuarioArray = selectedValue.split("|");
+            document.getElementById("prueba").innerHTML =   '<div class="tarjeta">'+
+                                                                '<div class="tarjeta-imagen"></div>'+
+                                                                '<div class="tarjeta-texto">'+
+                                                                    '<span class="date">'+usuarioArray[1]+'</span>'+
+                                                                    '<h2>'+usuarioArray[2]+'</h2>'+
+                                                                    '<p>Correo: '+usuarioArray[3]+'</p>'+
+                                                                    '<p>Celular: '+usuarioArray[4]+'</p>'+
+                                                                    '<p>Unidad: '+usuarioArray[5]+'</p>'+
+                                                                    '<p>Jerarquía: '+usuarioArray[6]+'</p>'+
+                                                                    '<p>Rol: '+usuarioArray[7]+'</p>'+
+                                                                '</div>'+
+                                                                '<div class="tarjeta-stats">'+
+                                                                    '<div class="stat left">'+
+                                                                        '<div class="value">4<sup>m</sup></div>'+
+                                                                        '<div class="type">Tareas</div>'+
+                                                                    '</div>'+
+                                                                    '<div class="stat border">'+
+                                                                        '<div class="value">5123</div>'+
+                                                                        '<div class="type">Subordinados</div>'+
+                                                                    '</div>'+
+                                                                    '<div class="stat right">'+
+                                                                        '<div class="value">32</div>'+
+                                                                        '<div class="type">Flujos</div>'+
+                                                                    '</div>'+
+                                                                '</div>'+
+                                                            '</div>';
+            document.getElementById("idUsuarioInput").innerHTML = '<input type="hidden" id="id_usuario" name="id_usuario" value="'+usuarioArray[0]+'">';
+        }
+
+        function deshacerCambiosTarea() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Al deshacer los cambios, los datos volverán a ser los originales.',
+                icon: 'warning',
+                showDenyButton: true,
+                denyButtonText: 'Si, deshacer',
+                confirmButtonText: 'No, cancelar',
+            }).then((result) => {
+                if (result.isDenied) {
+                    Swal.fire(
+                        '¡Deshecho!',
+                        'Los cambios realizados en la tarea "{{ tarea.tarea }} se deshicieron."',
+                        'success'
+                    )
+                    setTimeout(function(){ window.location.href = "{% url 'AppWebHome:detalleTarea' tarea.id_tarea %}"; }, 1500);
+                } else if (result.isConfirmed) {
+                    Swal.fire(
+                        'Cancelado',
+                        'Los cambios en la tarea "{{ tarea.tarea }}" están a salvo :)',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        function actualizarTarea() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Actualizar la tarea "{{ tarea.tarea }}" será permanente.',
+                icon: 'warning',
+                showDenyButton: true,
+                confirmButtonText: 'Si, actualizar',
+                denyButtonText: `No, cancelar`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        '¡Guardado!',
+                        'La tarea "{{ tarea.tarea }}" ha sido actualizada.',
+                        'success'
+                    )
+                    setTimeout(function(){ document.forms["formulario-tarea"].submit(); }, 1500);
+                } else if (result.isDenied) {
+                    Swal.fire(
+                        'Cancelado',
+                        'Los cambios no fueron guardados.',
+                        'info'
+                    )
+                }
+            })
+        }
+
+        
+        async function reportarTarea() {
+
+            Swal.fire({
+                title: 'Reportando Tarea',
+                html: '<form method="POST" id="formulario-reporte" action="reportar-tarea/">{% csrf_token %}'+
+                    '<input type="hidden" name="id_tarea" id="id_tarea" value="{{ tarea.id_tarea }}">'+
+                    '<textarea name="reporte" id="reporte" cols="43" rows="4" style="resize:none; font-family:monospace;" placeholder="Escribe tu reporte aquí..." required></textarea>'+
+                    '</form>',
+                confirmButtonText: 'Enviar',
+                showDenyButton: true,
+                denyButtonText: 'Cancelar',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setTimeout(function(){ document.forms["formulario-reporte"].submit(); }, 1500);
+                }
+            })
+        }
+
+        function deshacerCambiosTarea() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Al deshacer los cambios, los datos volverán a ser los originales.',
+                icon: 'warning',
+                showDenyButton: true,
+                denyButtonText: 'Si, deshacer',
+                confirmButtonText: 'No, cancelar',
+            }).then((result) => {
+                if (result.isDenied) {
+                    Swal.fire(
+                        '¡Deshecho!',
+                        'Los cambios realizados en la tarea "{{ tarea.tarea }} se deshicieron."',
+                        'success'
+                    )
+                    setTimeout(function(){ window.location.href = "{% url 'AppWebHome:detalleTarea' tarea.id_tarea %}"; }, 1500);
+                } else if (result.isConfirmed) {
+                    Swal.fire(
+                        'Cancelado',
+                        'Los cambios en la tarea "{{ tarea.tarea }}" están a salvo :)',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        function actualizarTarea() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Actualizar la tarea "{{ tarea.tarea }}" será permanente.',
+                icon: 'warning',
+                showDenyButton: true,
+                confirmButtonText: 'Si, actualizar',
+                denyButtonText: `No, cancelar`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        '¡Guardado!',
+                        'La tarea "{{ tarea.tarea }}" ha sido actualizada.',
+                        'success'
+                    )
+                    setTimeout(function(){ document.forms["formulario-tarea"].submit(); }, 1500);
+                } else if (result.isDenied) {
+                    Swal.fire(
+                        'Cancelado',
+                        'Los cambios no fueron guardados.',
+                        'info'
+                    )
+                }
+            })
+        }
+
+        function borrarTarea() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Borrar la tarea "{{ tarea.tarea }}" será permanente.',
+                icon: 'warning',
+                showDenyButton: true,
+                denyButtonText: 'Si, borrar',
+                confirmButtonText: 'No, cancelar',
+            }).then((result) => {
+                if (result.isDenied) {
+
+                    window.location.href = "/borrar-tarea/{{ tarea.id_tarea }}";
+
+                } else if (result.isConfirmed) {
+                    Swal.fire(
+                        'Cancelado',
+                        'La tarea "{{ tarea.tarea }}" está a salvo :)',
+                        'error'
+                    )
+                }
+            })
+
+            
+        }
+    </script>
 
 {% endblock contenido %}

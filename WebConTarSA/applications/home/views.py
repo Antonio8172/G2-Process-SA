@@ -362,14 +362,15 @@ class FlujoDetailView(LoginRequiredMixin, DetailView):
         context["fechaActual"]  = OperacionesFechas.fecha_actual()
         return context
 
-    # Permite editar la tarea.
+    # Permite editar el flujo.
     def editar_flujo(request):
         return ModificacionesModelos.editar_flujo(request)
 
-    # Permite eliminar la tarea.
+    # Permite eliminar el flujo.
     def eliminar_flujo(request, pk):
         return ModificacionesModelos.borrar_flujo(request, pk)
 
+    # Permite ejecutar el flujo
     def ejecutar_flujo(request, pk):
         return ModificacionesModelos.ejecutar_flujo(request, pk)
 
