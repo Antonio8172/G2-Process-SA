@@ -158,6 +158,7 @@ class JerarquiaForm(forms.ModelForm):
         ]
         widgets = {
             'jerarquia' : forms.TextInput(attrs={
+                'id'        : 'nombreJerarquia',
                 'class'     : 'form-control',
                 'width'     : '300px',
                 'required'  : 'true',

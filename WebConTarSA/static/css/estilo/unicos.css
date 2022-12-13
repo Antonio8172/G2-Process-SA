@@ -1,7 +1,9 @@
 .oculto {
     visibility: hidden;
 }
-
+.desaparece{
+    display: none;
+}
 /* Color de fondo */
 .bg-rojo{
     background-color: rgba(255, 0, 0, 0.5);

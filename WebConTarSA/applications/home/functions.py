@@ -211,6 +211,18 @@ class ModificacionesModelos():
         jerarquiaCreada = Jerarquia.objects.crear_jerarquia(datos['jerarquia'],)
         return jerarquiaCreada
 
+# Editar Jerarquía
+    def editar_jerarquia(request):
+        id_jerarquia = request.POST['id_jerarquia']
+        nomjerarquia = request.POST['nombre_jerarquia']
+
+        jerarquia = Jerarquia.objects.get(id_jerarquia=id_jerarquia)
+
+        jerarquia.jerarquia = nomjerarquia
+        jerarquia.save()
+        messages.success(request, 'La jerarquía se ha actualizada exitosamente.')
+        return HttpResponseRedirect(reverse('AppWebHome:crearJerarquia'))
+
 # Borrar Jerarquía
     def borrar_jerarquia(request, id):
         jerarquia = Jerarquia.objects.get(id_jerarquia=id)
@@ -223,6 +235,18 @@ class ModificacionesModelos():
         rolCreado = Rol.objects.crear_rol(datos['rol'],)
         return rolCreado
 
+# Editar Rol
+    def editar_rol(request):
+        id_rol = request.POST['id_rol']
+        nomrol = request.POST['nombre_rol']
+
+        rol = Rol.objects.get(id_rol=id_rol)
+
+        rol.rol = nomrol
+        rol.save()
+        messages.success(request, 'El rol se ha actualizado exitosamente.')
+        return HttpResponseRedirect(reverse('AppWebHome:crearRol'))
+
 # Borrar Rol
     def borrar_rol(request, id):
         rol = Rol.objects.get(id_rol=id)
@@ -234,6 +258,18 @@ class ModificacionesModelos():
     def crear_unidad(datos):
         unidadCreada = Unidad.objects.crear_unidad(datos['unidad'])
         return unidadCreada
+
+# Editar Unidad
+    def editar_unidad(request):
+        id_unidad = request.POST['id_unidad']
+        nomunidad = request.POST['nombre_unidad']
+
+        unidad = Unidad.objects.get(id_unidad=id_unidad)
+
+        unidad.unidad = nomunidad
+        unidad.save()
+        messages.success(request, 'La unidad se ha actualizada exitosamente.')
+        return HttpResponseRedirect(reverse('AppWebHome:crearUnidad'))
 
 # Borrar Unidad
     def borrar_unidad(request, id):

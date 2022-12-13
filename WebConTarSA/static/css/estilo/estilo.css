@@ -60,19 +60,16 @@ body{
 
 /* tablas */
 
-tr.tr1, tr.tr2{
+tr.tr1 {
   border: 1px solid black;
 }
 tr.tr1:hover {
   background-color: rgb(97, 15, 173);
   color: white;
   border: 1px solid orangered;
+  cursor: pointer;
 }
-tr.tr2:hover {
-  background-color: orangered;
-  color: white;
-  border: 1px solid rgb(97, 15, 173);
-}
+
 
 td.td1 {
   padding: 2px;

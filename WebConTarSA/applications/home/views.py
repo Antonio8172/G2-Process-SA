@@ -413,6 +413,10 @@ class JerarquiaCreateView(LoginRequiredMixin, FormView):
     # Eliminación de una jerarquía.
     def eliminar_jerarquia(request, id):
         return ModificacionesModelos.borrar_jerarquia(request, id)
+    
+    # Edición de una jerarquía
+    def editar_jerarquia(request):
+        return ModificacionesModelos.editar_jerarquia(request)
 
 
 #-----------------------------#
@@ -454,6 +458,10 @@ class RolCreateView(LoginRequiredMixin, FormView):
     def eliminar_rol(request, id):
         return ModificacionesModelos.borrar_rol(request, id)
 
+    # Edición de unn rol.
+    def editar_rol(request):
+        return ModificacionesModelos.editar_rol(request)
+
 
 #-----------------------------#
 # crud unidades               #
@@ -493,3 +501,7 @@ class UnidadCreateView(LoginRequiredMixin, FormView):
     # Eliminación de una unidad.
     def eliminar_unidad(request, id):
         return ModificacionesModelos.borrar_unidad(request, id)
+
+    # Edición de una unidad.
+    def editar_unidad(request):
+        return ModificacionesModelos.editar_unidad(request)

@@ -14,42 +14,42 @@ Crear Unidad
         <a href="{% url 'AppWebHome:crudUnidad' %}" style="position:absolute; top:0; right:0;">
             <img class="btn-cerrar-1" id="img-icono-2" src="/static/img/iconos app/volveer.png" alt="imagen para cerrar">
         </a>
+        <form method="POST" action="{% url 'AppWebHome:editarUnidad' %}" id="formulario-unidad-actualizar"> {% csrf_token %}
+            <div class="oculto" id="idpruebau"><input type="hidden" value="" id="id_unidad" name="id_unidad"></div>
+            <div class="oculto" id="nombrepruebau"><input type="hidden" value="" id="nombre_unidad" name="nombre_unidad"></div>
+        </form>
 
         <div class="caja-arriba">
             <div class="tarjeta-form" style="grid-template-rows: 65px 102px 89px;">
                 <div class="tarjeta-titulo" style="background-color: rgb(97, 15, 173);"><h2>Crear nueva unidad</h2></div>
-                <form method="POST"> {% csrf_token %}
+                <form method="POST" id="formulario-unidad-crear"> {% csrf_token %}
                     <div class="tarjeta-texto">
                         <table style="padding: 25px 8%;">
                             <tbody>
                                 <tr>
                                     <td>ID:</td>
-                                    <td><input type="number" placeholder="Se registra automáticamente." readonly></td>
+                                    <td id="tdIdUnidad"><input type="number" placeholder="Se registra automáticamente." readonly id="idUnidad"></td>
                                 </tr>
                                 <tr>
                                     <td>Nombre Unidad: </td>
-                                    <td>{{form.unidad}}</td>
+                                    <td id="tdNombreUnidad">{{form.unidad}}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="tarjeta-botones">
-                        <a href="{% url 'AppWebHome:crearUnidad' %}">
-                            <div class="stat left">
-                                <img id="img-icono-2" src="/static/img/iconos app/polvo.png" alt="imagen para limpiar campos">
-                                <div class="valor">Limpiar</div>
-                            </div>
-                        </a>
-                        <button type="submit" class="stat border">
+                        <button onclick="limpiarCamposUnidad()" type="button" class="stat left">
+                            <img id="img-icono-2" src="/static/img/iconos app/polvo.png" alt="imagen para limpiar campos">
+                            <div class="valor">Limpiar</div>
+                        </button>
+                        <button onclick="crearUnidad()" type="button" class="stat border">
                             <img src="/static/img/iconos app/creaar.png" alt="imagen para crear" id="img-icono-2">
                             <div class="valor">Agregar</div>
                         </button>
-                        <a href="{% url 'AppWebHome:crearUnidad' %}">
-                            <div class="stat right">
-                                <img id="img-icono-2" src="/static/img/iconos app/actualizar.png" alt="imagen para ver tareas">
-                                <div class="valor">Actualizar</div>
-                            </div>
-                        </a>
+                        <button onclick="actualizarUnidad()" type="button" class="stat border">
+                            <img id="img-icono-2" src="/static/img/iconos app/actualizar.png" alt="imagen para actualizar">
+                            <div class="valor">Actualizar</div>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -71,14 +71,16 @@ Crear Unidad
             
                         <tbody>
                             {% for unidad in unidades %}
-                                <tr class="tr1">
-                                <td class="td1 ID">{{unidad.id_unidad}}</td>
-                                <td class="td1 Nombre">{{unidad.unidad}}</td>
-                                <td class="td1" style="width: 40px;">
-                                    <a class="a1" href="/borrar-unidad/{{ unidad.id_unidad }}">
-                                        <img src="/static/img/iconos app/eliminar.png" alt="imagen para eliminar una unidad" style="width: 20px;">        
-                                    </a>
-                                </td>
+                                <tr class="tr1" onclick="pasarDatosUnidad('{{unidad.id_unidad}}')" id="tr1{{unidad.id_unidad}}">
+                                    <td class="td1 ID">{{unidad.id_unidad}}</td>
+                                    <td class="td1 Nombre">{{unidad.unidad}}</td>
+                                    <td class="td1" style="width: 40px;">
+                                        <a class="a1" href="/borrar-unidad/{{ unidad.id_unidad }}">
+                                            <img class="a1" onclick="borrarUnidad('{{unidad.id_unidad}}', '{{unidad.unidad}}')" src="/static/img/iconos app/eliminar.png" alt="imagen para eliminar una unidad" style="width: 20px;">        
+                                        </a>
+                                    </td>
+                                    <input type="hidden" name="id{{unidad.id_unidad}}"id="id{{unidad.id_unidad}}" value="{{ unidad.id_unidad }}">
+                                    <input type="hidden" name="nombre{{unidad.id_unidad}}"id="nombre{{unidad.id_unidad}}" value="{{ unidad.unidad }}">
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -90,5 +92,121 @@ Crear Unidad
             </div>
         </div>
     </div>
+    <script>
+        function pasarDatosUnidad(i) {
+            var idUnidad = document.getElementById("id"+i).value;
+            var nombreUnidad = document.getElementById("nombre"+i).value;
+
+            document.getElementById("tdIdUnidad").innerHTML = '<input type="number" value="'+idUnidad+'" readonly id="idUnidad">';
+            document.getElementById("tdNombreUnidad").innerHTML = '<input type="text" name="unidad" id="nombreUnidad" class="form-control" width="300px" required="" maxlength="50" value="'+nombreUnidad+'">';
+
+            document.getElementById("idpruebau").innerHTML = '<input type="hidden" value="'+idUnidad+'" id="id_unidad" name="id_unidad">';
+            document.getElementById("nombrepruebau").innerHTML = '<input type="hidden" value="'+nombreUnidad+'" id="nombre_unidad" name="nombre_unidad">';
+
+        }
+
+        function limpiarCamposUnidad() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Al limpiar los campos, los datos ingresados se perderán para siempre :(.',
+                icon: 'warning',
+                showDenyButton: true,
+                denyButtonText: 'Si, limpiar',
+                confirmButtonText: 'No, cancelar',
+            }).then((result) => {
+                if (result.isDenied) {
+                    Swal.fire(
+                        '¡Limpio!',
+                        'Los campos del formulario están en blanco."',
+                        'success'
+                    )
+                    setTimeout(function(){ window.location.href = "{% url 'AppWebHome:crearUnidad' %}"; }, 1500);
+                } else if (result.isConfirmed) {
+                    Swal.fire(
+                        'Cancelado',
+                        'Los campos del formulario están a salvo :)',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        function crearUnidad() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Estás a punto de crear una nueva unidad.',
+                icon: 'warning',
+                showDenyButton: true,
+                confirmButtonText: 'Si, crear',
+                denyButtonText: `No, cancelar`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        '¡Guardado!',
+                        'Se ha creado una nueva unidad.',
+                        'success'
+                    )
+                    setTimeout(function(){ document.forms["formulario-unidad-crear"].submit(); }, 1500);
+                } else if (result.isDenied) {
+                    Swal.fire(
+                        'Cancelado',
+                        'No se ha creado nada.',
+                        'info'
+                    )
+                }
+            })
+        }
+        function actualizarUnidad() {
+            var unidad = document.getElementById("nombre_unidad").value;
+            var nombreUnidad = document.getElementById("nombreUnidad").value;
+            var idUnidad = document.getElementById("idUnidad").value;
+
+            console.log(unidad);
+            console.log(nombreUnidad)
+
+            document.getElementById("idpruebau").innerHTML = '<input type="hidden" value="'+idUnidad+'" id="id_unidad" name="id_unidad">';
+            document.getElementById("nombrepruebau").innerHTML = '<input type="hidden" value="'+nombreUnidad+'" id="nombre_unidad" name="nombre_unidad">';
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Actualizar la unidad "'+unidad+'" será permanente.',
+                icon: 'warning',
+                showDenyButton: true,
+                confirmButtonText: 'Si, actualizar',
+                denyButtonText: `No, cancelar`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setTimeout(function(){ document.forms["formulario-unidad-actualizar"].submit(); }, 1500);
+                } else if (result.isDenied) {
+                    Swal.fire(
+                        'Cancelado',
+                        'Los cambios no fueron guardados.',
+                        'info'
+                    )
+                }
+            })
+        }
+        function borrarUnidad(i, unidad) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Borrar la unidad "'+unidad+'" será permanente.',
+                icon: 'warning',
+                showDenyButton: true,
+                denyButtonText: 'Si, borrar',
+                confirmButtonText: 'No, cancelar',
+            }).then((result) => {
+                if (result.isDenied) {
+
+                    window.location.href = "/borrar-unidad/"+i;
+
+                } else if (result.isConfirmed) {
+                    Swal.fire(
+                        'Cancelado',
+                        'La unidad "'+unidad+'" está a salvo :)',
+                        'error'
+                    )
+                }
+            })
+        }
+    </script>
 
 {% endblock contenido %}

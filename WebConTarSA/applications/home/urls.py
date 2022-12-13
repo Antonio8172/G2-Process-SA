@@ -64,21 +64,21 @@ urlpatterns = [
     path('ejecutar-flujo/<int:pk>/',        views.FlujoDetailView.ejecutar_flujo,               name = 'ejecutarFlujo'),
 
         #jerarquía
-    path('crud-jerarquia/',                     views.CRUDJerarquiaView.as_view(),              name = 'crudJerarquia'),
-    path('crear-jerarquia/',                    views.JerarquiaCreateView.as_view(),            name = 'crearJerarquia'),
-    path('borrar-jerarquia/<int:id>',           views.JerarquiaCreateView.eliminar_jerarquia,   name = 'borrarJerarquia'),
-    # path('editar-jerarquia/',                   views.JerarquiaCreateView.editar_jerarquia,    name = 'editarJerarquia'),
+    path('crud-jerarquia/',                 views.CRUDJerarquiaView.as_view(),                  name = 'crudJerarquia'),
+    path('crear-jerarquia/',                views.JerarquiaCreateView.as_view(),                name = 'crearJerarquia'),
+    path('borrar-jerarquia/<int:id>',       views.JerarquiaCreateView.eliminar_jerarquia,       name = 'borrarJerarquia'),
+    path('editar-jerarquia/',               views.JerarquiaCreateView.editar_jerarquia,         name = 'editarJerarquia'),
 
         #rol
-    path('crud-rol/',                           views.CRUDRolView.as_view(),                    name = 'crudRol'),
-    path('crear-rol/',                          views.RolCreateView.as_view(),                  name = 'crearRol'),
-    path('borrar-rol/<int:id>',           views.RolCreateView.eliminar_rol,               name = 'borrarRol'),
-    # path('editar-rol/',                         views.RolCreateView.editar_rol,                name = 'editarRol'),
+    path('crud-rol/',                       views.CRUDRolView.as_view(),                        name = 'crudRol'),
+    path('crear-rol/',                      views.RolCreateView.as_view(),                      name = 'crearRol'),
+    path('borrar-rol/<int:id>',             views.RolCreateView.eliminar_rol,                   name = 'borrarRol'),
+    path('editar-rol/',                     views.RolCreateView.editar_rol,                     name = 'editarRol'),
 
         #unidad
     path('crud-unidad/',                    views.CRUDUnidadView.as_view(),                     name = 'crudUnidad'),
     path('crear-unidad/',                   views.UnidadCreateView.as_view(),                   name = 'crearUnidad'),
-    path('borrar-unidad/<int:id>',    views.UnidadCreateView.eliminar_unidad,             name = 'borrarUnidad'),
-    # path('editar-unidad/',                   views.UnidadCreateView.editar_unidad,             name = 'editarUnidad'),
+    path('borrar-unidad/<int:id>',          views.UnidadCreateView.eliminar_unidad,             name = 'borrarUnidad'),
+    path('editar-unidad/',                  views.UnidadCreateView.editar_unidad,               name = 'editarUnidad'),
 
 ]

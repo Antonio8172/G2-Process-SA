@@ -15,43 +15,44 @@ Crear Rol
             <img class="btn-cerrar-1" id="img-icono-2" src="/static/img/iconos app/volveer.png" alt="imagen para cerrar">
         </a>
 
+        <form method="POST" action="{% url 'AppWebHome:editarRol' %}" id="formulario-rol-actualizar"> {% csrf_token %}
+            <div class="oculto" id="idpruebar"><input type="hidden" value="" id="id_rol" name="id_rol"></div>
+            <div class="oculto" id="nombrepruebar"><input type="hidden" value="" id="nombre_rol" name="nombre_rol"></div>
+        </form>
+
         <div class="caja-arriba">
             <div class="tarjeta-form" style="grid-template-rows: 65px 102px 89px;">
                 <div class="tarjeta-titulo" style="background-color: rgb(97, 15, 173);"><h2>Crear nuevo rol</h2></div>
-                <form method="POST"> {% csrf_token %}
+                <form method="POST" id="formulario-rol-crear"> {% csrf_token %}
                     <div class="tarjeta-texto">
                         <table style="padding: 25px 8%;">
                             <tbody>
                                 <tr>
                                     <td>ID:</td>
-                                    <td><input type="number" placeholder="Se registra automáticamente." readonly></td>
+                                    <td id="tdIdRol"><input type="number" placeholder="Se registra automáticamente." readonly></td>
                                 </tr>
                                 <tr>
                                     <td>Nombre Rol: </td>
-                                    <td>{{form.rol}}</td>
+                                    <td id="tdNombreRol">{{form.rol}}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="tarjeta-botones">
-                        <a href="{% url 'AppWebHome:crearRol' %}">
-                            <div class="stat left">
-                                <img id="img-icono-2" src="/static/img/iconos app/polvo.png" alt="imagen para limpiar campos">
-                                <div class="valor">Limpiar</div>
-                            </div>
-                        </a>
-                        <button type="submit" class="stat border">
-                            <img src="/static/img/iconos app/creaar.png" alt="imagen para crear" id="img-icono-2">
-                            <div class="valor">Agregar</div>
-                        </button>
-                        <a href="{% url 'AppWebHome:crearRol' %}">
-                            <div class="stat right">
-                                <img id="img-icono-2" src="/static/img/iconos app/actualizar.png" alt="imagen para ver tareas">
-                                <div class="valor">Actualizar</div>
-                            </div>
-                        </a>
-                    </div>
                 </form>
+                <div class="tarjeta-botones">
+                    <button onclick="limpiarCamposRol()" type="button" class="stat left">
+                        <img id="img-icono-2" src="/static/img/iconos app/polvo.png" alt="imagen para limpiar campos">
+                        <div class="valor">Limpiar</div>
+                    </button>
+                    <button onclick="crearRol()" type="button" class="stat border">
+                        <img src="/static/img/iconos app/creaar.png" alt="imagen para crear" id="img-icono-2">
+                        <div class="valor">Agregar</div>
+                    </button>
+                    <button onclick="actualizarRol()" type="button" class="stat border">
+                        <img id="img-icono-2" src="/static/img/iconos app/actualizar.png" alt="imagen para actualizar">
+                        <div class="valor">Actualizar</div>
+                    </button>
+                </div>
             </div>
             <div class="tarjeta-tabla" style="grid-template-columns: 300px;">
 
@@ -71,14 +72,14 @@ Crear Rol
             
                         <tbody>
                             {% for rol in roles %}
-                                <tr class="tr1">
-                                <td class="td1 ID">{{rol.id_rol}}</td>
-                                <td class="td1 Nombre">{{rol.rol}}</td>
-                                <td class="td1" style="width: 40px;">
-                                    <a class="a1" href="/borrar-rol/{{ rol.id_rol }}">
-                                        <img src="/static/img/iconos app/eliminar.png" alt="imagen para eliminar un rol" style="width: 20px;">        
-                                    </a>
-                                </td>
+                                <tr class="tr1" onclick="pasarDatosRol('{{rol.id_rol}}')" id="tr1{{rol.id_rol}}">
+                                    <td class="td1 ID">{{rol.id_rol}}</td>
+                                    <td class="td1 Nombre">{{rol.rol}}</td>
+                                    <td class="td1" style="width: 40px;">
+                                        <img class="a1" onclick="borrarRol('{{rol.id_rol}}', '{{rol.rol}}')" src="/static/img/iconos app/eliminar.png" alt="imagen para eliminar un rol" style="width: 20px;">        
+                                    </td>
+                                    <input type="hidden" name="id{{rol.id_rol}}"id="id{{rol.id_rol}}" value="{{ rol.id_rol }}">
+                                    <input type="hidden" name="nombre{{rol.id_rol}}"id="nombre{{rol.id_rol}}" value="{{ rol.rol }}">
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -90,5 +91,117 @@ Crear Rol
             </div>
         </div>
     </div>
+    <script>
+        function pasarDatosRol(i) {
+            var idRol = document.getElementById("id"+i).value
+            var nombreRol = document.getElementById("nombre"+i).value
 
+            document.getElementById("tdIdRol").innerHTML = '<input type="number" value="'+idRol+'" readonly id="idRol">'
+            document.getElementById("tdNombreRol").innerHTML = '<input type="text" name="rol" id="nombreRol" class="form-control" width="300px" required="" maxlength="50" value="'+nombreRol+'">'
+
+            document.getElementById("idpruebar").innerHTML = '<input type="hidden" value="'+idRol+'" id="id_rol" name="id_rol">'
+            document.getElementById("nombrepruebar").innerHTML = '<input type="hidden" value="'+nombreRol+'" id="nombre_rol" name="nombre_rol">'
+
+        }
+
+        function limpiarCamposRol() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Al limpiar los campos, los datos ingresados se perderán para siempre :(.',
+                icon: 'warning',
+                showDenyButton: true,
+                denyButtonText: 'Si, limpiar',
+                confirmButtonText: 'No, cancelar',
+            }).then((result) => {
+                if (result.isDenied) {
+                    Swal.fire(
+                        '¡Limpio!',
+                        'Los campos del formulario están en blanco."',
+                        'success'
+                    )
+                    setTimeout(function(){ window.location.href = "{% url 'AppWebHome:crearRol' %}"; }, 1500);
+                } else if (result.isConfirmed) {
+                    Swal.fire(
+                        'Cancelado',
+                        'Los campos del formulario están a salvo :)',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        function crearRol() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Estás a punto de crear un nuevo rol.',
+                icon: 'warning',
+                showDenyButton: true,
+                confirmButtonText: 'Si, crear',
+                denyButtonText: `No, cancelar`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        '¡Guardado!',
+                        'Se ha creado un nuevo rol.',
+                        'success'
+                    )
+                    setTimeout(function(){ document.forms["formulario-rol-crear"].submit(); }, 1500);
+                } else if (result.isDenied) {
+                    Swal.fire(
+                        'Cancelado',
+                        'No se ha creado nada.',
+                        'info'
+                    )
+                }
+            })
+        }
+        function actualizarRol() {
+            var rol = document.getElementById("nombre_rol").value
+            var nombreRol = document.getElementById("nombreRol").value
+            var idRol = document.getElementById("idRol").value
+
+            document.getElementById("idpruebar").innerHTML = '<input type="hidden" value="'+idRol+'" id="id_rol" name="id_rol">'
+            document.getElementById("nombrepruebar").innerHTML = '<input type="hidden" value="'+nombreRol+'" id="nombre_rol" name="nombre_rol">'
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Actualizar el rol "'+rol+'" será permanente.',
+                icon: 'warning',
+                showDenyButton: true,
+                confirmButtonText: 'Si, actualizar',
+                denyButtonText: `No, cancelar`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setTimeout(function(){ document.forms["formulario-rol-actualizar"].submit(); }, 1500);
+                } else if (result.isDenied) {
+                    Swal.fire(
+                        'Cancelado',
+                        'Los cambios no fueron guardados.',
+                        'info'
+                    )
+                }
+            })
+        }
+        function borrarRol(i, rol) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Borrar el rol "'+rol+'" será permanente.',
+                icon: 'warning',
+                showDenyButton: true,
+                denyButtonText: 'Si, borrar',
+                confirmButtonText: 'No, cancelar',
+            }).then((result) => {
+                if (result.isDenied) {
+
+                    window.location.href = "/borrar-rol/"+i;
+
+                } else if (result.isConfirmed) {
+                    Swal.fire(
+                        'Cancelado',
+                        'El rol "'+rol+'" está a salvo :)',
+                        'error'
+                    )
+                }
+            })
+        }
+    </script>
 {% endblock contenido %}

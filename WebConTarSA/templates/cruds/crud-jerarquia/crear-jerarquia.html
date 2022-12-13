@@ -14,44 +14,44 @@ Crear Jerarquía
         <a href="{% url 'AppWebHome:crudJerarquia' %}" style="position:absolute; top:0; right:0;">
             <img class="btn-cerrar-1" id="img-icono-2" src="/static/img/iconos app/volveer.png" alt="imagen para cerrar">
         </a>
+        <form method="POST" action="{% url 'AppWebHome:editarJerarquia' %}" id="formulario-jerarquia-actualizar"> {% csrf_token %}
+            <div class="oculto" id="idpruebaj"><input type="hidden" value="" id="id_jerarquia" name="id_jerarquia"></div>
+            <div class="oculto" id="nombrepruebaj"><input type="hidden" value="" id="nombre_jerarquia" name="nombre_jerarquia"></div>
+        </form>
 
         <div class="caja-arriba">
             <div class="tarjeta-form" style="grid-template-rows: 65px 102px 89px;">
                 <div class="tarjeta-titulo" style="background-color: rgb(97, 15, 173);"><h2>Crear nueva jerarquía</h2></div>
-                <form method="POST"> {% csrf_token %}
+                <form method="POST" id="formulario-jerarquia-crear"> {% csrf_token %}
                     <div class="tarjeta-texto">
                         <table style="padding: 25px 8%;">
                             <tbody>
                                 <tr>
                                     <td>ID:</td>
-                                    <td><input type="number" placeholder="Se registra automáticamente." readonly></td>
+                                    <td id="tdIdJerarquia"><input type="number" placeholder="Se registra automáticamente." readonly id="idJerarquia"></td>
                                 </tr>
                                 <tr>
                                     <td>Nombre Jerarquia: </td>
-                                    <td>{{form.jerarquia}}</td>
+                                    <td id="tdNombreJerarquia">{{form.jerarquia}}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="tarjeta-botones">
-                        <a href="{% url 'AppWebHome:crearJerarquia' %}">
-                            <div class="stat left">
-                                <img id="img-icono-2" src="/static/img/iconos app/polvo.png" alt="imagen para eliminar datos">
-                                <div class="valor">Limpiar</div>
-                            </div>
-                        </a>
-                        <button type="submit" class="stat border">
-                            <img src="/static/img/iconos app/creaar.png" alt="imagen para crear datos" id="img-icono-2">
-                            <div class="valor">Agregar</div>
-                        </button>
-                        <a href="{% url 'AppWebHome:crearJerarquia' %}">
-                            <div class="stat right">
-                                <img id="img-icono-2" src="/static/img/iconos app/actualizar.png" alt="imagen para actualizar datos">
-                                <div class="valor">Actualizar</div>
-                            </div>
-                        </a>
-                    </div>
                 </form>
+                <div class="tarjeta-botones">
+                    <button onclick="limpiarCamposJerarquia()" type="button" class="stat left">
+                        <img id="img-icono-2" src="/static/img/iconos app/polvo.png" alt="imagen para limpiar campos">
+                        <div class="valor">Limpiar</div>
+                    </button>
+                    <button onclick="crearJerarquia()" type="button" class="stat border">
+                        <img src="/static/img/iconos app/creaar.png" alt="imagen para crear" id="img-icono-2">
+                        <div class="valor">Agregar</div>
+                    </button>
+                    <button onclick="actualizarJerarquia()" type="button" class="stat border">
+                        <img id="img-icono-2" src="/static/img/iconos app/actualizar.png" alt="imagen para actualizar">
+                        <div class="valor">Actualizar</div>
+                    </button>
+                </div>
             </div>
             <div class="tarjeta-tabla" style="grid-template-columns: 300px;">
 
@@ -71,14 +71,14 @@ Crear Jerarquía
             
                         <tbody>
                             {% for jerarquia in jerarquias %}
-                                <tr class="tr1">
+                                <tr class="tr1" onclick="pasarDatosJerarquia('{{jerarquia.id_jerarquia}}')" id="tr1{{jerarquia.id_jerarquia}}">
                                     <td class="td1 ID">{{jerarquia.id_jerarquia}}</td>
                                     <td class="td1 Nombre">{{jerarquia.jerarquia}}</td>
                                     <td class="td1" style="width: 40px;">
-                                        <a class="a1" href="/borrar-jerarquia/{{ jerarquia.id_jerarquia }}">
-                                            <img src="/static/img/iconos app/eliminar.png" alt="imagen para eliminar una jerarquía" style="width: 20px;">
-                                        </a>
+                                        <img class="a1" onclick="borrarJerarquia('{{jerarquia.id_jerarquia}}', '{{jerarquia.jerarquia}}')" src="/static/img/iconos app/eliminar.png" alt="imagen para eliminar una jerarquía" style="width: 20px;">
                                     </td>
+                                    <input type="hidden" name="id{{jerarquia.id_jerarquia}}"id="id{{jerarquia.id_jerarquia}}" value="{{ jerarquia.id_jerarquia }}">
+                                    <input type="hidden" name="nombre{{jerarquia.id_jerarquia}}"id="nombre{{jerarquia.id_jerarquia}}" value="{{ jerarquia.jerarquia }}">
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -90,5 +90,118 @@ Crear Jerarquía
             </div>
         </div>
     </div>
+    <script>
+        function pasarDatosJerarquia(i) {
+            var idJerarquia = document.getElementById("id"+i).value
+            var nombreJerarquia = document.getElementById("nombre"+i).value
+
+            document.getElementById("tdIdJerarquia").innerHTML = '<input type="number" value="'+idJerarquia+'" readonly id="idJerarquia">'
+            document.getElementById("tdNombreJerarquia").innerHTML = '<input type="text" name="jerarquia" id="nombreJerarquia" class="form-control" width="300px" required="" maxlength="50" value="'+nombreJerarquia+'">'
+
+            document.getElementById("idpruebaj").innerHTML = '<input type="hidden" value="'+idJerarquia+'" id="id_jerarquia" name="id_jerarquia">'
+            document.getElementById("nombrepruebaj").innerHTML = '<input type="hidden" value="'+nombreJerarquia+'" id="nombre_jerarquia" name="nombre_jerarquia">'
+
+        }
+
+        function limpiarCamposJerarquia() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Al limpiar los campos, los datos ingresados se perderán para siempre :(.',
+                icon: 'warning',
+                showDenyButton: true,
+                denyButtonText: 'Si, limpiar',
+                confirmButtonText: 'No, cancelar',
+            }).then((result) => {
+                if (result.isDenied) {
+                    Swal.fire(
+                        '¡Limpio!',
+                        'Los campos del formulario están en blanco."',
+                        'success'
+                    )
+                    setTimeout(function(){ window.location.href = "{% url 'AppWebHome:crearJerarquia' %}"; }, 1500);
+                } else if (result.isConfirmed) {
+                    Swal.fire(
+                        'Cancelado',
+                        'Los campos del formulario están a salvo :)',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        function crearJerarquia() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Estás a punto de crear una nueva jerarquía.',
+                icon: 'warning',
+                showDenyButton: true,
+                confirmButtonText: 'Si, crear',
+                denyButtonText: `No, cancelar`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        '¡Guardado!',
+                        'Se ha creado una nueva jerarquía.',
+                        'success'
+                    )
+                    setTimeout(function(){ document.forms["formulario-jerarquia-crear"].submit(); }, 1500);
+                } else if (result.isDenied) {
+                    Swal.fire(
+                        'Cancelado',
+                        'No se ha creado nada.',
+                        'info'
+                    )
+                }
+            })
+        }
+        function actualizarJerarquia() {
+            var jerarquia = document.getElementById("nombre_jerarquia").value
+            var nombreJerarquia = document.getElementById("nombreJerarquia").value
+            var idJerarquia = document.getElementById("idJerarquia").value
+
+            document.getElementById("idpruebaj").innerHTML = '<input type="hidden" value="'+idJerarquia+'" id="id_jerarquia" name="id_jerarquia">'
+            document.getElementById("nombrepruebaj").innerHTML = '<input type="hidden" value="'+nombreJerarquia+'" id="nombre_jerarquia" name="nombre_jerarquia">'
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Actualizar la jerarquía "'+jerarquia+'" será permanente.',
+                icon: 'warning',
+                showDenyButton: true,
+                confirmButtonText: 'Si, actualizar',
+                denyButtonText: `No, cancelar`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setTimeout(function(){ document.forms["formulario-jerarquia-actualizar"].submit(); }, 1500);
+                } else if (result.isDenied) {
+                    Swal.fire(
+                        'Cancelado',
+                        'Los cambios no fueron guardados.',
+                        'info'
+                    )
+                }
+            })
+        }
+        function borrarJerarquia(i, jerarquia) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Borrar la jerarquia "'+jerarquia+'" será permanente.',
+                icon: 'warning',
+                showDenyButton: true,
+                denyButtonText: 'Si, borrar',
+                confirmButtonText: 'No, cancelar',
+            }).then((result) => {
+                if (result.isDenied) {
+
+                    window.location.href = "/borrar-jerarquia/"+i;
+
+                } else if (result.isConfirmed) {
+                    Swal.fire(
+                        'Cancelado',
+                        'La jerarquía "'+jerarquia+'" está a salvo :)',
+                        'error'
+                    )
+                }
+            })
+        }
+    </script>
 
 {% endblock contenido %}
